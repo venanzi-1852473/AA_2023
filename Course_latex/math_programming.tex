@@ -789,11 +789,11 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
     Now we want to prove two things about this algorithm:
     \begin{itemize}
-        \item $GREEDY_\varepsilon$ gives a good approximation to DS
-        \item $GREEDY_\varepsilon$ runs quickly
+        \item $GREEDY_\varepsilon$ gives a good approximation to DS (Lemma~\ref{lemma:ds_greedy_1})
+        \item $GREEDY_\varepsilon$ runs quickly (Lemma~\ref{lemma:ds_greedy_2})
     \end{itemize}
 
-    \begin{lemma}
+    \begin{lemma}\label{lemma:ds_greedy_1}
         $GREEDY_\varepsilon$ returns a $2(1+\varepsilon)$-approximation, $\forall \varepsilon > 0$.
     \end{lemma}
 
@@ -818,9 +818,9 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
         \[ \min_{v \in S_i} \deg_{S_i}(v) \leq avg_{v \in S_i} \deg_{S_i}(v) \leq (1+\varepsilon)avg_{v \in S_i} \deg_{S_i}(v) \]
 
-        Thus $v \in A_i$ (i.e. if $\cardinality{S_i} \geq 1 \rightarrow \cardinality{A_i} \geq 1$).
+        Thus $v \in A_i$ (i.e.~if $\cardinality{S_i} \geq 1 \rightarrow \cardinality{A_i} \geq 1$).
 
-        Consider the first iteration $i$ s.t. at least one node of $S^*$ is removed from $S_i$.
+        Consider the first iteration $i$ s.t.~at least one node of $S^*$ is removed from $S_i$.
         That is, let $i$ be the smallest integer s.t. $A_i \cap S^* \neq \emptyset$.
 
         Let $v \in A_i \cap S^*$. Since $i$ is the first iteration in which $A_i \cap S^* \neq \emptyset$, it must be that $S_i \supseteq S^*$.
@@ -837,4 +837,53 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
         Thus $\rho(S_i) \geq \dfrac{1}{2(1+\varepsilon)} \rho(S^*)$.
 
         So $GREEDY_\varepsilon$ returns something no worse than a $2(1+\varepsilon)$-approximation.
+    \end{proof}
+
+    \begin{lemma}\label{lemma:ds_greedy_2}
+        $GREEDY_\varepsilon$ iterates for at most $O(\dfrac{\log n}{\varepsilon})$ times, $\forall \varepsilon > 0$.
+    \end{lemma}
+
+    \begin{proof}
+        Fix an iteration $i$.
+
+        $ 2 \cardinality{E(S_i)} =
+        \sum_{v \in S_i} \deg_{S_i}(v) =
+        \sum_{v_i \in A_i} \deg_{A_i}(v_i) + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) \geq
+        0 + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) >
+        \sum_{v \in S_i \setminus A_i}(\avg_{u \in S_i} \deg_{S_i} (u))(1 + \varepsilon) =
+        \sum_{v \in S_i \setminus A_i}(2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1 + \varepsilon)) = 
+        \cardinality{S_i \setminus A_i} 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) \overset{(A_i \subseteq S_i)}{=}
+        (\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon)$
+
+        Thus,
+        $2 \cardinality{E(S_i)} >
+        (\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) = 
+        (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} (1 + \varepsilon) =
+        (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon = 
+        2 \cardinality{E(S_i)} - 2 \cardinality{A_i} \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon$
+
+        $1 > 1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}})\varepsilon$.
+        Then $\cardinality{S_i} > \cardinality{S_i} - \cardinality{A_i} + (\cardinality{S_i} - \cardinality{A_i})\varepsilon$.
+
+        $(1+\varepsilon) \cardinality{A_i} \geq \varepsilon \cardinality{S_i} \rightarrow \cardinality{A_i} \geq \dfrac{\varepsilon}{1 + \varepsilon} \cardinality{S_i}$.
+
+        Now, recall $\cardinality{A_i} = \cardinality{S_i} - \cardinality{S_{i+1}}$. Then $\cardinality{S_i} - \cardinality{S_{i+1}} \geq \dfrac{\varepsilon}{1+\varepsilon} \cardinality{S_i}$.
+
+        $\cardinality{S_i} (1 - \dfrac{\varepsilon}{1+\varepsilon}) \geq \cardinality{S_{i+1}}$.
+
+        Thus,
+        \[ \cardinality{S_{i+1}} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_i} \]
+
+        Then,
+        \begin{itemize}
+            \item $\cardinality{S_0} = $
+            \item $\cardinality{S_1} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_0} = (1+\varepsilon)^{-1} \cdot n$
+            \item $\cardinality{S_2} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_1} = (1+\varepsilon)^{-2} \cdot n$
+            \item[\vdots]
+            \item $\cardinality{S_i} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_{i-1}} = (1+\varepsilon)^{-i} \cdot n$
+        \end{itemize}
+
+        Consider $i^* = \lceil \log_{1+\varepsilon} \rceil$. The procedure either ends before iteration $i^*$, or $\cardinality{S_{i^*}} \leq (1+\varepsilon)^{-i^*} \cdot n \leq (1+\varepsilon)^{- \log _{1+\varepsilon} n} \cdot n = \dfrac{1}{n} n = 1$.
+
+        The number of iterations, then, is at most $i^* = O(\log_{1+\varepsilon} n) = O(\frac{\log n}{\log(1+\varepsilon)}) = O(\frac{\log n}{\varepsilon})$.
     \end{proof}
