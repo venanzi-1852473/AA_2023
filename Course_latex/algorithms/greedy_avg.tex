@@ -1,0 +1,16 @@
+\begin{algorithm}
+    \caption{Greedy average}\label{alg:greedy_avg}
+    \begin{algorithmic}%[1]
+        \Procedure{Greedy\_AVG}{$G(V,E)$}
+            \State~$S_0 \gets V$
+            \State~$i \gets 0$
+                \While{$S_i \neq \emptyset$}
+                    \State~let $v_i$ be a node s.t. $\deg_{S_i}(v_i) \leq avg_{v \in S_i} \deg_{S_i}(v)$
+                    \State~$S_{i+1} \gets S_i \setminus \{v_i\}$
+                    \State~$i \gets i+1$
+                \EndWhile
+                
+            \Return~a set $S_i$ having larget density $\rho(S_i)$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

@@ -64,7 +64,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
 
 
-\subsection{Solution for Vertex Cover}
+\subsection{Solution for Vertex Cover}\label{subsec:vc_lp}
 
     We now see a pratical use of LPs to solve the Vertex Cover problem.
 
@@ -360,7 +360,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     Thus $IG = \dfrac{OPT_{SC}}{LP_{SC}^*} \overset{(\text{on some instances})}{\geq} \dfrac{\frac{1}{2} \log_2 n - O(\log \log n)}{2} \approx \frac{1}{4} \log_2 n$
 
 
-\subsection{Densest subgraph problem}
+\subsection{Densest subgraph problem}\label{subsec:densestsubgraph_problem}
 
     Input: $G(V,E)$
 
@@ -374,7 +374,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     For $k$-densest subgraph we want $S \subseteq V$, $\cardinality{S} = k$, s.t. $\cardinality{E(S)}$ is as large as possible.
 
     To solve this problem, we give an LP program.
-    \begin{equation}
+    \begin{equation}\label{eq:densestsubgraph_lp}
         \begin{cases}
             \max \sum_{\{i,j\} \in E} x_{\{i,j\}}                           \\
             x_{\{i,j\}} \leq y_i                    & \forall \{i,j\} \in E \\
@@ -670,4 +670,171 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
     \begin{proof}
         \[ c^T X = X^T c \leq X^T A^T Y = (A X)^T Y \leq b^T Y \]
+    \end{proof}
+
+
+    Recall \nameref{eq:densestsubgraph_lp} LP formulation.
+    Let us see it as a Primal LP (in "standard form").
+
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} x_{\{i,j\}}\\
+            (y_{ij}): x_{\{i,j\}} - x_i \leq 0  & \forall \{i,j\} \in E\\
+            (y_{ji}): x:{\{i,j\}} - x_j \leq 0  & \forall \{i,j\} \in E\\
+            (y^*): \sum_{i \in V} x_i \leq 1\\
+            x_{\{i,j\}} \geq 0                  & \forall \{i,j\} \in E\\
+            x_i \geq 0                          & \forall i \in V
+        \end{cases}
+    \end{equation}
+
+    Let us now consider the equivalent Dual LP.
+    \begin{equation}
+        \begin{cases}
+            \min y^*\\
+            (x_{\{i,j\}}): y_{ij} + y_{ji} \geq 1\\
+            (x_i): y^* - \sum_{j : \{i,j\} \in E} y_{ij} \geq 0\\
+            y^* \geq 0\\
+            y_{ij}, y_{ji} \geq 0
+        \end{cases}
+    \end{equation}
+
+    Our greedy 2-approximtion for DS is esentially a dual LP solution:
+    set $y^* = \Delta_{\phi_{GR}}$ and
+    \begin{equation}
+        y_{ij} = 
+        \begin{cases}
+            1 & \text{if } \{i,j\} \text{ is directed towards } i \text{ in } \phi_{GR}\\
+            0 & \text{o/w}
+        \end{cases}
+    \end{equation}
+
+    For the $x_{\{i,j\}}$, $y_{ij} + y_{ji} \geq 1$ is satisfied, because it is either $1+0 \geq 1$ or $0+1 \geq 1$.
+    For $x_i$, $y^* \geq \sum_{j : \{i,j\} \in E} y_{ij}$. $\Delta_{\phi_{GR}} = y^* \geq \sum_{j : \{i,j\} \in E} y_{ij} = deg_{\phi_{GR}}(i)$.
+
+    Then, each constraint is satisfied by our solution, of value $\Delta_{\phi_{GR}}$.
+
+    \[ \dfrac{\Delta_{\phi_{GR}}}{2} \leq \text{greedy solution} \leq PRIMAL^* \leq DUAL^* \leq \Delta_{\phi_{GR}} \]
+
+    Now, recall that \nameref{subsec:vc_lp} is a \textit{minimization} problem.
+    We saw its dual:
+    \begin{equation}
+        \begin{cases}
+            \min \sum_{v \in V} x_v\\
+            y_{\{u,v\}}: x_u + x_v \geq 1\\
+            x_v \geq 0
+        \end{cases}
+    \end{equation}
+
+    Let us now see its primal:
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{u,v\} \in E} y_{\{u,v\}}\\
+            x_v: \sum_{u : \{u,v\} \in E} y_{\{u,v\}} \leq 1\\
+            y_{\{u,v\}} \geq 0
+        \end{cases}
+    \end{equation}
+
+    For all maximal matching $M \subseteq E$. For the dual, we set
+    \begin{equation}
+        x_u = 
+        \begin{cases}
+            1 & \text{if } e \in M \text{ s.t. } u \in E\\
+            0 & \text{o/w}
+        \end{cases}
+    \end{equation}
+
+    Is this dual solution feasible? Yes.
+    By contradiction, if $x_u + x_v < 1$, for some $\{u,v\} \in E$, we could add $\{u,v\}$ to $M$. Then $M$ wouldn't be maximal.
+    What's the value of the solution? It is $\sum_{v \in V} x_v = 2 \cardinality{M}$.
+
+    Instead, for the primal, we set
+    \begin{equation}
+        y_{\{u,v\}} = 
+        \begin{cases}
+            1 & \text{if } \{u,v\} \in M\\
+            0 & \text{o/w}
+        \end{cases}
+    \end{equation}
+
+    In the algorithm, if there exists and edge $e$, we add both endpoints to the solution, and then we remove them from the graph.
+    THe solution is feasible because $M$ is a matching.
+
+    \[ \cardinality{M} \leq PRIMAL^* \leq DUAL^* \leq 2 \cardinality{M} \]
+
+
+\subsection{Greedy algorithms for Densest Subgraph}
+
+    Going back to \nameref{subsec:densestsubgraph_problem}, we want to improve the greedy algorithm, by parallelizing it and possibly make it so the number of iterations is reduced.
+
+    \input{algorithms/greedy_parallel.tex}
+
+    There are instances in which this algorithm saves many iterations, as well as instances in which it doesn't save much time. Let us think for example of a graph in which each component is two vertices connected together; it is easy to see that the graph that the algorithm would stop after only 1 iteration.
+    Let us now consider a path; the algorithm, at each iteration, would remove both endpoints of the path, thus requiring $\approx \frac{n}{2}$ iterations, if $n$ is the number of nodes.
+
+    So we need a better algorithm. See the algorithm \ref{alg:greedy_avg}.
+
+    \input{algorithms/greedy_avg.tex}
+
+    Does this solve the problem? Not really.
+    Consider a path with a triangle in one endpoint. For such a graph the algorithm requires $\approx n$ iterations.
+
+    See the alorithm \ref{alg:greedy_parallel_avg}
+
+    \input{algorithms/greedy_parallel_avg.tex}
+
+    Still no solution. A path is once once again an instance in which this algortihm doesn't save much time.
+    Though this is not a bad idea per se, so why not try to take a little more than the average?
+
+    \input{algorithms/greedy_epsilon.tex}
+
+    Now we want to prove two things about this algorithm:
+    \begin{itemize}
+        \item $GREEDY_\varepsilon$ gives a good approximation to DS
+        \item $GREEDY_\varepsilon$ runs quickly
+    \end{itemize}
+
+    \begin{lemma}
+        $GREEDY_\varepsilon$ returns a $2(1+\varepsilon)$-approximation, $\forall \varepsilon > 0$.
+    \end{lemma}
+
+    \begin{proof}
+        Let $S^* \neq \emptyset$ be an optimal solution (then, wlog, $\cardinality{S^*} \geq 2$).
+
+        We claim that $\forall v \in S^*$, $\deg_{S^*}(v) \geq \rho(S^*) \overset{\Delta}{=} \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}}$.
+
+        $\rho(S^*) = \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}} \overset{(\text{by optimality of }S^*)}{\geq} \rho(S^* \setminus \{v\}) = 
+        \dfrac{\cardinality{E(S^* \setminus \{v\})}}{\cardinality{S^* \setminus \{v\}}} = 
+        \dfrac{\cardinality{E(S^*)} - \deg_{S^*}(v)}{\cardinality{S^*}-1}$
+
+        So $\dfrac{\cardinality{E(S^*)} - \deg_{S^*}(v)}{\cardinality{S^*}-1} \leq \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}}$.
+
+        This implies that $\cardinality{E(S^*)} - \deg_{S^*}(v) \leq \dfrac{\cardinality{S^*}-1}{\cardinality{S^*}} \cardinality{E(S^*)} = (1 - \dfrac{1}{\cardinality{S^*}}) \cardinality{E(S^*)}$.
+
+        Thus $\cardinality{E(S^*)} - \deg_{S^*} \leq \cardinality{E(S^*)} - \dfrac{\cardinality{E(S^*)} }{\cardinality{S^*}}$.
+
+        So $\dfrac{\cardinality{E(S^*)} }{\cardinality{S^*}} \leq \deg_{S^*}(v)$. And this proves the first claim.
+
+        Our second claim is that at least $1$ node isremoved in each iteration (this is more technical, note in fact that, if it wasn't like that, the algorithm might run forever).
+
+        \[ \min_{v \in S_i} \deg_{S_i}(v) \leq avg_{v \in S_i} \deg_{S_i}(v) \leq (1+\varepsilon)avg_{v \in S_i} \deg_{S_i}(v) \]
+
+        Thus $v \in A_i$ (i.e. if $\cardinality{S_i} \geq 1 \rightarrow \cardinality{A_i} \geq 1$).
+
+        Consider the first iteration $i$ s.t. at least one node of $S^*$ is removed from $S_i$.
+        That is, let $i$ be the smallest integer s.t. $A_i \cap S^* \neq \emptyset$.
+
+        Let $v \in A_i \cap S^*$. Since $i$ is the first iteration in which $A_i \cap S^* \neq \emptyset$, it must be that $S_i \supseteq S^*$.
+
+        $\rho(S^*) \overset{(\text{claim 1})}{\leq}
+        \deg_{S^*}(v) \overset{(S_i \supseteq S^*)}{\leq}
+        \deg_{S_i}(v) \overset{(\text{greedy choice})}{\leq}
+        (1+\varepsilon) avg_{u \in S_i} \deg_{S_i}(u) = 
+        (1+\varepsilon) \dfrac{\sum_{u \in S_i} \deg_{S_i}(u)}{\cardinality{S_i}} =
+        (1+\varepsilon) \dfrac{2 \cardinality{E(S_i)}}{\cardinality{S_i}} = 
+        2 (1+\varepsilon) \rho(S_i)
+        $
+
+        Thus $\rho(S_i) \geq \dfrac{1}{2(1+\varepsilon)} \rho(S^*)$.
+
+        So $GREEDY_\varepsilon$ returns something no worse than a $2(1+\varepsilon)$-approximation.
     \end{proof}
