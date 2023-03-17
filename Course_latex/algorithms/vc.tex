@@ -1,0 +1,22 @@
+\begin{algorithm}
+    \caption{Search of a VC}\label{alg:vc}
+    \begin{algorithmic}%[1]
+        \Procedure{VC}{$G(V,E), k$}
+            \If{$E = \emptyset$}
+                \State~\Return~true
+            \EndIf
+            \If{$k = 0$}
+                \State~\Return~false
+            \Else
+                \State~fix $\{ u,v \} \in E$
+                \If{VC($G[V \setminus \{u\}], k-1$)}
+                    \State~\Return~true
+                \EndIf
+                \If{VC($G[V \setminus \{v\}], k-1$)}
+                    \State~\Return~true
+                \EndIf
+            \EndIf
+            \State~\Return~false
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

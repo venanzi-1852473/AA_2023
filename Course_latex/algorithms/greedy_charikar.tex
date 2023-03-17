@@ -1,0 +1,14 @@
+\begin{algorithm}
+    \caption{Charikar algorithm}\label{alg:charikar_greedy}
+    \begin{algorithmic}%[1]
+        \Procedure{Greedy}{$G(V,E)$}
+            \State~$S \gets V$
+                \For{$i = 1, 2, \dots, n$}
+                    \State~let $v_i$ be a node having minimum degree in $G[S_{i-1}]$
+                    \State~$S_i \gets S_{i-1} \setminus \{v_i\}$
+                \EndFor
+                
+            \Return~a set $S_i$ having larget density $\rho(S_i)$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

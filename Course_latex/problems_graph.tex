@@ -1,0 +1,220 @@
+\section{Problems on graphs}\label{sec:problems_graphs}
+
+\def\cut{Cut(S, V \setminus S)}
+\subsection{Max-Cut problem}\label{subsec:maxcut}
+    Input: undirected graph $G(V,E)$
+
+    Question: what is the bipartition $(S, V \setminus S)$ of $V$ that maximizes $\cardinality{\cut}$?
+
+    Where a \textit{cut} is defined as follows:
+    \[ \cut = \{ e \st e \in E \wedge e \cap S \neq \emptyset \wedge e \cap (V \setminus S) \neq \emptyset \} = \{ e \st e \in E \wedge \cardinality{e \cap S} = 1 \}\]
+
+    This problem is NP-Hard, thus we don't know how to solve it efficiently.
+    There exists a ($0.878\dots$)-approximation based on Semi-Definite Programming. We now see a simple $\frac{1}{2}$-approximation.
+
+    \input{algorithms/max_cut.tex}
+
+
+    \begin{theorem}\label{thm:randcut_approx}
+        If $S^*$ is an optimal solution to Max-Cut on $G(V,E)$, and $S$ is the set returned by Random-Cut, then
+        \[ \expected[ \cardinality{\cut} ] \geq \frac{1}{2} \cardinality{Cut(S^*, V \setminus S^*)} \]
+    \end{theorem}
+
+    \begin{lemma}\label{lemma:randcut_1}
+        Let $S$ be the set returned by Random-Cut, then $\forall e \in E$, $\prob[ e \in \cut] = \frac{1}{2}$.
+    \end{lemma}
+
+    \begin{proof}
+        By definition, $e \in \cut$ iff $\cardinality{S \cap e} = 1$.
+
+        If $e = \{ v,w \}$, $e \in \cut$ iff $( (v \in S \wedge w \not\in S) \vee (v \not\in S \wedge w \in S) )$.
+
+        Let $\xi_1 = "v \in S \wedge w \not\in S"$ and $\xi_2 = "v \not\in S \wedge w \in S"$.
+
+        $\prob[\xi_1] = \prob[c_v = \text{Heads} \wedge c_w = \text{Tails}] = \text{(by independence of the coins) } \prob[c_v = \text{Heads}] \cdot \prob[c_w = \text{Tails}] = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}$
+
+        With same reasoning, $\prob[\xi_2] = \prob[c_v = \text{Tails}] \cdot \prob[c_w = \text{Heads}] = \frac{1}{4}$.
+
+        $\prob[e \in \cut] = \prob[\xi_1 \vee \xi_2] = \prob[\xi_1] + \prob[\xi_2] - \prob[\xi_1 \wedge \xi_2] = \frac{1}{4} + \frac{1}{4} + 0 = \frac{1}{2}$
+    \end{proof}
+    
+    \begin{lemma}
+        $\forall T \subseteq V$, $Cut(T, V \setminus T) \subseteq E$, $\cardinality{Cut(T, V \setminus T)} \leq E$.
+    \end{lemma}
+
+    \begin{proof}
+        Trivial.
+    \end{proof}
+
+    \begin{corollary}\label{cor:randcut_3}
+        Let $S$ be the set of nodes returned by Random-Cut, 
+        \[ \expected[ \cardinality{\cut}] = \frac{\cardinality{E}}{2} \]
+    \end{corollary}
+
+    \begin{proof}
+        By Lemma \ref{lemma:randcut_1}, $\forall e \in E$ $\prob[e \in \cut] = \frac{1}{2}$.
+
+        $ \expected[\cardinality{\cut}] = \sum_{e \in E} \prob[e \in \cut] = \sum_{e \in E} \frac{1}{2} = \frac{\cardinality{E}}{2} $
+    \end{proof}
+
+    Recall Theorem \ref{thm:randcut_approx}.
+    \begin{proof}
+        The proof follows from Lemma \ref{lemma:randcut_1} and Corollary \ref{cor:randcut_3}.
+    \end{proof}
+
+
+    We now want to exploit a technique often used to improve the expected output of a randomized algorithm. We run the algorithm not once, but multiple times, and get the best result.
+
+    \input{algorithms/max_cut_repetition.tex}
+    
+    Note that, at the end of the algorithm, we don't ask to return \textit{the} largest cut but \textit{a} largest cut, since it could happen that there are multiple cuts with the same cardinality.
+    In fact, it can even happen, in general, that all the cuts found have the same cardinality.
+
+    Now, for $i \in [t] = \{ 1, 2, \dots, t \}$, let us define $N_i = \cardinality{E} - C_i$ ($N_i \geq 0$). $N_i$ would be our error, the number of edges we didn't cut.
+
+    Let $0 < \varepsilon < 1$.
+
+    $\prob[N_i \geq (1+\varepsilon)\expected[N_i]] \overset{\text{(by \nameref{subsec:markov_ineq})}}{\leq} \dfrac{1}{1+\varepsilon} = \dfrac{1+\varepsilon}{1+\varepsilon} - \dfrac{\varepsilon}{1 + \varepsilon} = 1 - \dfrac{\varepsilon}{1 + \varepsilon} \leq 1 - \dfrac{\varepsilon}{2}$
+
+    Note that $\cardinality{E} = 2 \expected[C_i]$.
+
+    $\prob[N_i \geq (1+\varepsilon)\expected[N_i]] = \prob[\cardinality{E} - C_i \geq (1+\varepsilon)(\cardinality{E} - \expected[C_i])] = \prob[\cardinality{E} - (1 + \varepsilon) \cardinality{E} \geq C_i - (1 + \varepsilon) \expected[C_i]] = \prob[- \varepsilon \cardinality[E] \geq C_i - (1 + \varepsilon) \expected[C_i]] = \prob[-2 \varepsilon \expected[C_i] + (1+\varepsilon) \expected[C_i] \geq C_i] = \prob[C_i \leq (1-\varepsilon) \expected[C_i]]$
+
+    $C_i \leq (1-\varepsilon) \expected[C_i]$ is our "bad event".
+
+    $C_i > (1-\varepsilon) \expected[C_i]$ is our "good event". $\prob[C_i > (1-\varepsilon) \expected[C_i]] \geq \frac{\varepsilon}{2}$.
+
+    Suppose we run for $t = \lceil\frac{2}{3} \ln \frac{1}{\delta} \rceil $ ($\delta$ will be the probability of error).
+
+    $\prob[\forall i \in [t], C_i \leq (1-\varepsilon) \expected[C_i]] \overset{(\text{by ind.~of the } t \text{ runs})}{=} \prod_{i = 1}^t \prob[C_i \leq (1 - \varepsilon) \expected[C_i]] \leq \prod_{i = 1}^t (1 - \frac{\varepsilon}{2}) = (1 - \frac{\varepsilon}{2})^t \leq (e^{- \frac{\varepsilon}{2}})^t = e^{-\frac{\varepsilon}{2}t} \leq e^{-\frac{\varepsilon}{2} \frac{2}{\varepsilon} \ln \frac{1}{\delta} = e^{- \ln \frac{1}{\delta}} } = \delta$
+
+
+\subsection{Vertex Cover problem}\label{subsec:vertcover}
+
+    Input: undirected graph $G(V,E)$.
+
+    Output: $S \subseteq V$, of smallest cardinalityt, s.t. $\forall e \in E$ $e \cap S \neq \emptyset$.
+
+    In other words, we want a subset of the vertices s.t. \textit{every} edge of the graph touches at least one of the chosen vertices.
+
+    It is a \textit{minimization} problem; note in fact that we could take every vertex (i.e. $S = V$) and this would clearly cover every edge.
+
+    It is an NP-Complete problem.
+
+    \input{algorithms/maximal_matching.tex}
+
+    The way we solve this problem is by actually solving another problem; in fact, we find a \textit{maximal matching}, that happens to be a VC.
+
+    \begin{definition}[Matching]
+        A matching of the graph $G(V,E)$ is a subset $A \subseteq E$ s.t. $\forall \{ e,e' \} \in \binom{A}{2}$, $e \cap e' = \emptyset$.
+    \end{definition}
+
+    \begin{definition}[Maximal matching]
+        A maximal matching of $G(V,E)$ is a subset $A \subseteq E$ s.t.
+        \begin{itemize}
+            \item it is a matching
+            \item $\forall e \in E \setminus A$, $A \cup \{e\}$ is not a matching
+        \end{itemize}
+    \end{definition}
+
+    Note that there is a distinction between \textit{maximal} and \textit{maximum} matching.
+    A maximum matching is a matching with the largest possible cardinality.
+    A maximal matching is a matching s.t.~we can't add any more edges to it; so if we do so, the set is not a matching anymore.
+
+    So it could happen that a matching is maximal, but there exists another matching with larger cardinality.
+
+    \begin{lemma}\label{lemma:vc1}
+        If $e_1, \dots, e_t$ are the edges selected by the MaximalMatching algorithms, then $\{ e_1, \dots, e_t \}$ is a maximal matching.
+    \end{lemma}
+
+    \begin{proof}
+        For brevity, let us call $A = \{ e_1, \dots, e_t \}$.
+        Suppose by contradiction that $A$ is not a maximal matching.
+
+        So, either $A$ is not a matching at all, or is not maximal, so there exists an edge removed by the algorithm that should have been added to the set.
+
+        When the algorithms picks an edge $e$, it removes all the edges connected to both endpoints of $e$. This ensures that $\forall e_1,e_2 \in A$, $e_1 \cap e_2 = \emptyset$.
+        So we know that the set is indeed a matching, and now we have to check if it is maximal.
+
+        If it's not maximal, then $\exists e \in E \setminus A$ that has been wrongfully removed by the algorithm.
+        But, following the same reasoning used to show that $A$ is a matching, we know that $e$ shares some endpoints with at least one of the selected edges; i.e. $\exists e_A \in A$ s.t. $e \cap e_A \neq \emptyset$.
+
+        So, adding any of the edges removed by the algorithm, would "break" the matching. Thus $A$ is also maximal.
+    \end{proof}
+
+    \begin{lemma}\label{lemma:vc2}
+        If MaximalMatching selects $t$ edges, then $\cardinality{S} = 2t$.
+    \end{lemma}
+
+    \begin{proof}
+        Trivial.
+    \end{proof}
+
+    \begin{lemma}\label{lemma:vc3}
+        Let $A$ be any matching of $G(V,E)$. If $S$ is a VC of $G(V,E)$, then $\cardinality{S} \geq \cardinality{A}$.
+    \end{lemma}
+
+    \begin{proof}
+        First note that a VC for $G(V,E)$ is also a VC for $G(V,B)$, $\forall B \subseteq E$.
+
+        Now, pick any $A \subseteq E$. Since, by assumption, $S$ is a VC for $G(V,E)$, then $S$ must also cover each edge in $A$; this $S$ is a VC for $G(V,A)$.
+
+        The graph $G(V,A)$ can only have nodes of degree at most $1$ (i.e.~either $0$ or $1$).
+        In fact, suppose $A$ has a node of degree $>1$, say $2$; then $A$ would have two edges that share a node, thus it wouldn't be a matching.
+
+        So, from the point of view of VC, any node in $G(V,A)$ can cover at most one edge, since $\forall v \in V$, $\deg_{G(V,A)}(v) \leq 1$.
+
+        Thus, a set of, say, $k$ nodes, can cover $\leq k$ edges of $G(V,A)$. Now, $G(V,A)$ has $\cardinality{A}$ edges, thus each VC of $G(V,A)$ has to have at least $\cardinality{A}$ nodes.
+    \end{proof}
+
+    \begin{theorem}
+        MaximalMatching returns a $2$-approximation to VC.\@
+    \end{theorem}
+
+    \begin{proof}
+        Let $A$ be the maximal matching produced by the MaximalMatching procedure (the one called $\{ e_1, \dots, e_t \}$ in Lemma~\ref{lemma:vc1}).
+
+        This solution contains $\cardinality{S} = 2 \cardinality{A}$ nodes (Lemma~\ref{lemma:vc2}).
+
+        Since $A$ is a matching, if $S^*$ is an optimal solution (smallest solution), we know by Lemma~\ref{lemma:vc3} that $\cardinality{S^*} \geq \cardinality{A}$.
+
+        $\cardinality{S^*} \geq \cardinality{A} = \frac{\cardinality{S}}{2} \rightarrow \cardinality{S} \leq 2 \cardinality{S^*}$.
+    \end{proof}
+
+    There are reasons to believe that this is the best possible approximation.
+    In fact, VC is \textit{conjectured} to be NP-Hard to approximate to $2 - \varepsilon$ ($\forall \varepsilon > 0$ constant).
+
+    Although, good news, VC has a good property that lets us "easily" (under some conditions) find a solution. It is \textbf{fixed parameter tractable}.
+    If $G(V,E)$ has a VC of $k$ nodes, then an optimal VC of $G(V,E)$ can be found in time $n^c \cdot f(k)$; specifically, there's an algorithm that finds a VC in time $O(n^2 \cdot 2^k)$.
+
+    So, if the optimal solution is small enough (i.e. $\log n$), then this search only takes polynomial time.
+
+    The algorithm makes use of \nameref{subsubsec:induced_subgraph}.
+
+    \input{algorithms/vc.tex}
+
+    \begin{lemma}
+        VC($G(V,E), k$) takes time $O(n^2 \cdot 2^k)$.
+    \end{lemma}
+
+    \begin{proof}
+        By induction, running VC($G(V,E), l)$ causes at most $2^l - 1$ calls to the function VC.
+
+        Base case ($l = 0$). Only the first call to VC($\cdot, 0$) will be generated. $2^{l-1} - 1 = 2^1 - 1 = 1$.
+
+        Inductive step ($l+1$). Assume the claim holds for $l$. The number of calls generated by VC($\cdot, l+1$) is equal to no more than twice the numner of calls generated by VC($\cdot, l$)$+1$.
+        The total number of calls, by induction, is then $\leq 1 + 2(2^{l+1}-1) = 1 + 2^{l+2} - 2 = 2^{l+2} - 1$.
+
+        Each single casll takes time $O(n^2)$; there a few checkes that can be done in constant time, we have to fix an edge, and we have to build the induced subgraph (which take $O(n^2)$).
+        Note that, fixing an edge might take $O(n^2)$; worst case we use an adjacency matrix and we visit it until we find a fixable edge.
+
+        Thus, the claim follows.
+    \end{proof}
+
+    \begin{lemma}
+        VC($G(V,E), k$) == true iff $G(V,E)$ has a VC of size $k$.
+    \end{lemma}
+
+    \begin{exercise}
+        The proof of above lemma is left as an exercise
+    \end{exercise}

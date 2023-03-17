@@ -1,0 +1,64 @@
+\section{Introduction}\label{sec:introduction}
+
+\subsection{Categorization of algorithms}
+    Algorithms can be categorized by a number of criteria:
+    \begin{itemize}
+        \item Whether the input is all available at the beggining or not
+            \begin{itemize}
+                \item Offline
+                \item Online
+            \end{itemize}
+        \item Whether some choices are randomized or not
+            \begin{itemize}
+                \item Deterministic
+                \item Randomized
+                \item Both can be quantum algorithms
+            \end{itemize}
+        \item How good the algorithm does on some inputs
+            \begin{itemize}
+                \item Worst-case input
+                \item Average-case input
+            \end{itemize}
+        \item Whether we distribute our algorithms execution among multiple processors or not 
+            \begin{itemize}
+                \item Single processor
+                \item Parallel/Distributed
+            \end{itemize}
+    \end{itemize}
+
+\subsection{Graphs}
+    If $S$ is a set and $k$ is a non-negative integer, then
+    \[ \binom{S}{k} = \{ T \st T \subseteq S \wedge \cardinality{T} = k \} \]
+
+    The cardinality of such set is $\cardinality{\binom{S}{2}} = \frac{\cardinality{S}!}{k! (\cardinality{S} - k)!} = \binom{\cardinality{S}}{k}$
+
+
+    Many algorithms seen in this course solve problems on graphs.
+    A graph is $G(V,E)$, where $V$ is the set of vertices and $E$, the set of edges, is $E \subseteq \{ \{ u,v \} \st u,v \in V \wedge u \neq v \} = \binom{V}{2} $.
+
+
+\subsection{Approximations}
+    Most problems during the course are going to be approached in the following manner.
+    We have a problem that is NP-Hard (or perhaps NP-Complete), so we don't know how to solve it efficiently.
+    What we know how to do is to solve such problems efficiently but approximating the solution; that is, the solution proposed by our algorithm is worse than the optimal solution to the problem.
+
+    How do we denote such approximations?
+    If a problem is a \textit{maximization} problem (e.g. a set that has some property and its cardinality is as large as possible) then our approximation algorithm will return something that is smaller than the optimal.
+    In this case we denote the approximation as a number smaller than 1, possibly a fraction. For instance, a $\frac{1}{2}$-approximation means that the solution is at least half the optimal solution (e.g. if the optimal is $10$, then our solution is at least 5).
+
+    If a problem is a \textulc{minimization} problem, then we reason in an analogous way. Our algorithm outputs a solution larger than the optimal.
+    For instance, a $2$-approximation means that our solution is at most twice as large as the optimal one.
+
+    The approach that will be used in many cases is the following. Given a hard problem, we give a randomized algorithm that approximates, in polynomial time, the solution.
+    The random choices of an algorithm can yield to a solution that not only it's an approximation, even worse it can be wrong.
+    Wwe then prove that the probability that the solution is actually wrong is so small, that we can ignore it.
+
+    \begin{center}
+        \fbox{Check how above will hold for future algorithms. }
+    \end{center}
+
+
+\subsection{Math and CS notions}
+    There are some notions about mathematics or computer science, used during the course, that are not part of the program, but are strictly related to many of the things seen, and may be worth explaining quickly.
+    
+    Such notions are explained at the end of this document, in section \nameref{sec:math_notions}.

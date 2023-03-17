@@ -1,0 +1,15 @@
+\begin{algorithm}
+    \caption{Approximation of Max-Cut}\label{alg:randomcut}
+    \begin{algorithmic}%[1]
+        \Procedure{Random-Cut}{$V,E$}
+        \State~$S \gets \emptyset$
+        \For{each $v \in V$}
+            \State~flip an independent/fair coin $c_v$
+            \If{$c_v$ is heads}
+                \State~$S \gets S \cup \{ v \}$
+            \EndIf
+        \EndFor
+        \State~\Return~$S$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

@@ -1,0 +1,84 @@
+\section{Math and CS notions}\label{sec:math_notions}
+
+\subsection{Tail inequalities}
+    \begin{itemize}
+        \item Markov inequality
+        \item Chebyshev inequality
+        \item Chernoff bound
+    \end{itemize}
+
+    \subsubsection{Markov inequality}\label{subsec:markov_ineq}
+        If $Y$ is a non negative random variable, then $\forall c \geq 1$
+        \[ \prob[Y \geq c \cdot \expected[Y]] \leq \frac{1}{c} \]
+
+    \begin{proof}
+        Let $\xi$ be an event, and let
+        \begin{equation}
+            X_\xi = 
+            \begin{cases}
+                1 & \text{if } \xi \text{ happens}\\
+                0 & \text{o/w}
+            \end{cases}
+        \end{equation}
+
+        In particular, for $a > 0$, consider
+        \begin{equation}
+            X_{Y \geq a} = 
+            \begin{cases}
+                1 & \text{if } Y \geq a \text{ happens}\\
+                0 & \text{o/w}
+            \end{cases}
+        \end{equation}
+        Then $\prob[a \cdot X_{Y \geq a} \leq Y] = 1$.
+
+        So, $\expected[a \cdot X_{Y \geq a}] \leq \expected[Y]$.
+        Also, $\expected[a \cdot X_{Y \geq a}] = a \cdot \expected[X_{Y \geq a}] = a \cdot \prob[Y \geq a]$.
+
+        $a \cdot \prob[Y \geq a] \leq \expected[Y]$, and $\prob[Y \geq a] \leq \frac{\expected[Y]}{a}$.
+
+        Let us choose $a = c \cdot \expected[Y]$, then $\prob[Y \geq c \cdot \expected[Y]] \leq \frac{\expected[Y]}{c \cdot \expected[Y]} = \frac{1}{c}$.
+    \end{proof}
+
+
+\subsection{NP}
+    Disclaimer: as of now I'm \textbf{not} going to be too formal in the definition of NP, since for this course it is important to understand at least that NP problems are hard to solve.
+
+    NP stands for \textit{Non-deterministic Polynomial}.
+    It is the set of problems that can be solved in polynomial time by a Non-Deterministic Turing Machine (NDTM).
+    Suppose input size $n$, we say that an algorithm runs in \textit{polynomial time} if it runs in time $O(n^c)$, for some constant $c > 0$.
+
+    These problems capture the idea of puzzles. Given a puzzle, it is hard to solve it, but, given a solution to the puzzle, it is easy to check if the solution is correct.
+
+    A bit more formally, given a set $S$, we want to know if the instance $x$ belongs to $S$. Given a solution $y$ to the problem, there exists an algorithm $V(\cdot, \cdot)$ that, runs in polynomial time, and given as inputs $x$ and $y$ (i.e. $V(x,y)$) returns true iff $x \in S$; if this is the case, then $y$ is said to be a valid witness.
+
+    Let us see an example on \textit{clique}.
+    We want to know if a graph $G$ has a $k$-clique; so $G$ would be our instance $x$ and $S$ would be the set of all graphs with a $k$-clique.
+    Finding a $k$-clique is hard in general, but, given a set of vertices, our witness $y$, it is quite easy to check if $y$ is a $k$-clique.
+    Suppose the graph has $n$ node, at most (i.e. for an $n$-clique) we would have to check if every node is connected to every other node; this procedure would take time $O(n^2)$.
+
+    What happens with many (if not all?) of these NP problems is that the solution size is polynomial w.r.t. the input size (possibly even linear), but the number of possible solutions is exponential.
+
+    The ways in which we can deal with these problems are the following:
+    \begin{itemize}
+        \item brute force the optimal solution (not recommended)
+        \item using smart constructs and smart heuristics, some algorithms, although still having exponential time in the worst case, can solve many real life instances really really fast (possibly even in linear or almost linear time)
+        \item find an approximation in polynomial time (which is what we do in this course)
+    \end{itemize}
+
+    \subsubsection{NP-Hardness}
+        A problem is said to be NP-Hard if it is harder to solve than any other problem in NP.
+
+        To formally define NP-Hardness we would should also define what a Karp-Reduction is.
+        Very informally, if a problem $A$ is harder to solve than $B$ means that, if we have an algorithm to solve $A$, then we could also solve $B$.
+
+    \subsubsection{NP-Completeness}
+        A problem is said to be NP-Complete if it is both NP-Hard and in NP.
+        So the NP-Complete problems are the hardest to solve in NP.
+
+
+\subsection{Graphs}
+
+    \subsubsection{Induced subgraph}\label{subsubsec:induced_subgraph}
+        Let $G(V,E)$ be a graph. We define $G[S]$, the subgraph of $G$ induced by $S$, for $S \subseteq V$, as the graph having $S$ as a set of vertices and edges $\{ e \st e \in E \wedge e \subseteq S \}$.
+
+        Informally, we take we original graph, we cut away any node not in $S$ and all the edges connected to these removed nodes.

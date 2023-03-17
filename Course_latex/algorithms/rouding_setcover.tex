@@ -1,0 +1,15 @@
+\begin{algorithm}
+    \caption{Randomized rounding technique}\label{alg:rand_round_sc}
+    \begin{algorithmic}%[1]
+        \State~$A \gets \emptyset$
+        \State~let $x^*$ be an optimal LP solution
+        \For{$k=1$ to $\lceil 2 \ln{n} \rceil$}
+            \For{$j = 1$ to $m$}
+                \State~flip an independent coin with head probability $x_j^*$
+                \If{the coin is heads}
+                    \State~$A \gets A \cup \{ S_j \}$
+                \EndIf
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}

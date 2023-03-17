@@ -1,0 +1,673 @@
+\section{Mathematical programming}
+
+We can divide mathematical programs in:
+\begin{itemize}
+    \item Linear Programming (LP)
+    \item Semi-Definite Programming (SDP)
+\end{itemize}
+
+A mathematical program contains:
+\begin{itemize}
+    \item varibles $x_1, \dots, x_n$ ($x_i \in \mathbb{R}$ or $x_i \in \mathbb{Q}$)
+    \item objective function $f(x_1, \dots, x_n)$ (either to minimize or to maximize)
+    \item constraint functions $g_i(x_1, \dots, x_n) \leq b_i$ (or $g_i(x_1, \dots, x_n) \geq b_i$), for $i = 1, \dots, n$
+\end{itemize}
+
+In a linear program, the objective function $f$ is linear and each constraint function $g_i$ is linear as well.
+
+When we force each variable to be an integer, the progam is called \textbf{Integer Program}.
+
+\begin{definition}[Feasible solution]
+    A solution is said to be feasible if it satisfied all constraints.
+\end{definition}
+
+\subsection{Some examples}
+
+    \begin{equation}
+        \begin{cases}
+            \max x_1 + x_2\\
+            x_1 \geq 3\\
+            x_2 \geq 5\\
+            x_1 \leq 2.5
+        \end{cases}
+    \end{equation}
+
+    This program clearly has no solutions, since the constraints $x_1 \geq 3$ and $x_1 \leq 2.5$ can't be both satisfies ad the same time.
+
+    \begin{equation}
+        \begin{cases}
+            \max x_1 + x_2\\
+            x_2 \geq 5\\
+            x_1 \leq 2.5
+        \end{cases}
+    \end{equation}
+
+    There are infinitely many solutions, and the "optimal value" of this LP is unbounded ($\infty$).
+
+    \begin{equation}
+        \begin{cases}
+            \max x_1 + x_2\\
+            2 x_1 + x_2 \leq 10\\
+            x_1 \geq 0
+            x_2 \geq 0
+        \end{cases}
+    \end{equation}
+
+    We can set $x_1 = 0$ and $x_2 = 10$. All the constraints are satisfied and our objective function would have value $10$.
+
+
+\subsection{Hardness of LPs}
+    If $f(x_1, \dots, x_n) = \sum_{j=1}^n c_j x_j$ and $g_i(x_1, \dots, x_n) = \sum_{j=1}^n a_{ij} x_j$, then if each coefficient $c_j$ and $a_{ij}$ and each term $b_i$ is a rational number, representable with at most $t$ bits, then the LP can be optimized in time $O(n \cdot m \cdot t)^c$, for come constant $c > 0$.
+
+    IPs are instead harder to solve than LPs. In general, we can't solve an IP in polynomial time.
+    What can be done, and will be done later for some problems, is to give an IP program for a problem, that will be tranformed into an LP, easier to solve.
+
+
+
+\subsection{Solution for Vertex Cover}
+
+    We now see a pratical use of LPs to solve the Vertex Cover problem.
+
+    Let our set of variables be $\{ x_v \st v \in V \}$. We define our IP, for a graph $G(V,E)$ to be the following:
+    \begin{equation}\label{eq:lp_vc}
+        \begin{cases}
+            \min \sum_{v \in V} x_v\\
+            x_u + x_v \geq 1    & \forall \{ u,v \} \in E\\
+            x_v \in \B          & \forall v \in V
+        \end{cases}
+    \end{equation}
+
+    Solving this IP would give us an optimal VC.
+
+    Let $x_{v_1}^*, x_{v_2}^*, \dots, x_{v_n}^*$ be an optimal solution to the IP. Define $S^* = \{ v \st v \in V \wedge x_v^* = 1 \}$.
+
+    \begin{theorem}
+        $S^*$ is an optimal VC of $G(V,E)$.
+    \end{theorem}
+
+    \begin{lemma}
+        $S^*$ is a vertex cover.
+    \end{lemma}
+
+    \begin{proof}
+        $S^*$ being a VC means that $\forall \{u,v\} \in E$, $u \in S^*$ or $v \in S^*$ or both (i.e. $u,v \in S^*$).
+        Given that $x_u^* + x_v^* \geq 1$, $\forall \{ u,v \} \in E$, and that $x_u^*, x_v^* \in B$, at least one of $x_u^*$ and $x_v^*$ is equal to $1$.
+        This $u \in S^*$ or $v \in S^*$.
+    \end{proof}
+
+    \begin{lemma}
+        If $S$ is a VC, then there exists a feasible solution $\{ x_v \}_{v \in V}$ to the IP, s.t. $\sum_{v \in V} x_v = \cardinality{S}$.
+    \end{lemma}
+
+    \begin{proof}
+        $x_v = 1 \leftrightarrow v \in S$.
+    \end{proof}
+
+    \begin{corollary}
+        An optimal solution to the IP has value equal to
+        \[ \min_{\substack{S \subseteq V\\ S \text{ is a VC}}} \cardinality{S} \]
+    \end{corollary}
+
+    Recall that IPs can't be solve, in general, in polytime, while LPs can.
+    So we \textit{relax} the IP for VC (see equation \ref{eq:lp_vc}) into an LP.
+    
+    \begin{equation}\label{eq:ip_vc}
+        \begin{cases}
+            \min \sum_{v \in V} x_v\\
+            x_u + x_v \geq 1    & \forall \{ u,v \} \in E\\
+            0 \leq x_v \leq 1   & \forall v \in V
+        \end{cases}
+    \end{equation}
+
+    Note the the two programs are almost the same, except that, during the relaxation, we've allowed each variable from being in $\B$, to being in the range $[0,1]$.
+    Albeit this is not how IPs are always transformed into LPs, it is indeed quite often the case, and it is the way in which most (if not all) of the IPs during this course will be transformed into LPs.
+
+    It is easy transforming the IP into a VC solution: for a vertex $v$, $x_v = 1$ iff $v$ is in the vertex cover.
+    In the LP we have fractional values, so how do we choose vertices? We apply a \textbf{rounding rule}, basically an algorithm that, given an LP solutions, it outputs a VC set.
+
+    The rounding rule for this problem is quite simple. We define $S = \{ v \st x_v \geq \frac{1}{2} \wedge v \in V \}$.
+
+    \begin{lemma}
+        $S$ is a vertex cover.
+    \end{lemma}
+
+    \begin{proof}
+        Let $\{ u,v \} \in E$. The LP contains the constraint $x_u + x_v \geq 1$.
+        Given that our solutions guarantees that $x_u + x_v \geq 1$ (the LP solution is feasible by definition).
+
+        $x_u + x_v \geq 1 \rightarrow \max (x_u, x_v) \geq \frac{x_u + x_v}{2} \geq \frac{1}{2}$.
+
+        Thus, $u \in S$, or $v \in S$ (or both), thus the edge $\{ u,v \}$ is covered.
+    \end{proof}
+
+    \begin{lemma}\label{lemma:lp_vc1}
+        $\cardinality{S} \leq 2 \sum_{v \in V} x_v$.
+    \end{lemma}
+
+    \begin{proof}
+        $\cardinality{S} = \sum_{v \in S} 1 \overset{(v \in S \rightarrow x_v \geq \frac{1}{2})}{\leq} \sum_{v \in S} 2 x_v = 2 \sum_{v \in S} x_v \overset{(x_v \geq 0)}{\leq} 2 \sum_{v \in V} x_v$
+    \end{proof}
+
+    Recall that the LP minimizes $\sum_{v \in V} x_v$. Let $\{ x_v^* \}_{v \in V}$ be an optimal solution to the LP.
+    Let $S^*$ be the result of the application of our rounding rule; i.e. $S^* = \{ v \st v \in V \wedge x_v^* \geq \frac{1}{2} \}$.
+    \[ \cardinality{S^*} \overset{(\text{Lemma } \ref{lemma:lp_vc1})}{\leq} 2 \sum_{v \in V} x_v^* = 2 LP^* \overset{(\text{LP relaxation of IP})}{\leq} 2 IP^* = 2 \min_{\substack{S \subseteq V\\ S \text{ is a VC}}} \cardinality{S} = 2 OPT \]
+
+    If Lemma~\ref{lemma:lp_vc1} could be improved (to, say, $\cardinality{S} \leq 1.9 \sum_{v \in V} x_v$), then the approximation ration would be directly improved.
+
+    Let us define the \textbf{integrality gap} to be the ration between the optimal IP solution and the optimal LP solution. That is,
+    \[ IG = \frac{IP^*}{LP^* } \]
+
+    Now, let us consider a particular graph s.t. we can use it show an upper bound on the integrality gap.
+    This approach will be used also in the future: build a special instance of a problem, s.t. the instance can be used to show lower or upper bound to the optimality of approximations.
+
+    Consider the graph $G(V,E) = K_3$ (i.e.~the complete graph with $3$ vertices).
+
+    \begin{lemma}
+        Each optimal solution for $G(V,E)$ contains two nodes.
+    \end{lemma}
+
+    \begin{lemma}
+        $x_1 = x_2 = x_3 = \frac{1}{2}$ is a feasible solution of value $\frac{3}{2}$.
+    \end{lemma}
+
+    \begin{proof}
+        $\forall \{ i,j \} \in E$, $x_i + x_j = 2 \frac{1}{2} = 1 \geq 1$. Thus each constraint is satisfied.
+
+        The objective value is $3 \frac{1}{2} = \frac{3}{2}$.
+    \end{proof}
+
+    \begin{lemma}
+        There exists no feasible LP solution of value $< \frac{3}{2}$.
+    \end{lemma}
+
+    \begin{proof}
+        For $\{ i,j \} \in E$, $x_i + x_j \geq 1$.
+
+        $2 \sum_{v \in V} x_v = 2 x_1 + 2 x_2 + 2 x_3 = (x_1 + x_2) + (x_2 + x_3) + (x_1 + x_3) \overset{\text{feasibility}}{\geq} 1 + 1 + 1 = 3 $.
+
+        Thus $\sum_{v \in V} \geq \frac{3}{2}$.
+    \end{proof}
+
+    \begin{corollary}
+        $LP^* = \frac{3}{2}$ and $IP^* = 2$.
+    \end{corollary}
+
+    Thus, for $K_3$, $IG = \frac{IP^*}{LP^*} = \frac{2}{\frac{3}{2}} = \frac{4}{3}$. So $IG \leq 2$.
+
+    \begin{exercise}
+        Show that $\forall \varepsilon > 0$, $\exists G(V,E)$ s.t. $\dfrac{OPT_{VC}(G(V,E))}{LP^*(G(V,E))} \geq 2 - \varepsilon$.
+
+        Hints:
+        \begin{itemize}
+            \item $K_t$, large $t$
+            \item Prove the optimal VC for $K_t$ has $t-1$ nodes
+            \item What is the optimal LP solution for $K_t$?
+        \end{itemize}
+    \end{exercise}
+
+
+\subsection{Set Cover problem}
+
+    Input: $U = [n] = \{ 1, \dots, n \}$, $S_1, \dots, S_m \subseteq U$.
+
+    We call the input $U$, meaning our \textit{universe} set.
+
+    Question: what is the size of a smallest class of subsets $T \subseteq [m]$ s.t. $\bigcup_{j \in T} S_j = U$?
+
+    Let us see an example. Let $U = [4] = \{ 1,2,3,4 \}$, and let $S_1 = \{ 1,2 \}$, $S_2 = \{ 2,3 \}$, $S_3 = \{ 3,4 \}$.
+    A solution, even optimal, is $S_1 \cup S_3 = [4]$.
+
+    Set Cover (SC) is NP-Hard. We consider an LP solution to approximate it. We first see an IP problem, translated into an LP.
+
+    Let the IP be
+    \begin{equation}
+        \begin{cases}
+            \min \sum_{j=1}^m x_j                               & (x_j = 1 \text{ if } S_j \text{ is in the solution})\\
+            \sum_{j \in [m] \text{ s.t. } i \in S_j} x_j \geq 1 & \forall i \in [n]\\
+            x_j \in \B                                          & \forall j \in [m]
+        \end{cases}
+    \end{equation}
+
+    The LP relaxation is
+    \begin{equation}
+        \begin{cases}
+            \min \sum_{j=1}^m x_j                               \\
+            \sum_{j \in [m] \text{ s.t. } i \in S_j} x_j \geq 1 & \forall i \in [n]\\
+            0 \leq x_j \leq 1                                   & \forall j \in [m]
+        \end{cases}
+    \end{equation}
+
+    The constraint $\sum_{j \in [m] \text{ s.t. } i \in S_j} x_j \geq 1$ means that each element of $[n]$ has to be picked at least once.
+
+    \begin{observation}
+        $LP^* \leq IP^*$
+    \end{observation}
+
+    \begin{proof}
+        The LP is a relaxation to the IP (the constraint of the LP are less stringent than those of the IP).
+        Thus each IP solution is also an LP solution.
+    \end{proof}
+
+    We now need a rounding rule, to converto the LP solution into a solution for Set Cover.
+    This rounding rule is a randomized procedure, less trivial than the one used for VC. Many rouding rules are actually randomized, like this one.
+
+    \input{algorithms/rouding_setcover.tex}
+
+    The first for loop is a repetition of "phases". It represents how many times do we want to repeat the subprocedure in the second loop, the one that loops over sets and adds them to the solution.
+
+    As it is going to be clearer later on, since this procedure is randomized, it is not always the case that the output $A$ is indeed a set cover.
+    
+    The number of times we repeat the first loop actually defines a sort of trade off.
+    The more times we repeat it, the higher the probability that $A$ is a set cover, but also the higher the probability that we put too many sets in the solution, leading to a solution worse than the optimal.
+    
+    \begin{lemma}
+        Consider a generic iteration $k$ of the outer loop.
+        Let $p_i$ be the probability in iteration $k$ that at least on of the sets containing $i$ gets added to $A$.
+        Then $p_i \geq 1 - \frac{1}{e} \approx 0.633\dots$.
+    \end{lemma}
+
+    \begin{proof}
+        To prove this lemma we are going to use that fact that $1 - x \leq e^{-x}$.
+
+        $\prob[i \text{ not covered in iteration } k] = \prod_{j \in [m] \text{:} i \in S_j} (1 - x_j^*) \leq \prod_{j \in [m] \text{:} i \in S_j} e^{-x_j^*} = e^{- \sum_{j \in [m] : i \in S_j}} \overset{\text{(feasibility of solution)}}{\leq} e^{-1}$.
+
+        Thus $\prob[i \text{ covered in iteration } k] \geq 1 - \frac{1}{e}$.
+    \end{proof}
+
+    \begin{lemma}\label{lemma:sc_2}
+        Pick $i \in [n]$. $\prob[i \text{ not covered by ant set in } A] \leq \frac{1}{n^2}$.
+    \end{lemma}
+
+    \begin{proof}
+        $\prob[i \text{ not covered by any set in } A] = \prod_{k=1}^{\lceil 2 \ln n \rceil} \prob[i \text{ not covered in iteration } k] \leq \prod_{k=1}^{\lceil 2 \ln n \rceil} \frac{1}{e} = e^{- \lceil 2 \ln n \rceil} = n^{-2} $ 
+    \end{proof}
+
+    \begin{lemma}
+        $\prob[A \text{ is a set cover}] \geq 1 - \frac{1}{n}$
+    \end{lemma}
+
+    \begin{proof}
+        $\prob[A \text{ is not a set cover}] \overset{\text{(UB)}}{\leq} \sum_{i=1}^n \prob[i \text{ not covered by } A] \overset{\text{(Lemma \ref{lemma:sc_2})}}{\leq} \sum_{i=1}^{n} \frac{1}{n^2} = \frac{n}{n^2} = \frac{1}{n}$
+    \end{proof}
+
+    \begin{lemma}
+        $\expected[\cardinality{A}] \leq \lceil 2 \ln n \rceil LP^* \leq \lceil 2 \ln n \rceil OPT_{SC}$
+    \end{lemma}
+
+    \begin{proof}
+        Fix an iteration $k$ of the outer loop. Let $A_k$ be the class of sets added to $A$ in iteration $k$.
+
+        $\expected[\cardinality{A_k}] \overset{(\text{linearity of } \expected)}{=} \sum_{i=1}^{m} x_j^* = LP^* \leq OPT_{SC}$
+
+        $A = A_1 \cup A_2 \cup \dots \cup A_k \cup \dots \cup A_{\lceil 2 \ln n \rceil}$.
+        
+        $\cardinality{A} \leq \sum_{i = 1}^{\lceil 2 \ln n \rceil} \cardinality{A_i}$. Then $\expected[\cardinality{A}] \leq \sum_{i=1}^{\lceil 2 \ln n \rceil} \expected[\cardinality{A}] = \sum_{i=1}^{\lceil 2 \ln n \rceil} LP^* \leq \lceil 2 \ln n \rceil LP^* \leq \lceil 2 \ln n \rceil OPT_{SC}$.
+    \end{proof}
+
+    So, let us consider the following statement
+    \[ ? \overset{\exists \text{ instance}}{\leq} \frac{OPT_{SC}}{LP_{SC}^*} \overset{\forall \text{ instance}}{\leq} \lceil 2 \ln n \rceil \]
+
+    If we manage to find an instance with an IG smaller than $\frac{OPT_{SC}}{LP_{SC}^*}$, then we have proved a lower bound on the integrality gap of set cover.
+    
+    We know of such an instance, that we shall see in a moment. As it is the case, the following will be proved
+    \[ \dfrac{1}{4 \ln 2} \ln n \overset{\exists \text{ instance}}{\leq} \frac{OPT_{SC}}{LP_{SC}^*} \overset{\forall \text{ instance}}{\leq} \lceil 2 \ln n \rceil \]
+
+    An improvement, albeit a small one.
+
+    Let us consider the following universe set, $E = \{ e_A \st A \in \binom{[q]}{\frac{q}{2}}, \text{ for some even } q \geq 2 \}$.
+
+    For $n = \cardinality{E} = \binom{q}{\frac{q}{2}} = \Theta(\frac{2^q}{\sqrt{q}}) \Rightarrow q \geq \log n - \Theta(\log \log n)$.
+
+    $\forall i \in [q]$, let us define $S_i = \{ e_A \st e_A \in E \wedge i \in A \}$ and $C = \{ S_i \st i \in [q] \}$. $\cardinality{C} = q \overset{\Delta}{=} m$.
+
+    Let us see an example. Given $q = 4$:
+    \begin{itemize}
+        \item $E = \{ e_{12}, e_{13}, e_{14}, e_{23}, e_{24}, e_{34} \}$
+        \item $S_1 = \{ e_{12}, e_{13}, e_{14} \}$
+        \item $S_2 = \{ e_{12}, e_{23}, e_{24} \}$
+        \item $S_3 = \{ e_{13}, e_{23}, e_{34} \}$
+        \item $S_4 = \{ e_{14}, e_{24}, e_{34} \}$
+    \end{itemize}
+
+    \begin{lemma}
+        $LP_{SC}^* \leq 2$
+    \end{lemma}
+
+    \begin{proof}
+        Consider the LP solution $_1 = x_2 = \cdots = x_q = \frac{2}{q}$, with $q = n$.
+        This solution has value $\sum_{i=1}^{q} x_i = q \frac{2}{q} = 2$.
+
+        The generic LP constraint is $\sum_{s_j : e_a \in S_j} x_j \geq 1$, $\forall e_a \in E$.
+
+        $\sum_{s_j : e_a \in S_j} x_j = \sum_{s_j : e_a \in S_j} \frac{2}{q} = \cardinality{A} \frac{2}{q} = \frac{q}{2} \frac{2}{q} = 1 \geq 1$. Thus the solution is feasible.
+    \end{proof}
+
+    \begin{lemma}
+        $OPT_{SC} \geq \frac{1}{2} \log_2 n - O(\log \log n)$
+    \end{lemma}
+
+    \begin{proof}
+        Assume by contradiction that the sets $S_{i_1}, S_{i_2}, \dots, S_{i_k}$, for $k \leq \frac{q}{2}$, cover each element of the instance.
+        Consider also the set $T = [q] \setminus \{ i_1, \dots, i_k \}$.
+        Then $\exists A \subseteq T$ s.t. $\cardinality{A} = \frac{q}{2}$ (because $\cardinality{T} \geq q - k \geq \frac{q}{2}$), then $e_A \in E$.
+
+        The element $e_A$ is not covered by $S_{i_1}, S_{i_2}, \dots, S_{i_k}$, because $A \cap \{ i_1, \dots, i_k \} = \emptyset$.
+        Then $S_{i_1}, S_{i_2}, \dots, S_{i_k}$ is not a set cover if $k \leq \frac{q}{2}$.
+
+        It follows that the minimum set cover contains $\geq \frac{q}{2} + 1$ sets.
+    \end{proof}
+
+    Thus $IG = \dfrac{OPT_{SC}}{LP_{SC}^*} \overset{(\text{on some instances})}{\geq} \dfrac{\frac{1}{2} \log_2 n - O(\log \log n)}{2} \approx \frac{1}{4} \log_2 n$
+
+
+\subsection{Densest subgraph problem}
+
+    Input: $G(V,E)$
+
+    Question: what is the subset $S \subseteq V$ having maximum \textbf{density}?
+
+    We define density as follows:
+    \[ \rho(S) = \dfrac{\cardinality{E(S)}}{\cardinality{S}} \]
+    Where $E(S) = \{ \{u,v\} \st \{u,v\} \in E \wedge u,v \in S \}$.
+
+    A variation of the problem is the following.
+    For $k$-densest subgraph we want $S \subseteq V$, $\cardinality{S} = k$, s.t. $\cardinality{E(S)}$ is as large as possible.
+
+    To solve this problem, we give an LP program.
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} x_{\{i,j\}}                           \\
+            x_{\{i,j\}} \leq y_i                    & \forall \{i,j\} \in E \\
+            x_{\{i,j\}} \leq y_j                    & \forall \{i,j\} \in E \\
+            \sum_{i \in V} y_i \leq 1                                       \\
+            x_{\{i,j\}} \geq 0                      & \forall \{i,j\} \in E \\
+            y_i \geq 0                              & \forall i \in V
+        \end{cases}
+    \end{equation}
+
+    \begin{lemma}\label{lemma:densestsubgraph_1}
+        For any $G(V,E)$, $\forall S \subseteq V$, $\exists$ feasible solution to the LP, having value $\geq \frac{\cardinality{E(S)}}{\cardinality{S}} = \rho(S)$.
+    \end{lemma}
+
+    \begin{proof}
+        For $i \in S$, set $y_i = \frac{1}{\cardinality{S}}$.
+        For $i \in V \setminus S$, set $y_i = 0$.
+        For each $\{i,j\} \in E$, set
+        \begin{equation}
+            x_{\{i,j\}} = 
+            \begin{cases}
+                \frac{1}{\cardinality{S}} & \text{if } \{i,j\} \in E(S)\\
+                0                           & \text{o/w}
+            \end{cases}
+        \end{equation}
+
+        The constraint $\sum_{i \in V} y_i \leq 1$ is satisfied, given that
+        $\sum_{i \in V} y_i = \sum_{i \in S} y_i + \sum_{i \in V \setminus S} y_i = \sum_{i \in S} \frac{1}{\cardinality{S}} + \sum_{i \in V \setminus S} 0 = \frac{\cardinality{S}}{\cardinality{S}} = 1$.
+
+        Take any $\{i,j\} \in E(S)$. We have $x_{\{i,j\}} = \frac{1}{\cardinality{S}}$.
+        But, if $\{i,j\} \in E(S)$, then $i,j \in S$. Thus $y_i = y_j = \frac{1}{\cardinality{S}}$.
+        Then, $\forall \{i,j\} \in E(S)$, the constraints $x_{\{i,j\}} \leq y_i$ and $x_{\{i,j\}} \leq y_j$ are both satisfied.
+
+        If instead $\{i,j\} \not\in E(S)$, then $x_{\{i,j\}} = 0$.
+        Thus $x_{\{i,j\}} \leq y_i$ and $x_{\{i,j\}} \leq y_j$ are both satisfied by $y_i, y_j \geq 0$.
+
+        Thus, our solution is feasible.
+
+        The value of the solution is:
+        \[ \sum_{\{i,j\} \in E} x_{\{i,j\}} = \sum_{\{i,j\} \in E(S)} x_{\{i,j\}} = \sum_{\{i,j\} \in E(S)} \frac{1}{\cardinality{S}} = \dfrac{\cardinality{E(S)}}{\cardinality{S}} = \rho(S) \]
+    \end{proof}
+
+    \begin{lemma}\label{lemma:densestsubgraph_2}
+        For any feasible LP solution of value $v$, $\exists S \subseteq V$ s.t. $\rho(S) \geq v$.
+    \end{lemma}
+
+    \begin{proof}
+        Let $Y', X'$ be a feasible LP solution of value $v$.
+        Let $Y, X$ be the solution to the LP s.t.
+        \begin{itemize}
+            \item $y_i = y_i'$, $\forall i \in V$
+            \item $x_{\{i,j\}} = \min(y_i,y_j)$, $\forall \{i,j\} \in E$
+        \end{itemize}
+
+        The $Y,X$ solution is feasible, indeed:
+        \begin{itemize}
+            \item $\sum_{i \in V} y_i = \sum_{i \in V} y_i' \leq 1$
+            \item $\forall \{i,j\} \in E$, it holds $x_{\{i,j\}} \leq y_i$ and $x_{\{i,j\}} \leq y_j$
+        \end{itemize}
+
+        We have to provide a set $S$ having density at least $v$.
+        We are going to provide a number of $S$'s, one of which will have the desired property.
+        $\forall r \geq 0$, let us consider
+        \[ S(r) = \{ i \st y_i \geq r \} \]
+        \[ E(r) = \{ \{i,j\} \st x_{\{i,j\}} \geq r \} \]
+
+        We can observe that $\{i,j\} \in E(r) \leftrightarrow i \in S(r)$ and $j \in S(r)$.
+        The proof is left as an exercise.
+
+        We claim that $\exists r \geq 0$ s.t. $\rho(S(r)) = \dfrac{\cardinality{E(r)}}{\cardinality{S(r)}} \geq \sum_{\{i,j\} \in E} x_{\{i,j\}} = v$.
+
+        Proof of claim. We define a permutation $\pi$ of the nodes s.t.
+        \[ 0 \leq y_{\pi(1)} \leq y_{\pi(2)} \leq \cdots \leq y_{\pi(n-1)} \leq y_{\pi(n)} \leq 1 \]
+
+        $ \int_0^1 \cardinality{E(r)} dr =
+        \int_{0}^{y_{\pi(1)}} \cardinality{S(r)}dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} \cardinality{S(r)}dr + \cdots + \int_{y_{\pi(n)}}^{1} \cardinality{S(r)}dr =
+        \int_{0}^{y_{\pi(1)}} n \; dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} (n-1)dr + \cdots + \int_{y_{\pi(n-1)}}^{y_{\pi(n)}} 1 dr + \int_{y_{\pi(n)}}^{1} 0 dr = 
+        (y_{\pi(1)} - 0)n + (y_{\pi(2)} - y_{\pi(1)})(n-1) + \cdots + (y_{\pi(n)} - y_{\pi(n-1)})1 + 0 = 
+        y_{\pi(1)} (n - (n-1)) + y_{\pi(2)}((n-1) - (n-2)) + \cdots + y_{\pi(n)}(1-0) = 
+        \sum_{i=1}^{n} y_{\pi(i)} = \sum_{i=1}^{n} y_i \leq 1$.
+
+        $  \int_0^1 \cardinality{E(r)} dr = \sum_{\{i,j\} \in E} x_{\{i,j\}} = \sum_{\{i,j\} \in E} \min(y_i, y_j) = \sum_{\{i,j\} \in E} \min(y_i', y_j') \geq \sum_{\{i,j\} \in E} x_{\{i,j\}}' = v $
+
+        Then, $\int_0^1 \cardinality{S(r)}dr \leq 1$ and $\int_0^1 \cardinality{E(r)}dr \geq v$.
+
+        By contradiction, supopose that $\forall r \geq 0$, $\dfrac{\cardinality{E(r)}}{\cardinality{S(r)}} < v$.
+        Then $\cardinality{E(r)} < v \cardinality{S(r)}$, $\forall r \geq 0$.
+        Thus $v \leq \sum_{\{i,j\} \in E} x_{\{i,j\}} = \int_0^1 \cardinality{E(r)}dr < \int_0^1 v \cardinality{S(r)} dr = v \int_0^1 \cardinality{S(r)} dr \leq v \cdot 1 = v$.
+
+        Since $v \not< v$, we have a contradiction.
+        Thus $\exists r \geq 0$ s.t. $\cardinality{E(r)} \geq v \cardinality{S(r)} \rightarrow \rho(S(r)) \geq v$.
+    \end{proof}
+
+    Thus, we can get an optimal (densest) subgraph (one of $S(y_1), \dots, S(y_n)$ will do).
+    We can solve the LP in polytime, and we can transform the LP solution in an optimal subgraph.
+    Is this fast enough? No, the LP has $\geq \cardinality{E}$ variables.
+
+    \begin{corollary}
+        $LP^* = OPT_{DS}$
+    \end{corollary}
+
+    \begin{proof}
+        By Lemma~\ref{lemma:densestsubgraph_1}, $LP^* \geq OPT_{DS}$.
+        By Lemma~\ref{lemma:densestsubgraph_2}, $LP^* \leq OPT_{DS}$.
+    \end{proof}
+
+    The LP for Densest Subgraph has $\Theta(n^2)$ variables, so albeit being polynomially solvable, the number of variables is not linear.
+    For $n$ very large (e.g. $10^8 \dots 10^9$ nodes), $n^2$ is too slow.
+
+    We now see a greedy algorithm, due to M. Charikar, to approximate Densest Subgraph.
+
+    \input{algorithms/greedy_charikar.tex}
+
+    \begin{exercise}
+        Prove that Greedy does not always return an optimal solution.
+
+        Hint: construct a graph s.t.~the algorithm returna a non optimal solution.
+    \end{exercise}
+
+    \begin{definition}[Orientation]
+        An orientation $\phi$ of the edges of an undirected graph $G(V,E)$ is a function that assigns to each $e \in E$ one of its endpoints
+        \[ \phi : E \rightarrow V \]
+    \end{definition}
+    
+    Note that $\phi(e) \in e$.
+
+    \begin{definition}
+        Given an orientation $\phi$ of $G(V,E)$, let $d_\phi(v)$ be the in-degree of $v \in V$, according to $\phi$.
+    \end{definition}
+
+    \begin{observation}
+        If $\phi$ is an orientation of $G(V,E)$, then $\sum_{v \in V} d_\phi(v) = \cardinality{E}$.
+    \end{observation}
+
+    \begin{definition}
+        The max-degree of $\phi$ is $\Delta_\phi = \max_{v \in V} d_\phi(v)$.
+    \end{definition}
+
+    \begin{lemma}
+        $\max_{\emptyset \subset S \subseteq V} \rho(S) = \max_{\emptyset \subset S \subseteq V} \dfrac{\cardinality{E(S)}}{\cardinality{S}} \leq \Delta_\phi$, $\forall \phi$.
+    \end{lemma}
+
+    \begin{proof}
+        Let $\emptyset \subset S \subseteq V$ be given.
+        Each $\{u,v\} \in E(S)$ is going to be oriented towards on of its endpoints; that is, towards a node of $S$.
+        So $\cardinality{E(S)} \leq \sum_{v \in S} d_\phi(v) \leq \sum_{v \in S} \Delta_\phi = \cardinality{S} \Delta\phi$.
+
+        Thus, $\dfrac{\cardinality{E(S)}}{\cardinality{S}} \leq \Delta_\phi$.
+    \end{proof}
+
+    While running the greedy algorithms, we \textit{build} an orientation.
+    Whenever node $v_i$ (the $i^{th}$ node to be removed) is removed from the graph (which, at that point, has node set $S_{i-1}$) we orient each edge of $G[S_{i-1}]$ that is incident on $v_i$ towards $v_i$.
+    The resulting orientation is called $\phi_{GR}$.
+
+    Observe that, with orientation $\phi_{GR}$, $d_{\phi_{GR}}(v)$ equals the degree of $v$ in the graph, when $v$ is about to be removed.
+
+    \begin{lemma}
+        Let $M$ be the maximum $\rho(S_i)$ value; i.e. $M = \max_{i = 0,\dots,n-1} \rho(S_i)$.
+        (Note that $M$ is the value of the greedy solution).
+
+        Then, $\Delta_{\phi_{GR}} \leq 2M$.
+    \end{lemma}
+
+    \begin{proof}
+        For $i = 1, 2, \dots, n$, $v_i$ is a node of minumum degree in $G[S_{i-1}]$.
+        In general, the minumum degree in a graph is not larger than the average degree of the same graph.
+        Thus $d_{\phi_{GR}}(v_i) = \min_{v \in S_{i-1}} d_{S_{i-1}}(v) \leq avg_{v \in S_{i-1}} d_{S_{i-1}}(v) =
+        \dfrac{\sum_{v \in S_{i-1}} d_{S_{i-1}}(v)}{\cardinality{S_{i-1}}} = \dfrac{2 \cardinality{E(S_{i-1})}}{\cardinality{S_{i-1}}} = 2\rho(S_{i-1})$.
+
+        Then
+        \[ \Delta_{\phi_{GR}} = \max_{v_i \in V} d_{\phi_{GR}}(v_i) = \max_{i=1, \dots, n} d_{\phi_{GR}}(v_i) \leq
+        \max_{i=1, \dots, n} 2 \rho(S_{i-1}) = 2M \]
+    \end{proof}
+
+    \begin{corollary}
+        Greedy returns a $2$-approximation to Densest Subgraph.
+    \end{corollary}
+
+    \begin{proof}
+        \[ M \geq \dfrac{\Delta_{\phi_{GR}}}{2} \geq \dfrac{\max_{\emptyset \subset S \subseteq V} \rho(S)}{2} \]
+
+        Thus the greedy solution is not worse than a $2$-approximation.
+    \end{proof}
+
+
+\subsection{Primal and Dual}
+
+    We can define an LP, in general, as a \textbf{primal} in the following way:
+    \begin{equation}
+        \begin{cases}
+            \max c_1 x_1 + c_2 x_2 + \cdots + c_n x_n\\
+            (y_1) a_{11} x_1 + a_{12} x_2 + \cdots + a_{1n} x_n \leq b_1\\
+            (y_2) a_{21} x_1 + a_{22} x_2 + \cdots + a_{2n} x_n \leq b_2\\
+            \vdots\\
+            (y_2) a_{m1} x_1 + a_{m2} x_2 + \cdots + a_{mn} x_n \leq b_m\\
+            x_1, \dots, x_n \geq 0
+        \end{cases}
+    \end{equation}
+
+    The \textbf{dual} of the above LP is:
+    \begin{equation}
+        \begin{cases}
+            \min b_1 y_1 + b_2 y_2 + \cdots + b_m y_m\\
+            (x_1) a_{11} y_1 + a_{21} y_2 + \cdots + a_{m1} y_m \geq c_1\\
+            (x_2) a_{12} y_1 + a_{22} y_2 + \cdots + a_{m2} y_m \geq c_2\\
+            \vdots\\
+            (x_n) a_{1n} y_1 + a_{2n} y_2 + \cdots + a_{mn} y_m \geq c_n\\
+            y_1, \dots, y_m \geq 0
+        \end{cases}
+    \end{equation}
+
+    The fact that a primal is always defined as a maximization problem, and a dual as a minimization problem, is conventional.
+
+    Now, we can also define these programs in matrix form.
+
+    If
+    \begin{equation}
+        A = 
+        \begin{pmatrix}
+            a_{11} & a_{12} & \cdots & a_{1n}\\
+            a_{21} & a_{22} & \cdots & a_{2n}\\
+            \vdots\\
+            a_{m1} & a_{m2} & \cdots & a_{mn}
+        \end{pmatrix}
+    \end{equation}
+
+    \begin{equation}
+        b = 
+        \begin{pmatrix}
+            b_1\\
+            \vdots\\
+            b_m
+        \end{pmatrix}
+    \end{equation}
+    
+    \begin{equation}
+        c = 
+        \begin{pmatrix}
+            c_1\\
+            \vdots\\
+            c_n
+        \end{pmatrix}
+    \end{equation}
+
+    \begin{equation}
+        X = 
+        \begin{pmatrix}
+            x_1\\
+            \vdots\\
+            x_n
+        \end{pmatrix}
+    \end{equation}
+
+    \begin{equation}
+        Y = 
+        \begin{pmatrix}
+            y_1\\
+            \vdots\\
+            y_m
+        \end{pmatrix}
+    \end{equation}
+
+    Then the \textbf{primal} is
+    \begin{equation}
+        \begin{cases}
+            \max c^T X\\
+            AX \leq b\\
+            X \geq 0
+        \end{cases}
+    \end{equation}
+
+    And the \textbf{dual} is
+    \begin{equation}
+        \begin{cases}
+            \min b^T Y\\
+            A^T Y \geq c\\
+            Y \geq 0
+        \end{cases}
+    \end{equation}
+
+    Recall that, if $N$ and $M$ are matrices, then $(N M)^T = M^T N^T$.
+
+    \begin{theorem}[Weak Duality]
+        If 
+        \begin{itemize}
+            \item $X$ is a feasible solution to the primal
+            \item $Y$ is a feasible solution to the dual
+        \end{itemize}
+
+        Then 
+        \[ Primal(C) = c^T X \leq b^T Y = Dual(Y) \]
+    \end{theorem}
+
+    \begin{proof}
+        \[ c^T X = X^T c \leq X^T A^T Y = (A X)^T Y \leq b^T Y \]
+    \end{proof}

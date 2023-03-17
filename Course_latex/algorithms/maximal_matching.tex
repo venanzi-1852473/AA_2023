@@ -1,0 +1,14 @@
+\begin{algorithm}
+    \caption{Approximation to VC}\label{alg:maxmatching}
+    \begin{algorithmic}%[1]
+        \Procedure{MaximalMatching}{$V,E$}
+        \State~$S \gets \emptyset$
+        \While{$E \neq \emptyset$}
+            \State~pick $e = \{u,v\} \in E$
+            \State~$S \gets S \cup e$
+            \State~remove all the edges incident on $v$ and $w$ from $E$
+        \EndWhile
+        \State\Return~$S$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

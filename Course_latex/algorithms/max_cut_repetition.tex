@@ -1,0 +1,11 @@
+\begin{algorithm}
+    \caption{Repetition of Random-Cut}\label{alg:randomcut_rep}
+    \begin{algorithmic}%[1]
+        \For{$i=1$ to $t$}
+            \State~run Random-Cut($V,E$) independently
+            \State~let $S_i, V \setminus S_i$ be the resulting cut
+            \State~let $C_i = \cardinality{\cut}$
+        \EndFor
+        \State \Return a largest cut
+    \end{algorithmic}
+\end{algorithm}
