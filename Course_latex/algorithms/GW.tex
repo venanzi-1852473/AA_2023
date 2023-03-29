@@ -1,0 +1,12 @@
+\begin{algorithm}
+    \caption{Goemans-Williamson procedure}\label{alg:GW}
+    \begin{algorithmic}%[1]
+        \Procedure{GW}{$G(V,E)$}
+            \State~solve Max-Cut SDP, obtaining vectors $\underbar{v}_1, \dots, \underbar{v}_n$ (for $n = \cardinality{V}$)
+            \State~sample a UAR vector $\underbar{Y}$ on the $n$-dimensional hypersphere $H_n$
+            \State~$S \gets \{ i \st \underbar{v}_i \cdot \underbar{Y} \geq 0 \}$
+
+            \Return $(S, V \setminus S)$
+        \EndProcedure\@
+    \end{algorithmic}
+\end{algorithm}

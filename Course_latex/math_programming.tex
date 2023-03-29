@@ -887,3 +887,301 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
         The number of iterations, then, is at most $i^* = O(\log_{1+\varepsilon} n) = O(\frac{\log n}{\log(1+\varepsilon)}) = O(\frac{\log n}{\varepsilon})$.
     \end{proof}
+
+
+\subsection{Max-Cut}
+    Recall \nameref{subsec:maxcut}.
+    Given a graph $G(V,E)$, find a subset $S \subseteq V$ s.t. $\cardinality{Cut(S, V \setminus S)}$ is maximized.
+    Where
+    \[ Cut(S, V \setminus S) = \{ e \st e \in E \wedge \cardinality{e \cap S} = 1 \} \]
+
+    What could be an LP for Max-Cut? Let us try the following program
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} x_{\{i,j\}}\\
+            0 \leq x_{\{i,j\}} & \forall \{i,j\} \in E
+        \end{cases}
+    \end{equation}
+
+    It is easy to see that this is not a good LP.\@
+    It has an unbounded integrality gap; $\forall \tau > 0$, $\forall e \in E$, set $x_e = \tau$.
+
+    So we modify slightly above LP.\@
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} x_{\{i,j\}}\\
+            0 \leq x_{\{i,j\}} \leq 1               & \forall \{i,j\} \in E
+        \end{cases}
+    \end{equation}
+
+    What is the IG of this LP?
+    $LP^* = \cardinality{E}$ (set $x_{\{i,j\}} = 1$, $\forall \{i,j\} \in E$).
+    So, $\forall G(V,E)$, the Max-Cut optimum value lies within $\frac{\cardinality{E}}{2}$ and $\cardinality{E}$.
+    Thus $IG \leq 2$.
+
+    A $2$-approximating LP is trivial. Can we do better?
+
+    Let us now take the LP just defined, and add an inequality for triangles subgraphs (i.e.~the graph $K_3$).
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} x_{\{i,j\}}\\
+            x_{\{i,j\}} + x_{\{j,k\}} + x_{\{i,k\}} \leq 2  & \forall \{i,j,k\} \in \binom{V}{3} \text{ s.t. } \{i,j\}, \{j,k\}, \{i,k\} \in E\\
+            0 \leq x_{\{i,j\}} \leq 1                       & \forall \{i,j\} \in E
+        \end{cases}
+    \end{equation}
+
+    Suppose that $S, V \setminus S$ is an integral solution to Max-cut.
+    Then, the value of this solution is $\cardinality{Cut(S, V \setminus S)}$.
+
+    Given $S, V \setminus S$, let us set
+    \begin{equation}
+        x_{\{i,j\}} = 
+        \begin{cases}
+            1 & \text{if } \cardinality{\{i,j\} \cap S} = 1\\
+            0 & \text{o/w}
+        \end{cases}
+    \end{equation}
+
+    Then $\sum_{\{i,j\} \in E} x_{\{i,j\}} = \cardinality{Cut(S, V \setminus S)}$.
+
+    Is the fractional solution feasible? Let $i,j,k$ be a triangle in $G(V,E)$.
+
+    If $\cardinality{\{i,j,k\} \cap S} \in \{0,3\}$, then $x_{\{i,j\}} + x_{\{j,k\}} + x_{\{i,k\}} = 0 \leq 2$.
+
+    If $\cardinality{\{i,j,k\} \cap S} \in \{1,2\}$, then $x_{\{i,j\}} + x_{\{j,k\}} + x_{\{i,k\}} = 2 \leq 2$.
+
+    In any case all the constraints are satisfied, thus the fractional solution is feasible.
+
+    Let us now consider another LP, where we add an additional inequality (to the one already added for triangles).
+    We add the \textit{triangle inequality}.
+
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} x_{\{i,j\}}\\
+            x_{\{i,j\}} + x_{\{j,k\}} + x_{\{i,k\}} \leq 2  & \forall \text{triangle } \{i,j,k\}\\
+            x_{\{i,j\}} + x_{\{j,k\}} \geq x_{\{i,k\}}      & \forall \text{triangle } \{i,j,k\}\\
+            0 \leq x_{\{i,j\}} \leq 1                       & \forall \{i,j\} \in E
+        \end{cases}
+    \end{equation}
+
+    One should prove that this ia a relaxation of Max-cut.
+
+    In the 90s the following has been proved (TODO check if it actually has been proven in the 90s).
+    If one takes the original Max-Cut LP, and adds to it at most $n^{O(1)}$ constraints, each involving $O(1)$ variables (while still guaranteeing that the LP is a relaxation), then the integrality gap of the LP is at least $2 - \varepsilon$, $\forall \varepsilon > 0$.
+
+    Goemans-Williamson came up with an algorithm based on mathematical programming (but not on LPs) which gives a $0.878\dots$-approximation to Max-Cut.
+
+    We now see a different kind of mathematical program for solving Max-Cut. A \textbf{Quadratic Program} (QP).
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} \frac{1 - x_i x_j}{2}\\
+            x_i^2 = 1           & \forall i \in V\\
+            x_i \in \mathbb{R}  & \forall i \in V
+        \end{cases}
+    \end{equation}
+
+    Note that
+    \begin{equation}
+        \begin{cases}
+            x_i^2 \leq 1\\
+            x_i^2 \geq 1
+        \end{cases}
+        \Longleftrightarrow 
+        \begin{cases}
+            x_i^2 \leq 1\\
+            -x_i^2 \leq -1
+        \end{cases}
+    \end{equation}
+
+    It follows that $x_i \in \{1,-1\}$, $\forall i \in V$.
+
+    If $i$ and $j$ are s.t. $x_i = x_j$ then $\dfrac{1- x_i x_j}{2} = \dfrac{1 - 1}{2} = 0$.
+
+    If $i$ and $j$ are s.t. $x_i \neq x_j$ then $\{x_i,x_j\} = \{1,-1\}$. Thus $\dfrac{1- x_i x_j}{2} = \dfrac{1 - (-1)}{2} = 1$.
+
+    \begin{lemma}
+        Max-Cut $OPT = QP^*$.
+    \end{lemma}
+
+    Unfortunately, quadratic programs, in general, are NP-Hard.
+
+
+\subsection{Semi-Definite Programming (SDP)}
+
+    \begin{equation}
+        \begin{cases}
+            \max \sum_{1 \leq i \leq j \leq n} c_{ij} \cdot \underbar{v}_i \cdot \underbar{v}_j\\
+            \sum_{1 \leq i \leq j \leq n} a_{ijk} \cdot \underbar{v}_i \cdot \underbar{v}_j \leq b_k & \forall k = 1, \dots, m\\
+            \underbar{v}_i \in \mathbb{R}^n & \forall i = 1, \dots, n
+        \end{cases}
+    \end{equation}
+
+    Where
+    \[ \underbar{v}_i \cdot \underbar{v}_j = \sum_{k=1}^t v_i(k) \cdot v_j(k) \]
+
+    Also, the dimensionality of $\mathbb{R}^n$ (i.e. $n$) has to be $\Omega(n)$, where $n$ is the number of variables.
+
+    The optimal solution to a SDP can be approximated to an additive $\forall \varepsilon > 0$ in time polynomial in $n \log \frac{1}{\varepsilon}$.
+
+
+\subsection{Max-Cut SDP}
+    Recall the QP for Max-Cut, we wanna relax it into an SDP.
+
+    \begin{equation}
+        \text{QP:~}
+        \begin{cases}
+            \max \sum_{\{i,j\} \in E} \frac{1 - x_i x_j}{2}\\
+            x_i^2 = 1           & \forall i \in V\\
+            x_i \in \mathbb{R}  & \forall i \in V
+        \end{cases}
+        \overset{\text{relax}}{\implies} \text{SDP:~}
+        \begin{cases}
+            \max_{\{i,j\} \in E} \frac{1 - \underbar{v}_i \cdot \underbar{v}_j}{2}\\
+            \underbar{v}_i \cdot \underbar{v}_i = 1 & \forall i \in \mathbb{R}\\
+            \underbar{v}_i \in \mathbb{R}^n         & \forall i \in \mathbb{R}
+        \end{cases}
+    \end{equation}
+
+    The relaxation if quite natural, there are no complicated reasonings.
+    The $x_i$ variables in the QP can be seen as vectors of size $1$. We then transform them in vectors of size $n$ in the SDP.
+
+    \begin{lemma}
+        $SDP^* \geq QP^* (= OPT)$.
+    \end{lemma}
+
+    \begin{proof}
+        Let $x_1, x_2, \dots, x_n$ be a feasible solution to QP.\@
+
+        Set
+        \begin{equation}
+            \underbar{v}_i = 
+            \begin{pmatrix}
+                x_i\\
+                0\\
+                0\\
+                \vdots\\
+                0
+            \end{pmatrix}
+            \forall i \in [n]
+        \end{equation}
+
+        We now want to prove that:
+        \begin{itemize}
+            \item this SDP solution is feasible
+            \item the value of the SDP is not smaller than the QP one
+        \end{itemize}
+
+        Let us prove the first claim. $\forall i \in [n]$,
+        \[ \underbar{v}_i \cdot \underbar{v}_i = \sum_{j=1}^n \underbar{v}_i(j) \cdot \underbar{v}_i(j) = \sum_{j=1}^{n} \underbar{v}_i(j)^2 = \underbar{v}_i(j)^2 = x_i^2 \overset{\text{feasibility of QP}}{=} 1 \]
+
+        Then $\underbar{v}_i \cdot \underbar{v}_i \geq 1$. Thus the SDP solution is feasible.
+
+        Let us now prove the second claim.
+        \[ \sum_{\{i,j\} \in E} \frac{1 - \underbar{b}_i \cdot \underbar{v}_j}{2} = \sum_{\{i,j\} \in E} \frac{1 - x_i x_j}{2} \]
+
+        So, not only $SDP \geq QP$, but actually $SDP = QP$.
+    \end{proof}
+
+    \begin{corollary}
+        $SDP^* \geq OPT$ (Max-Cut's optimal). 
+    \end{corollary}
+
+    Can we bound the integrality gap?
+    Can we find a constant $c$ s.t. $OPT \geq c \cdot SOP^*$
+
+    To do so, we are going to see an important rounding algorithm, by \textit{Goemans-Williamson}.
+
+    \input{algorithms/GW.tex}
+
+    For the definition of an hypersphere see \nameref{subsec:hypersphere}.
+
+    First of all, let us consider any of the $\underbar{v}_i$ vectors of the SDP solution.
+    Because of the constraint $\underbar{v}_i \cdot \underbar{v}_i = 1$, all the $\underbar{v}_i$ vectors are on the hypersphere, by construction.
+
+    The high level idea is the following. Let us consider the simple case of $H_2$ (i.e.~a circle), though the idea holds for any dimension.
+    Let $\underbar{v}$ and $\underbar{w}$ be any two vectors.
+    
+    Suppose $\norm{\underbar{v}}_2 = \norm{\underbar{w}}_2 = 1$, then:
+    \begin{itemize}
+        \item $\norm{\underbar{v}}_2^2 = \norm{\underbar{w}}_2^2 = 1^2 = 1$
+        \item $\underbar{v} \cdot \underbar{v} = \underbar{w} \cdot \underbar{w} = 1$
+        \item $\underbar{v} \cdot \underbar{w} = \cos (\theta_{\underbar{v}, \underbar{w}})$ (see \textit{Cosine similarity})
+    \end{itemize}
+
+    Let us divide the circle in two equal parts, with a straight line. This straight line would be our UAR vector $\underbar{Y}$.
+    The two parts of the circle will be our cut of the graph: if two vectors lie on the same half of the circle, then they are on the same part of the cut.
+    Equivalently, if two vectors are divided by $\underbar{Y}$, then they are divided by the cut.
+
+    This is why we look at the cosine:
+    \begin{itemize}
+        \item smaller angle $\rightarrow$ bigger cosine ($\cos 0\degree = 1$) $\rightarrow$ higher probability that two vectors are not divided
+        \item bigger angle $\rightarrow$ smaller cosine ($\cos 180\degree = -1$) $\rightarrow$ higher probability that two vectors are divided
+    \end{itemize}
+    
+    Let us see some cases:
+    \begin{itemize}
+        \item $\theta_{\underbar{v},\underbar{w}} = 0\degree \rightarrow \prob[\underbar{v},\underbar{w} \text{ both go in } S] = 1$
+        \item $\theta_{\underbar{v},\underbar{w}} = 180\degree \rightarrow \prob[\underbar{v},\underbar{w} \text{ both go in } S] = 0$
+        \item $\theta_{\underbar{v},\underbar{w}} = \frac{\pi}{2}\degree \rightarrow \prob[\underbar{v},\underbar{w} \text{ both go in } S] = \frac{1}{2}$
+    \end{itemize}
+
+    \begin{lemma}\label{lemma:gw1}
+        Let $\{i,j\} \in E$, then $\prob[\cardinality{ \{i,j\} \cap S } = 1] = \prob[\{i,j\} \text{ is cut}] = \dfrac{\theta_{\underbar{v}_i, \underbar{v}_j}}{\pi}$.
+    \end{lemma}
+
+    \begin{proof}[Proof (sketch)]
+        Consider a "plane" (a 2-D flat) passing through the origin
+        \[ O =  \begin{pmatrix}
+            0\\ 
+            \vdots\\
+            0
+          \end{pmatrix} \]
+        And consider two vectors $\underbar{v}_i, \underbar{v}_j$.
+
+        Let $\theta_{\underbar{v}_i,\underbar{v}_j}$ be the angle between the two vectors.
+        Then the angle between the projections of the vectors remains $\theta_{\underbar{v}_i,j\underbar{v}_j}$.
+
+        Since $\underbar{Y}$ is sampled UAR on the hypersphere, the projection of $\underbar{Y}$ on the plane will be a UAR vector/direction, starting from $O$.
+        Note that the projection of $\underbar{Y}$ might be a direction, because it could be too short.
+
+        $\prob[\{i,j\} \text{ is cut}] =
+        \prob[(i \in S \wedge j \not\in S) \vee (i \not\in S \wedge \in S)] = 
+        \prob[i \in S \wedge j \not\in S] + \prob[i \not\in S \wedge j \in S] =
+        \prob[\underbar{v}_i \cdot \underbar{Y} \geq 0 \wedge \underbar{v}_j \cdot \underbar{Y} < 0] + \prob[\underbar{v}_i \cdot \underbar{Y} < 0 \wedge \underbar{v}_j \cdot \underbar{Y} \geq 0] =
+        \dfrac{\theta_{ij}}{2 \pi} + \dfrac{\theta_{ij}}{2 \pi} =
+        \dfrac{\theta_{ij}}{\pi}$
+    \end{proof}
+
+    Observe that GW reduces to our original UAR-cut solution if $\theta_{ij} = \frac{\pi}{2}$, $\forall \{i,j\} \in \binom{V}{2}$.
+    In particular, GW uses the SDP solution to induce controlled bias on the random-cut algorithm.
+
+    \begin{theorem}
+        If $(S, V \setminus S)$ is the cut returned by GW, then
+        \[ \expected[\cardinality{Cut(S, V \setminus S)}] \geq \alpha_{GW} SDP^* (\geq \alpha_{GW} OPT) \]
+
+        For $\alpha_{GW} = \dfrac{2}{\pi} \min_{x \in (-1,1)} \dfrac{\arccos (x)}{1-x} \approx 0.878\dots$.
+    \end{theorem}
+
+    \begin{proof}
+        $\expected[\cardinality{Cut(S,V \setminus S)}] =
+        \sum_{\{i,j\} \in E} \prob[\{i,j\} \text{ cut by } S] \overset{Lemma~\ref{lemma:gw1}}{=}
+        \sum_{\{i,j\} \in E} \dfrac{\theta_{\underbar{v}_i,\underbar{v}_j}}{\pi} = 
+        \sum_{\{i,j\} \in E} \dfrac{\arccos(\underbar{v}_i, \underbar{v}_j)}{\pi}$
+
+        Now, suppose $\alpha$ is s.t.  $\dfrac{\arccos(x)}{\pi} \geq \alpha (\frac{1}{2} - \frac{x}{2})$, for each $x \in (-1,1)$.
+
+        Then $\expected[\cardinality{Cut(, V \setminus S)}] \geq \alpha \sum_{\{i,j\} \in E} \frac{1 - \underbar{v}_i \cdot \underbar{v}_j}{2} = \alpha \cdot SDP^*$.
+
+        What is the larget $\alpha$ for which $\dfrac{\arccos(x)}{\pi} \geq \alpha (\frac{1}{2} - \frac{x}{2})$ holds $\forall x \in (-1,1)$?
+
+        $\forall x \in (-1,1)$,
+        $\alpha  \frac{1-x}{2} \leq \frac{\arccos(x)}{\pi} \rightarrow
+        \alpha (1-x) \leq \frac{2}{\pi} \arccos(x) \rightarrow
+        \alpha \leq \frac{2}{\pi} \frac{\arccos(x)}{1-x}$
+
+        Then,
+        \[ \alpha = \alpha_{GW} \overset{\Delta}{=} \min_{x \in (-1,1)} (\frac{2}{\pi} \frac{\arccos(x)}{1-x}) \approx 0.878\dots \]
+    \end{proof}
+
+    So, we proved that
+    \[ 0.878\dots = \alpha_{GW} \leq IG (\text{Max-Cut SDP}) \leq ? \]

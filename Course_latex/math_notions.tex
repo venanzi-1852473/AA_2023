@@ -82,3 +82,14 @@
         Let $G(V,E)$ be a graph. We define $G[S]$, the subgraph of $G$ induced by $S$, for $S \subseteq V$, as the graph having $S$ as a set of vertices and edges $\{ e \st e \in E \wedge e \subseteq S \}$.
 
         Informally, we take we original graph, we cut away any node not in $S$ and all the edges connected to these removed nodes.
+
+
+\subsection{Hypersphere}\label{subsec:hypersphere}
+    Let $\underbar{v}$ be a vector. Recall that the $2$-norm of a vector is defined as
+    \[ \norm{\underbar{v}}_2 = \sqrt{\sum_t \underbar{v}(t)^2} = \sqrt{\underbar{v} \cdot \underbar{v}} \]
+
+    An hypersphere, on $n$ dimensions, is the generalization of a sphere.
+    It is defined as follows:
+    \[ H_n = \{ x \in \mathbb{R}^n \st \norm{x}_2 = 1 \} \]
+
+    $H_2$ is a circle. $H_3$ is a sphere.
