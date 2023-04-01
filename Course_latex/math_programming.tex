@@ -91,8 +91,8 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
     \begin{proof}
         $S^*$ being a VC means that $\forall \{u,v\} \in E$, $u \in S^*$ or $v \in S^*$ or both (i.e. $u,v \in S^*$).
-        Given that $x_u^* + x_v^* \geq 1$, $\forall \{ u,v \} \in E$, and that $x_u^*, x_v^* \in B$, at least one of $x_u^*$ and $x_v^*$ is equal to $1$.
-        This $u \in S^*$ or $v \in S^*$.
+        Given that $x_u^* + x_v^* \geq 1$, $\forall \{ u,v \} \in E$, and that $x_u^*, x_v^* \in \B$, at least one of $x_u^*$ and $x_v^*$ is equal to $1$.
+        Thus $u \in S^*$ or $v \in S^*$.
     \end{proof}
 
     \begin{lemma}
@@ -123,9 +123,11 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     Albeit this is not how IPs are always transformed into LPs, it is indeed quite often the case, and it is the way in which most (if not all) of the IPs during this course will be transformed into LPs.
 
     It is easy transforming the IP into a VC solution: for a vertex $v$, $x_v = 1$ iff $v$ is in the vertex cover.
-    In the LP we have fractional values, so how do we choose vertices? We apply a \textbf{rounding rule}, basically an algorithm that, given an LP solutions, it outputs a VC set.
+    In the LP we have fractional values, so how do we choose vertices? We apply a \textbf{rounding rule}: an algorithm that, given an LP solution, outputs a VC set.
 
-    The rounding rule for this problem is quite simple. We define $S = \{ v \st x_v \geq \frac{1}{2} \wedge v \in V \}$.
+    The rounding rule for this problem is quite simple.
+    We define 
+    \[ S = \{ v \st x_v \geq \frac{1}{2} \wedge v \in V \} \]
 
     \begin{lemma}
         $S$ is a vertex cover.
@@ -133,8 +135,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
     \begin{proof}
         Let $\{ u,v \} \in E$. The LP contains the constraint $x_u + x_v \geq 1$.
-        Given that our solutions guarantees that $x_u + x_v \geq 1$ (the LP solution is feasible by definition).
-
+        Given that our solution guarantees that $x_u + x_v \geq 1$ (the LP solution is feasible by definition),
         $x_u + x_v \geq 1 \rightarrow \max (x_u, x_v) \geq \frac{x_u + x_v}{2} \geq \frac{1}{2}$.
 
         Thus, $u \in S$, or $v \in S$ (or both), thus the edge $\{ u,v \}$ is covered.
@@ -154,7 +155,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
     If Lemma~\ref{lemma:lp_vc1} could be improved (to, say, $\cardinality{S} \leq 1.9 \sum_{v \in V} x_v$), then the approximation ration would be directly improved.
 
-    Let us define the \textbf{integrality gap} to be the ration between the optimal IP solution and the optimal LP solution. That is,
+    Let us define the \textbf{integrality gap} to be the ratio between the optimal IP solution and the optimal LP solution. That is,
     \[ IG = \frac{IP^*}{LP^* } \]
 
     Now, let us consider a particular graph s.t. we can use it show an upper bound on the integrality gap.
@@ -1185,3 +1186,68 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
     So, we proved that
     \[ 0.878\dots = \alpha_{GW} \leq IG (\text{Max-Cut SDP}) \leq ? \]
+
+    The G-W analysis is tight.
+    $\forall \varepsilon > 0$, $\exists$ graph $G(V,E)$ s.t.~the IG of the SDP Max-relaxation is no better than $\alpha_{GW} + \varepsilon$.
+
+    We now prove a weaker claim.
+    We consider a graph instance which has an IG slightly worse than $0.878\dots$.
+
+    Consider the following graph $C_5$ (i.e.~a cycle of length $5$).
+
+    \fbox{INSERT $C_5$ drawing.}
+
+    Let our cut be $S = \{ 0,1,4 \}$.
+
+    We cut $4$ edges. Thus $OPT \geq 4$.
+
+    \begin{lemma}
+        If $k$ is odd, then it is impossible to cut all the edges of $C_k$ (i.e. cycle on $k$ nodes).
+    \end{lemma}
+
+    \begin{proof}
+        We can try to do cut all the edges by picking nodes with the following procedure.
+        Follow the cycle, alternating nodes to pick; i.e.~we pick one and skip the following, then pick the following and skip the one after, and continue to do so.
+
+        Because the cycle is of odd length, then at the end of the cycle we must pick two adjacent nodes, and the edge that connects these two nodes won't be cut.
+    \end{proof}
+
+    Note that this is the same reason why we can't have a perfect matching on an odd cycle.
+
+    So, as a corollary, we get that, in $C_5$, $OPT < \cardinality{E} = 5$.
+
+    Thus $4 \leq OPT < 5 \rightarrow OPT=4$.
+
+    Now that we have the optimal value, let us try to solve the SDP for this graph.
+    Consider the following solution. $\forall i \in \{ 0,1, \dots, 4 \}$, set:
+    \[ \underbar{v}_i = (\cos (i \frac{2\pi}{5})), \sin (i \frac{2\pi}{5}), 0,0,0) \]
+
+    For this solution to be feasible we must have that $\forall i \in V, \underbar{v}_i \cdot \underbar{v}_i = 1$.
+    Before showing it, recall that $\forall x, \cos^2 x + \sin^2 x = 1$.
+
+    $\underbar{v}_i \cdot \underbar{v}_i =
+    \norm{\underbar{v}_i}_2^2 = 
+    \sum_{j=1}^{5} \underbar{v}_i(j) \cdot \underbar{v}_i(j) = 
+    \sum_{j=1}^{2} \underbar{v}_i(j) \cdot \underbar{v}_i(j) = 
+    \cos^2(i \frac{2\pi}{5}) + \sin^2(i \frac{2\pi}{5}) =
+    1$.
+
+    Thus the solution is feasible.
+    Let us now calculate the value of such solution.
+
+    $SDP =
+    \sum_{\{i,j\} \in E} \frac{1 - \underbar{v}_i \cdot \underbar{v}_i}{2} = 
+    \frac{1 - \underbar{v}_0 \cdot \underbar{v}_2}{2} + \frac{1 - \underbar{v}_2 \cdot \underbar{v}_4}{2} + \frac{1 - \underbar{v}_4 \cdot \underbar{v}_1}{2} + \frac{1 - \underbar{v}_1 \cdot \underbar{v}_3}{2} + \frac{1 - \underbar{v}_3 \cdot \underbar{v}_0}{2} = 
+    \dfrac{1 - \cos(\theta_{02}) + 1 - \cos(\theta_{24}) + 1 - \cos(\theta_{41}) + 1 - \cos(\theta_{13}) + 1 - \cos(\theta_{30})}{2} = 
+    \frac{1 - \cos(\frac{4\pi}{5}) 5}{2} =
+    \frac{5}{2} (1 - \cos (\frac{4\pi}{5})) \approx
+    4.522\dots$
+
+    Thus, the IG is no better than
+    \[ 0.878\dots = \alpha_{GW} \overset{\forall G}{\leq} IG \overset{\exists G}{\leq} \dfrac{4}{4.522\dots} = 0.884\dots \]
+
+    The first inequality (i.e.~$\alpha_{GW} \leq IG$) is actually tight, but tightness is harder to prove.
+
+    So, for Max-Cut we have a $0.878\dots$ approximation that cannot be improved by modifying the random rounding algorithm.
+    Can the approximation be improved at all?
+    There are reasons to believe that $0.878\dots$ is the best one we can obtain in polynomial time.

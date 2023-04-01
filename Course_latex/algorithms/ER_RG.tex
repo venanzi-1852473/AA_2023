@@ -1,0 +1,15 @@
+\begin{algorithm}
+    \caption{E-R random graph $G(n,p)$}\label{alg:er_rg}
+    \begin{algorithmic}%[1]
+        \State$S \gets [n]$\@
+        \State$E \gets \emptyset$\@
+        \For{each $\{i,j\} \in \binom{V}{2}$ }
+            \State flip an iid coin with head probability $p$\@
+            \If{coin is heads}
+                \State $E \gets E \cup \{i,j\}$
+            \EndIf\@
+        \EndFor\@
+
+        \State\Return~$G(V,E)$
+    \end{algorithmic}
+\end{algorithm}
