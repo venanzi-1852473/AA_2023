@@ -1,0 +1,15 @@
+\begin{algorithm}
+    \caption{Submodular functions framework for Max-cover}\label{alg:greedy_submodular}
+    \begin{algorithmic}%[1]
+        \Procedure{$\textsc{Greedy}_f$}{$X,k$}
+            \State~$S_0 \gets \emptyset$
+
+            \For{$i = 0,1, \dots, k-1$}
+                \State~let $x_{i+1} \in X$ be a maximizer of $f(S_i \cup \{x_{i+1}\})$  %\Comment{equiv. to max of $\Delta_f(x_{i+1} \given S_i)}
+                \State~$S_{i+1} \gets S_i \cup \{x_{i+1}\}$
+            \EndFor
+            
+            \Return~$S_k$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

@@ -1,0 +1,18 @@
+\begin{algorithm}
+    \caption{Greedy for Max-cover}\label{alg:greedy_maxcover}
+    \begin{algorithmic}%[1]
+        \Procedure{Greedy}{$C,k$}
+            \State~$C' \gets \emptyset$
+            \State~$T_0 \gets \emptyset$
+
+            \For{$i = 1,2, \dots, k$}
+                \State~assign to each $S \in C \setminus C'$ the score $sc_{T_{i-1}}(S) = \cardinality{S \setminus T_{i-1}}$
+                \State~let $S_i \in C \setminus C'$ be a set of largest $sc_{T_{i-1}}$ score
+                \State~$C' \gets C' \cup \{ S_i \}$
+                \State~$T_i \gets T_{i-1} \cup S_i$
+            \EndFor
+            
+            \Return~$C'$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
