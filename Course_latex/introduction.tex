@@ -49,13 +49,9 @@
     If a problem is a \textulc{minimization} problem, then we reason in an analogous way. Our algorithm outputs a solution larger than the optimal.
     For instance, a $2$-approximation means that our solution is at most twice as large as the optimal one.
 
-    The approach that will be used in many cases is the following. Given a hard problem, we give a randomized algorithm that approximates, in polynomial time, the solution.
-    The random choices of an algorithm can yield to a solution that not only it's an approximation, even worse it can be wrong.
-    Wwe then prove that the probability that the solution is actually wrong is so small, that we can ignore it.
-
-    \begin{center}
-        \fbox{Check how above will hold for future algorithms. }
-    \end{center}
+    The approach that will be used in many cases is the following. Given a hard problem, we given an algorithm (possibly randomized) that approximates the solution in polynomial time.
+    The algorithm is then analyzed to prove various properties that we are interested in. We ugually prove that the algorithm is an approximation, and how good of an approximation it is.
+    In the case of randomized algorithms, it might be that the solution not only is an approximation, it might be just wrong; in those cases we are interested in proving that the probability of an incorrect solution is so small that it can be ignored.
 
 
 \subsection{Math and CS notions}

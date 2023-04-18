@@ -44,10 +44,18 @@
 
     \input{algorithms/ER_RG.tex}
 
-    $\expected[\cardinality{Cut(S, V \setminus S)}] =
-    \sum_{i \in S} \sum_{j \in V \setminus S} \prob[\{ i,j \} \in E] =
-    \sum_{i \in S} \sum_{j \in V \setminus S} p =
-    \cardinality{S} \cdot \cardinality{V \setminus S} \cdot p$
+    %$\expected[\cardinality{Cut(S, V \setminus S)}] =
+    %\sum_{i \in S} \sum_{j \in V \setminus S} \prob[\{ i,j \} \in E] =
+    %\sum_{i \in S} \sum_{j \in V \setminus S} p =
+    %\cardinality{S} \cdot \cardinality{V \setminus S} \cdot p$
+
+    \begin{equation*}
+        \begin{split}
+            \expected[\cardinality{Cut(S, V \setminus S)}] &=\\
+                &= \sum_{i \in S} \sum_{j \in V \setminus S} \prob[\{ i,j \} \in E] =\\
+                &= \sum_{i \in S} \sum_{j \in V \setminus S} p = \cardinality{S} \cdot \cardinality{V \setminus S} \cdot p
+        \end{split}
+    \end{equation*}
 
     Thus, $\expected_{G \thicksim G(n,p)}[\Psi(S)] =
     \dfrac{\expected[\cardinality{Cut(S, V \setminus S)}]}{\cardinality{S} \cdot \cardinality{V \setminus S}} =
@@ -130,11 +138,19 @@
     Let $P$ be any predicate. $[P]$ has value $1$ is $P$ is true, and $0$ if $P$ is false.
 
     \begin{proof}
-        $\phi(d_T) =
-        \dfrac{\sum_{\{x,y\} \in E} d_T(X,Y)}{\sum_{\{x,y\} \in \binom{V}{2}} d_T(X,Y)} = 
-        \dfrac{\sum_{\{x,y\} \in E} [X \in T \text{ xor } Y \in T]}{\sum_{\{x,y\} \in \binom{V}{2}} [X \in T \text{ xor } Y \in T]} = $
+        %$\phi(d_T) =
+        %\dfrac{\sum_{\{x,y\} \in E} d_T(X,Y)}{\sum_{\{x,y\} \in \binom{V}{2}} d_T(X,Y)} = 
+        %\dfrac{\sum_{\{x,y\} \in E} [X \in T \text{ xor } Y \in T]}{\sum_{\{x,y\} \in \binom{V}{2}} [X \in T \text{ xor } Y \in T]} = $
 
-        $\dfrac{\cardinality{Cut(T, V \setminus T)}}{\cardinality{T} \cdot \cardinality{V \setminus T}}$
+        %$\dfrac{\cardinality{Cut(T, V \setminus T)}}{\cardinality{T} \cdot \cardinality{V \setminus T}}$
+
+        \begin{equation*}
+            \begin{split}
+                \phi(d_T)   &=\\
+                            &= \dfrac{\sum_{\{x,y\} \in E} d_T(X,Y)}{\sum_{\{x,y\} \in \binom{V}{2}} d_T(X,Y)} = \dfrac{\sum_{\{x,y\} \in E} [X \in T \text{ xor } Y \in T]}{\sum_{\{x,y\} \in \binom{V}{2}} [X \in T \text{ xor } Y \in T]} =\\
+                            &= \dfrac{\cardinality{Cut(T, V \setminus T)}}{\cardinality{T} \cdot \cardinality{V \setminus T}}
+            \end{split}
+        \end{equation*}
     \end{proof}
 
     \begin{definition}[Cut metric]
@@ -156,10 +172,17 @@
         Since $d$ is a cut metric with cuts $T_1, \dots, T_k$, $\exists \lambda_1, \lambda_2, \dots, \lambda_k > 0$ s.t. $d(X,Y) = \sum_{i=1}^k(\lambda_i \cdot d_{T_i}(X,Y))$, $\forall X,Y \in V$.
 
         Then,
-        $\phi(d) =
-        \dfrac{\sum_{\{u,v\} \in E} d(u,v)}{\sum_{\{u,v\} \in \binom{V}{2}} d(u,v)} = 
-        \dfrac{\sum_{\{u,v\} \in E} \sum_{i=1}^{k} (\lambda_i \cdot d_{T_i}(u,v))}{\sum_{\{u,v\} \in \binom{V}{2}} \sum_{i=1}^{k} (\lambda_i \cdot d_{T_i}(u,v))} = 
-        \dfrac{\sum_{i=1}^{k} \sum_{\{u,v\} \in E} (\lambda_i \cdot d_{T_i}(u,v))}{\sum_{i=1}^{k} \sum_{\{u,v\} \in \binom{V}{2}} (\lambda_i \cdot d_{T_i}(u,v))}$
+        %$\phi(d) =
+        %\dfrac{\sum_{\{u,v\} \in E} d(u,v)}{\sum_{\{u,v\} \in \binom{V}{2}} d(u,v)} = 
+        %\dfrac{\sum_{\{u,v\} \in E} \sum_{i=1}^{k} (\lambda_i \cdot d_{T_i}(u,v))}{\sum_{\{u,v\} \in \binom{V}{2}} \sum_{i=1}^{k} (\lambda_i \cdot d_{T_i}(u,v))} = 
+        %\dfrac{\sum_{i=1}^{k} \sum_{\{u,v\} \in E} (\lambda_i \cdot d_{T_i}(u,v))}{\sum_{i=1}^{k} \sum_{\{u,v\} \in \binom{V}{2}} (\lambda_i \cdot d_{T_i}(u,v))}$
+
+        \begin{equation*}
+            \begin{split}
+                \phi(d) &= \dfrac{\sum_{\{u,v\} \in E} d(u,v)}{\sum_{\{u,v\} \in \binom{V}{2}} d(u,v)} = \dfrac{\sum_{\{u,v\} \in E} \sum_{i=1}^{k} (\lambda_i \cdot d_{T_i}(u,v))}{\sum_{\{u,v\} \in \binom{V}{2}} \sum_{i=1}^{k} (\lambda_i \cdot d_{T_i}(u,v))} =\\
+                        &= \dfrac{\sum_{i=1}^{k} \sum_{\{u,v\} \in E} (\lambda_i \cdot d_{T_i}(u,v))}{\sum_{i=1}^{k} \sum_{\{u,v\} \in \binom{V}{2}} (\lambda_i \cdot d_{T_i}(u,v))}
+            \end{split}
+        \end{equation*}
 
         We now claim that, if $a_i, b_i > 0$, $\forall i \in [k]$, then
         \[ \dfrac{\sum_{i=1}^k a_i}{\sum_{i=1}^k b_i} \geq \min_{i \in [k]} \dfrac{a_i}{b_i} \]
@@ -227,14 +250,23 @@
         \end{equation}
 
         Let $u,v \in V$, then
-        $\cardinality{\underbar{X}_u - \underbar{X}_v}_1 =
-        \sum_{i=1}^{k}\cardinality{\underbar{X}_u(i) - \underbar{X}_v(i)} =
-        \sum_{i=1}^{k}([\cardinality{\{u,v\} \cap T} = 1] \cdot \lambda_i) =
-        \sum_{i=1}^{k}(d_{T_i}(u,v) \cdot \lambda_i) =
-        d(u,v)$
+        %$\cardinality{\underbar{X}_u - \underbar{X}_v}_1 =
+        %\sum_{i=1}^{k}\cardinality{\underbar{X}_u(i) - \underbar{X}_v(i)} =
+        %\sum_{i=1}^{k}([\cardinality{\{u,v\} \cap T} = 1] \cdot \lambda_i) =
+        %\sum_{i=1}^{k}(d_{T_i}(u,v) \cdot \lambda_i) =
+        %d(u,v)$
+
+        \begin{equation*}
+            \begin{split}
+                \cardinality{\underbar{X}_u - \underbar{X}_v}_1 &= \sum_{i=1}^{k}\cardinality{\underbar{X}_u(i) - \underbar{X}_v(i)} = \sum_{i=1}^{k}([\cardinality{\{u,v\} \cap T} = 1] \cdot \lambda_i) =\\
+                    &= \sum_{i=1}^{k}(d_{T_i}(u,v) \cdot \lambda_i) =\\
+                    &= d(u,v)
+            \end{split}
+        \end{equation*}
 
         Now, suppose that we have $X \subseteq \mathbb{R}$.
         Let us start, for semplicity, with $d=1$.
+
         Suppose that the points that we want to embed in a cut metric are $(X_1), (X_2), \dots, (X_n)$.
 
         Let $\pi : [n] \rightarrow [n]$ be a permutation s.t. $X_{\pi(1)} \leq X_{\pi(2)} \leq \cdots \leq X_{\pi(n)}$.
@@ -245,11 +277,19 @@
         Then $\lambda_j \geq 0$, since $X_{\pi(j+1)} \geq X_{\pi(j)}$.
 
         For each $i < j$, it hold that
-        $\lambda_i  + \lambda_{i+1} + \cdots + \lambda_{j-1} = 
-        \sum_{t=1}^{n-1}(d_{S_t}(\pi(i), \pi(j)) \cdot \lambda_t) = 
-        (X_{\pi(j)} - X_{\pi(j-1)}) + (X_{\pi(j-1)} - X_{\pi(j-2)}) + \cdots + (X_{\pi(i+1)} - X_{\pi(i)}) = 
-        X_{\pi(j)} - X_{\pi(i)} = 
-        \cardinality{X_{\pi(j)} - X_{\pi(i)}}_1$
+        %$\lambda_i  + \lambda_{i+1} + \cdots + \lambda_{j-1} = 
+        %\sum_{t=1}^{n-1}(d_{S_t}(\pi(i), \pi(j)) \cdot \lambda_t) = 
+        %(X_{\pi(j)} - X_{\pi(j-1)}) + (X_{\pi(j-1)} - X_{\pi(j-2)}) + \cdots + (X_{\pi(i+1)} - X_{\pi(i)}) = 
+        %X_{\pi(j)} - X_{\pi(i)} = 
+        %\cardinality{X_{\pi(j)} - X_{\pi(i)}}_1$
+
+        \begin{equation*}
+            \begin{split}
+                \lambda_i  + \lambda_{i+1} + \cdots + \lambda_{j-1} &= \sum_{t=1}^{n-1}(d_{S_t}(\pi(i), \pi(j)) \cdot \lambda_t) =\\
+                    &= (X_{\pi(j)} - X_{\pi(j-1)}) + (X_{\pi(j-1)} - X_{\pi(j-2)}) + \cdots + (X_{\pi(i+1)} - X_{\pi(i)}) =\\
+                    &= X_{\pi(j)} - X_{\pi(i)} = \cardinality{X_{\pi(j)} - X_{\pi(i)}}_1
+            \end{split}
+        \end{equation*}
 
         Thus, an $\ell_1$-metric $X$, over $d=1$ dimension, can be represented by a cut metric (over $\cardinality{X}-1$ cuts).
         In general, an $\ell_1$-metric over $d$ dimensions is equal to the sum of $d$ $\ell_1$-metrics over $1$ dimension each.
@@ -347,8 +387,14 @@
         The shortest path metric satisfies the triangle inequality.
     \end{observation}
 
-    Consider the graph $C_4$.
-    \fbox{insert $C_4$ graph figure here}.
+    Consider the graph $C_4$, as in figure~\ref{fig:c4}.
+
+    \begin{figure}[h]
+        \centering
+        \input{graphs/C4.tex}
+        \caption{Graph $C_4$}
+        \label{fig:c4}
+    \end{figure}
 
     $1 = d_G(1,2) = d_G(2,3) = d_G(3,4) = d_G(4,1)$.
 
@@ -359,10 +405,16 @@
     Recall that
     \[ \cardinality{X-Y}_1 = \sum_{i=1}^{d} \cardinality{X_i - Y_i} \]
 
-    \toalign
     Then,
-    \[ \cardinality{X_1 - X_2}_1 = \cardinality{X_2 - X_3}_1 = \cardinality{X_3 - X_4}_1 = \cardinality{X_1 - X_4}_1 = 1 \]
-    \[ \cardinality{X_1 - X_3}_1 = \cardinality{X_2 - X_4}_1 = 1+1 = 2 \]
+    %\[ \cardinality{X_1 - X_2}_1 = \cardinality{X_2 - X_3}_1 = \cardinality{X_3 - X_4}_1 = \cardinality{X_1 - X_4}_1 = 1 \]
+    %\[ \cardinality{X_1 - X_3}_1 = \cardinality{X_2 - X_4}_1 = 1+1 = 2 \]
+
+    \begin{equation*}
+        \begin{split}
+            &\cardinality{X_1 - X_2}_1 = \cardinality{X_2 - X_3}_1 = \cardinality{X_3 - X_4}_1 = \cardinality{X_1 - X_4}_1 = 1\\
+            &\cardinality{X_1 - X_3}_1 = \cardinality{X_2 - X_4}_1 = 1+1 = 2
+        \end{split}
+    \end{equation*}
 
     Thus, $f(i) = X_i$ is an embedding with no distortion.
 
@@ -371,10 +423,16 @@
     Recall that
     \[ \cardinality{X-Y}_2 = \sqrt{\sum_{i=1}^{d} (X_i - Y_i)^2} \]
 
-    \toalign
     Then,
-    \[ \cardinality{X_1 - X_2}_2 = \cardinality{X_2 - X_3}_2 = \cardinality{X_3 - X_4}_2 = \cardinality{X_1 - X_4}_2 = 1 \]
-    \[ \cardinality{X_1 - X_3}_2 = \cardinality{X_2 - X_4}_2 = \sqrt{1^2 + 1^2} = \sqrt{2} \]
+    %\[ \cardinality{X_1 - X_2}_2 = \cardinality{X_2 - X_3}_2 = \cardinality{X_3 - X_4}_2 = \cardinality{X_1 - X_4}_2 = 1 \]
+    %\[ \cardinality{X_1 - X_3}_2 = \cardinality{X_2 - X_4}_2 = \sqrt{1^2 + 1^2} = \sqrt{2} \]
+
+    \begin{equation*}
+        \begin{split}
+            &\cardinality{X_1 - X_2}_2 = \cardinality{X_2 - X_3}_2 = \cardinality{X_3 - X_4}_2 = \cardinality{X_1 - X_4}_2 = 1\\
+            &\cardinality{X_1 - X_3}_2 = \cardinality{X_2 - X_4}_2 = \sqrt{1^2 + 1^2} = \sqrt{2}
+        \end{split}
+    \end{equation*}
 
     On the edges we have a distance of $1$. On the diagonals we have a distance of $\frac{2}{\sqrt{2}} = \sqrt{2}$.
     Thus, the distortion of this embedding is $\sqrt{2}$.
@@ -489,10 +547,21 @@
 
         Inductive case. Assume the claim holds until $i \leq k-1$; we want to prove it for $i+1$.
 
-        $u_{i+1} = \cardinality{X^*} - t_{i+1} = \cardinality{X^*} - \cardinality{T_{i+1}} = \cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i+1} S_j} =
-        \cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i} S_j} - \cardinality{S_{i+1} \setminus \bigcup_{i=1}^i S_j} = \cardinality{X^*} - \cardinality{T_i} - \cardinality{S_{i+1} \setminus T_i} =
-        \cardinality{X^*} - \cardinality{T_i} - s_{i+1} = u_i - s_{i+1} \overset{\text{previous claim}}{\leq} u_i - \frac{u_i}{k} = (1 - \frac{1}{k})u_i \leq
-        (1 - \frac{1}{k}) - (1 - \frac{1}{k})^i \cardinality{X^*} = (1 - \frac{1}{k})^{i+1} \cardinality{X^*}$. And this proves the claim.
+        %$u_{i+1} = \cardinality{X^*} - t_{i+1} = \cardinality{X^*} - \cardinality{T_{i+1}} = \cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i+1} S_j} =
+        %\cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i} S_j} - \cardinality{S_{i+1} \setminus \bigcup_{i=1}^i S_j} = \cardinality{X^*} - \cardinality{T_i} - \cardinality{S_{i+1} \setminus T_i} =
+        %\cardinality{X^*} - \cardinality{T_i} - s_{i+1} = u_i - s_{i+1} \overset{\text{previous claim}}{\leq} u_i - \frac{u_i}{k} = (1 - \frac{1}{k})u_i \leq
+        %(1 - \frac{1}{k}) - (1 - \frac{1}{k})^i \cardinality{X^*} = (1 - \frac{1}{k})^{i+1} \cardinality{X^*}$.
+        
+        \begin{equation*}
+            \begin{split}
+                u_{i+1} &= \cardinality{X^*} - t_{i+1} = \cardinality{X^*} - \cardinality{T_{i+1}} = \cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i+1} S_j} =\\
+                        &= \cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i} S_j} - \cardinality{S_{i+1} \setminus \bigcup_{i=1}^i S_j} = \cardinality{X^*} - \cardinality{T_i} - \cardinality{S_{i+1} \setminus T_i} =\\
+                        &= \cardinality{X^*} - \cardinality{T_i} - s_{i+1} = u_i - s_{i+1} \overset{\text{previous claim}}{\leq} u_i - \frac{u_i}{k} = (1 - \frac{1}{k})u_i \leq\\
+                        &\leq (1 - \frac{1}{k}) - (1 - \frac{1}{k})^i \cardinality{X^*} = (1 - \frac{1}{k})^{i+1} \cardinality{X^*}
+            \end{split}
+        \end{equation*}
+
+        And this proves the claim.
 
         Then, $u_k \leq (1 - \frac{1}{k})^k \cardinality{X^*} \leq (1 - \frac{1}{e}) \cardinality{X^*} \leq \frac{1}{e} \cardinality{X^*}$.
         But, $u_k = \cardinality{X^*} - \cardinality{T_k}$, then $\cardinality{X^*} - \cardinality{T_k} = u_k \leq \frac{1}{e} \cardinality{X^*}$, then $(1 - \frac{1}{e}) \cardinality{X^*} \leq \cardinality{T_k} = t_k$.
@@ -614,22 +683,42 @@
         Then $f(S^*) = \max_{S \in \binom{X}{k}} f(S)$.
 
         $\forall i = 0, \dots, k-1$:
-        \begin{multline*}
-            f(S^*) \overset{\text{monotonicity}}{\leq} f(S^* \cup S_i) =\\
-            f(\{ X_1^*, \dots, X_k^* \} \cup S_i) - f(\{ X_1^*, \dots, X_{k-1}^*\} \cup S_i) + f(\{ X_1^*, \dots, X_{k-1}^* \} \cup S_i) -\\
-            f(\{ X_1^*, \dots, X_{k-2}^* \} \cup S_i)  + f(\{ X_1^*, \dots, X_{k-2}^* \} \cup S_i)  - \cdots - f(\{ X_1^*, X_2^*\} \cup S_i) + \\
-            f(\{ X_1^*, X_2^*\} \cup S_i)  - f({X_1^*} \cup S_i) + f({X_1^*} \cup S_i) - f(S_i) + f(S_i) =\\
-            \Delta_f(X_{k}^* \given S_i \cup \{ X_1^*, \dots, X_{k-1}^* \}) +\\
-            \Delta_f(X_{k-1}^* \given S_i \cup \{ X_1^*, \dots, X_{k-2}^* \}) +\\
-            \vdots\\
-            \Delta_f(X_{2}^* \given S_i \cup \{ X_1^*\}) +\\
-            \Delta_f(X_{1}^* \given S_i) +\\
-            f(S_i) =\\
-            f(S_i) + \sum_{j=1}^{k} \Delta_f(X_j^* \given S_i \cup \{ X_1^*, \dots, X_{j-1}^* \}) \overset{\text{diminish. return}}{\leq} f(S_i) + \sum_{j=1}^{k} \Delta_f(X_j^* \given S_i) \overset{\text{greedy choice}}{\leq}\\
-            f(S_i) + \sum_{j=1}^{k} \Delta_f(X_{i+1} \given S_i) = f(S_i) + k \cdot \Delta_f(X_{i+1} \given S_i) = f(S_i) + k (f(S_i \cup \{ X_{i+1} \}) - f(S_i))
-        \end{multline*}
+        %\begin{multline*}
+        %    f(S^*) \overset{\text{monotonicity}}{\leq} f(S^* \cup S_i) =\\
+        %    f(\{ X_1^*, \dots, X_k^* \} \cup S_i) - f(\{ X_1^*, \dots, X_{k-1}^*\} \cup S_i) + f(\{ X_1^*, \dots, X_{k-1}^* \} \cup S_i) -\\
+        %    f(\{ X_1^*, \dots, X_{k-2}^* \} \cup S_i)  + f(\{ X_1^*, \dots, X_{k-2}^* \} \cup S_i)  - \cdots - f(\{ X_1^*, X_2^*\} \cup S_i) + \\
+        %    f(\{ X_1^*, X_2^*\} \cup S_i)  - f({X_1^*} \cup S_i) + f({X_1^*} \cup S_i) - f(S_i) + f(S_i) =\\
+        %    \Delta_f(X_{k}^* \given S_i \cup \{ X_1^*, \dots, X_{k-1}^* \}) +\\
+        %    \Delta_f(X_{k-1}^* \given S_i \cup \{ X_1^*, \dots, X_{k-2}^* \}) +\\
+        %    \vdots\\
+        %    \Delta_f(X_{2}^* \given S_i \cup \{ X_1^*\}) +\\
+        %    \Delta_f(X_{1}^* \given S_i) +\\
+        %    f(S_i) =\\
+        %    f(S_i) + \sum_{j=1}^{k} \Delta_f(X_j^* \given S_i \cup \{ X_1^*, \dots, X_{j-1}^* \}) \overset{\text{diminish. return}}{\leq} f(S_i) + \sum_{j=1}^{k} \Delta_f(X_j^* \given S_i) \overset{\text{greedy choice}}{\leq}\\
+        %    f(S_i) + \sum_{j=1}^{k} \Delta_f(X_{i+1} \given S_i) = f(S_i) + k \cdot \Delta_f(X_{i+1} \given S_i) = f(S_i) + k (f(S_i \cup \{ X_{i+1} \}) - f(S_i))
+        %\end{multline*}
+
+        \begin{equation*}
+            \begin{split}
+                f(S^*) \overset{\text{monotonicity}}{\leq} & f(S^* \cup S_i) =\\
+                    &= f(\{ X_1^*, \dots, X_k^* \} \cup S_i) - f(\{ X_1^*, \dots, X_{k-1}^*\} \cup S_i) + f(\{ X_1^*, \dots, X_{k-1}^* \} \cup S_i) -\\
+                    &- f(\{ X_1^*, \dots, X_{k-2}^* \} \cup S_i)  + f(\{ X_1^*, \dots, X_{k-2}^* \} \cup S_i)  - \cdots - f(\{ X_1^*, X_2^*\} \cup S_i) + \\
+                    &+ f(\{ X_1^*, X_2^*\} \cup S_i)  - f({X_1^*} \cup S_i) + f({X_1^*} \cup S_i) - f(S_i) + f(S_i) =\\
+                    &= \Delta_f(X_{k}^* \given S_i \cup \{ X_1^*, \dots, X_{k-1}^* \}) +\\
+                    &+ \Delta_f(X_{k-1}^* \given S_i \cup \{ X_1^*, \dots, X_{k-2}^* \}) +\\
+                    & \vdots\\
+                    &+ \Delta_f(X_{2}^* \given S_i \cup \{ X_1^*\}) +\\
+                    &+ \Delta_f(X_{1}^* \given S_i) +\\
+                    &+ f(S_i) =\\
+                    &= f(S_i) + \sum_{j=1}^{k} \Delta_f(X_j^* \given S_i \cup \{ X_1^*, \dots, X_{j-1}^* \}) \overset{\text{diminish. return}}{\leq}\\
+                    &\leq f(S_i) + \sum_{j=1}^{k} \Delta_f(X_j^* \given S_i) \overset{\text{greedy choice}}{\leq}\\
+                    &\leq f(S_i) + \sum_{j=1}^{k} \Delta_f(X_{i+1} \given S_i) = f(S_i) + k \cdot \Delta_f(X_{i+1} \given S_i) =\\
+                    &= f(S_i) + k (f(S_i \cup \{ X_{i+1} \}) - f(S_i))
+            \end{split}
+        \end{equation*}
 
         Then, $f(S^*) \leq f(S_i) + k (f(S_i \cup \{ X_{i+1} \}) - f(S_i))$.
+
         Let us define $\delta_i = f(S^*) - f(S_i)$.
 
         $f(S^* - f(S_i)) \leq k (f(S_{i+1}) - f(S_i))$
@@ -643,14 +732,21 @@
         Then, $\forall i = 0, \dots, k-1$, $\delta_{i+1} \leq (1 - \frac{1}{k}) \delta_i$.
 
         Finally,
+        %$\delta_0 = f(S^*) - f(S_0) = f(S^*) - f(\emptyset) \overset{\text{non-neg.}}{\leq} f(S^*)$
+        %$\delta_1 \leq (1 - \frac{1}{k}) \delta_0 \leq (1 - \frac{1}{k}) f(S^*)$
+        %$\delta_2 \leq (1 - \frac{1}{k}) \delta_1 \leq (1 - \frac{1}{k})^2 f(S^*)$
+        %$\vdots$
+        %$\delta_k \leq f(S^*) - f(S_k) \leq (1 - \frac{1}{k})^k f(S^*) \leq \frac{1}{e} f(S^*) \rightarrow f(S_k) \geq (1 - \frac{1}{e}) f(S^*)$
 
-        $\delta_0 = f(S^*) - f(S_0) = f(S^*) - f(\emptyset) \overset{\text{non-neg.}}{\leq} f(S^*)$
+        \begin{equation*}
+            \begin{split}
+                &\delta_0 = f(S^*) - f(S_0) = f(S^*) - f(\emptyset) \overset{\text{non-neg.}}{\leq} f(S^*)\\
+                & \delta_1 \leq (1 - \frac{1}{k}) \delta_0 \leq (1 - \frac{1}{k}) f(S^*)\\
+                & \delta_2 \leq (1 - \frac{1}{k}) \delta_1 \leq (1 - \frac{1}{k})^2 f(S^*)\\
+                & \vdots\\
+                & \delta_k \leq f(S^*) - f(S_k) \leq (1 - \frac{1}{k})^k f(S^*) \leq \frac{1}{e} f(S^*) 
+            \end{split}
+        \end{equation*}
 
-        $\delta_1 \leq (1 - \frac{1}{k}) \delta_0 \leq (1 - \frac{1}{k}) f(S^*)$
-
-        $\delta_2 \leq (1 - \frac{1}{k}) \delta_1 \leq (1 - \frac{1}{k})^2 f(S^*)$
-
-        $\vdots$
-
-        $\delta_k \leq f(S^*) - f(S_k) \leq (1 - \frac{1}{k})^k f(S^*) \leq \frac{1}{e} f(S^*) \rightarrow f(S_k) \geq (1 - \frac{1}{e}) f(S^*)$
+        Then, $f(S_k) \geq (1 - \frac{1}{e}) f(S^*)$.
     \end{proof}

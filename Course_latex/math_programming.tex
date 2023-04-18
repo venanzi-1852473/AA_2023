@@ -450,12 +450,23 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
         Proof of claim. We define a permutation $\pi$ of the nodes s.t.
         \[ 0 \leq y_{\pi(1)} \leq y_{\pi(2)} \leq \cdots \leq y_{\pi(n-1)} \leq y_{\pi(n)} \leq 1 \]
 
-        $ \int_0^1 \cardinality{E(r)} dr =
-        \int_{0}^{y_{\pi(1)}} \cardinality{S(r)}dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} \cardinality{S(r)}dr + \cdots + \int_{y_{\pi(n)}}^{1} \cardinality{S(r)}dr =
-        \int_{0}^{y_{\pi(1)}} n \; dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} (n-1)dr + \cdots + \int_{y_{\pi(n-1)}}^{y_{\pi(n)}} 1 dr + \int_{y_{\pi(n)}}^{1} 0 dr = 
-        (y_{\pi(1)} - 0)n + (y_{\pi(2)} - y_{\pi(1)})(n-1) + \cdots + (y_{\pi(n)} - y_{\pi(n-1)})1 + 0 = 
-        y_{\pi(1)} (n - (n-1)) + y_{\pi(2)}((n-1) - (n-2)) + \cdots + y_{\pi(n)}(1-0) = 
-        \sum_{i=1}^{n} y_{\pi(i)} = \sum_{i=1}^{n} y_i \leq 1$.
+        %$ \int_0^1 \cardinality{E(r)} dr =
+        %\int_{0}^{y_{\pi(1)}} \cardinality{S(r)}dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} \cardinality{S(r)}dr + \cdots + \int_{y_{\pi(n)}}^{1} \cardinality{S(r)}dr =
+        %\int_{0}^{y_{\pi(1)}} n \; dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} (n-1)dr + \cdots + \int_{y_{\pi(n-1)}}^{y_{\pi(n)}} 1 dr + \int_{y_{\pi(n)}}^{1} 0 dr = 
+        %(y_{\pi(1)} - 0)n + (y_{\pi(2)} - y_{\pi(1)})(n-1) + \cdots + (y_{\pi(n)} - y_{\pi(n-1)})1 + 0 = 
+        %y_{\pi(1)} (n - (n-1)) + y_{\pi(2)}((n-1) - (n-2)) + \cdots + y_{\pi(n)}(1-0) = 
+        %\sum_{i=1}^{n} y_{\pi(i)} = \sum_{i=1}^{n} y_i \leq 1$.
+
+        \begin{equation*}
+            \begin{split}
+                \int_0^1 \cardinality{E(r)} dr &=\\
+                    &= \int_{0}^{y_{\pi(1)}} \cardinality{S(r)}dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} \cardinality{S(r)}dr + \cdots + \int_{y_{\pi(n)}}^{1} \cardinality{S(r)}dr =\\
+                    &= \int_{0}^{y_{\pi(1)}} n \; dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} (n-1)dr + \cdots + \int_{y_{\pi(n-1)}}^{y_{\pi(n)}} 1 dr + \int_{y_{\pi(n)}}^{1} 0 dr =\\
+                    &= (y_{\pi(1)} - 0)n + (y_{\pi(2)} - y_{\pi(1)})(n-1) + \cdots + (y_{\pi(n)} - y_{\pi(n-1)})1 + 0 =\\
+                    &= y_{\pi(1)} (n - (n-1)) + y_{\pi(2)}((n-1) - (n-2)) + \cdots + y_{\pi(n)}(1-0) =\\
+                    &= \sum_{i=1}^{n} y_{\pi(i)} = \sum_{i=1}^{n} y_i \leq 1
+            \end{split}
+        \end{equation*}
 
         $  \int_0^1 \cardinality{E(r)} dr = \sum_{\{i,j\} \in E} x_{\{i,j\}} = \sum_{\{i,j\} \in E} \min(y_i, y_j) = \sum_{\{i,j\} \in E} \min(y_i', y_j') \geq \sum_{\{i,j\} \in E} x_{\{i,j\}}' = v $
 
@@ -803,9 +814,16 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
         We claim that $\forall v \in S^*$, $\deg_{S^*}(v) \geq \rho(S^*) \overset{\Delta}{=} \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}}$.
 
-        $\rho(S^*) = \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}} \overset{(\text{by optimality of }S^*)}{\geq} \rho(S^* \setminus \{v\}) = 
-        \dfrac{\cardinality{E(S^* \setminus \{v\})}}{\cardinality{S^* \setminus \{v\}}} = 
-        \dfrac{\cardinality{E(S^*)} - \deg_{S^*}(v)}{\cardinality{S^*}-1}$
+        %$\rho(S^*) = \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}} \overset{(\text{by optimality of }S^*)}{\geq} \rho(S^* \setminus \{v\}) = 
+        %\dfrac{\cardinality{E(S^* \setminus \{v\})}}{\cardinality{S^* \setminus \{v\}}} = 
+        %\dfrac{\cardinality{E(S^*)} - \deg_{S^*}(v)}{\cardinality{S^*}-1}$
+
+        \begin{equation*}
+            \begin{split}
+                \rho(S^*) &= \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}} \overset{(\text{by optimality of }S^*)}{\geq} \rho(S^* \setminus \{v\}) =\\
+                    &= \dfrac{\cardinality{E(S^* \setminus \{v\})}}{\cardinality{S^* \setminus \{v\}}} = \dfrac{\cardinality{E(S^*)} - \deg_{S^*}(v)}{\cardinality{S^*}-1}
+            \end{split}
+        \end{equation*}
 
         So $\dfrac{\cardinality{E(S^*)} - \deg_{S^*}(v)}{\cardinality{S^*}-1} \leq \dfrac{\cardinality{E(S^*)}}{\cardinality{S^*}}$.
 
@@ -826,14 +844,22 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
         Let $v \in A_i \cap S^*$. Since $i$ is the first iteration in which $A_i \cap S^* \neq \emptyset$, it must be that $S_i \supseteq S^*$.
 
-        $\rho(S^*) \overset{(\text{claim 1})}{\leq}
-        \deg_{S^*}(v) \overset{(S_i \supseteq S^*)}{\leq}
-        \deg_{S_i}(v) \overset{(\text{greedy choice})}{\leq}
-        (1+\varepsilon) avg_{u \in S_i} \deg_{S_i}(u) = 
-        (1+\varepsilon) \dfrac{\sum_{u \in S_i} \deg_{S_i}(u)}{\cardinality{S_i}} =
-        (1+\varepsilon) \dfrac{2 \cardinality{E(S_i)}}{\cardinality{S_i}} = 
-        2 (1+\varepsilon) \rho(S_i)
-        $
+        %$\rho(S^*) \overset{(\text{claim 1})}{\leq}
+        %\deg_{S^*}(v) \overset{(S_i \supseteq S^*)}{\leq}
+        %\deg_{S_i}(v) \overset{(\text{greedy choice})}{\leq}
+        %(1+\varepsilon) avg_{u \in S_i} \deg_{S_i}(u) = 
+        %(1+\varepsilon) \dfrac{\sum_{u \in S_i} \deg_{S_i}(u)}{\cardinality{S_i}} =
+        %(1+\varepsilon) \dfrac{2 \cardinality{E(S_i)}}{\cardinality{S_i}} = 
+        %2 (1+\varepsilon) \rho(S_i)
+        %$
+
+        \begin{equation*}
+            \begin{split}
+                \rho(S^*)   &\overset{(\text{claim 1})}{\leq} \deg_{S^*}(v) \overset{(S_i \supseteq S^*)}{\leq} \deg_{S_i}(v) \overset{(\text{greedy choice})}{\leq}\\
+                            &\leq (1+\varepsilon) avg_{u \in S_i} \deg_{S_i}(u) = (1+\varepsilon) \dfrac{\sum_{u \in S_i} \deg_{S_i}(u)}{\cardinality{S_i}} =\\
+                            &= (1+\varepsilon) \dfrac{2 \cardinality{E(S_i)}}{\cardinality{S_i}} = 2 (1+\varepsilon) \rho(S_i)
+            \end{split}
+        \end{equation*}
 
         Thus $\rho(S_i) \geq \dfrac{1}{2(1+\varepsilon)} \rho(S^*)$.
 
@@ -847,21 +873,38 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     \begin{proof}
         Fix an iteration $i$.
 
-        $ 2 \cardinality{E(S_i)} =
-        \sum_{v \in S_i} \deg_{S_i}(v) =
-        \sum_{v_i \in A_i} \deg_{A_i}(v_i) + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) \geq
-        0 + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) >
-        \sum_{v \in S_i \setminus A_i}(\avg_{u \in S_i} \deg_{S_i} (u))(1 + \varepsilon) =
-        \sum_{v \in S_i \setminus A_i}(2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1 + \varepsilon)) = 
-        \cardinality{S_i \setminus A_i} 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) \overset{(A_i \subseteq S_i)}{=}
-        (\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon)$
+        %$ 2 \cardinality{E(S_i)} =
+        %\sum_{v \in S_i} \deg_{S_i}(v) =
+        %\sum_{v_i \in A_i} \deg_{A_i}(v_i) + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) \geq
+        %0 + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) >
+        %\sum_{v \in S_i \setminus A_i}(\avg_{u \in S_i} \deg_{S_i} (u))(1 + \varepsilon) =
+        %\sum_{v \in S_i \setminus A_i}(2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1 + \varepsilon)) = 
+        %\cardinality{S_i \setminus A_i} 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) \overset{(A_i \subseteq S_i)}{=}
+        %(\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon)$
+
+        \begin{equation*}
+            \begin{split}
+                2 \cardinality{E(S_i)}  &= \sum_{v \in S_i} \deg_{S_i}(v) = \sum_{v_i \in A_i} \deg_{A_i}(v_i) + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) \geq\\
+                                        &\geq 0 + \sum_{v_i \in S_i \setminus A_i} \deg_{S_i} (v_i) > \sum_{v \in S_i \setminus A_i}(\avg_{u \in S_i} \deg_{S_i} (u))(1 + \varepsilon) =\\
+                                        &= \sum_{v \in S_i \setminus A_i}(2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1 + \varepsilon)) = \cardinality{S_i \setminus A_i} 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) \overset{(A_i \subseteq S_i)}{=}\\
+                                        &= (\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon)
+            \end{split}
+        \end{equation*}
 
         Thus,
-        $2 \cardinality{E(S_i)} >
-        (\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) = 
-        (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} (1 + \varepsilon) =
-        (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon = 
-        2 \cardinality{E(S_i)} - 2 \cardinality{A_i} \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon$
+        %$2 \cardinality{E(S_i)} >
+        %(\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) = 
+        %(1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} (1 + \varepsilon) =
+        %(1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon = 
+        %2 \cardinality{E(S_i)} - 2 \cardinality{A_i} \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon$
+
+        \begin{equation*}
+            \begin{split}
+                2 \cardinality{E(S_i)}  &> (\cardinality{S_i} - \cardinality{A_i}) 2 \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} (1+\varepsilon) = (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} (1 + \varepsilon) =\\
+                                        &= (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon =\\
+                                        &= 2 \cardinality{E(S_i)} - 2 \cardinality{A_i} \dfrac{\cardinality{E(S_i)}}{\cardinality{S_i}} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}}) 2 \cardinality{E(S_i)} \varepsilon
+            \end{split}
+        \end{equation*}
 
         $1 > 1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}} + (1 - \dfrac{\cardinality{A_i}}{\cardinality{S_i}})\varepsilon$.
         Then $\cardinality{S_i} > \cardinality{S_i} - \cardinality{A_i} + (\cardinality{S_i} - \cardinality{A_i})\varepsilon$.
@@ -876,13 +919,23 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
         \[ \cardinality{S_{i+1}} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_i} \]
 
         Then,
-        \begin{itemize}
-            \item $\cardinality{S_0} = $
-            \item $\cardinality{S_1} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_0} = (1+\varepsilon)^{-1} \cdot n$
-            \item $\cardinality{S_2} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_1} = (1+\varepsilon)^{-2} \cdot n$
-            \item[\vdots]
-            \item $\cardinality{S_i} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_{i-1}} = (1+\varepsilon)^{-i} \cdot n$
-        \end{itemize}
+        %\begin{itemize}
+        %    \item $\cardinality{S_0} = n$
+        %    \item $\cardinality{S_1} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_0} = (1+\varepsilon)^{-1} \cdot n$
+        %    \item $\cardinality{S_2} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_1} = (1+\varepsilon)^{-2} \cdot n$
+        %    \item[\vdots]
+        %    \item $\cardinality{S_i} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_{i-1}} = (1+\varepsilon)^{-i} \cdot n$
+        %\end{itemize}
+
+        \begin{equation*}
+            \begin{split}
+                &\cardinality{S_0} = n\\
+                &\cardinality{S_1} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_0} = (1+\varepsilon)^{-1} \cdot n\\
+                &\cardinality{S_2} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_1} = (1+\varepsilon)^{-2} \cdot n\\
+                &\vdots\\
+                &\cardinality{S_i} \leq \dfrac{1}{1 + \varepsilon} \cardinality{S_{i-1}} = (1+\varepsilon)^{-i} \cdot n\\
+            \end{split}
+        \end{equation*}
 
         Consider $i^* = \lceil \log_{1+\varepsilon} \rceil$. The procedure either ends before iteration $i^*$, or $\cardinality{S_{i^*}} \leq (1+\varepsilon)^{-i^*} \cdot n \leq (1+\varepsilon)^{- \log _{1+\varepsilon} n} \cdot n = \dfrac{1}{n} n = 1$.
 
@@ -1145,12 +1198,21 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
         Since $\underbar{Y}$ is sampled UAR on the hypersphere, the projection of $\underbar{Y}$ on the plane will be a UAR vector/direction, starting from $O$.
         Note that the projection of $\underbar{Y}$ might be a direction, because it could be too short.
 
-        $\prob[\{i,j\} \text{ is cut}] =
-        \prob[(i \in S \wedge j \not\in S) \vee (i \not\in S \wedge \in S)] = 
-        \prob[i \in S \wedge j \not\in S] + \prob[i \not\in S \wedge j \in S] =
-        \prob[\underbar{v}_i \cdot \underbar{Y} \geq 0 \wedge \underbar{v}_j \cdot \underbar{Y} < 0] + \prob[\underbar{v}_i \cdot \underbar{Y} < 0 \wedge \underbar{v}_j \cdot \underbar{Y} \geq 0] =
-        \dfrac{\theta_{ij}}{2 \pi} + \dfrac{\theta_{ij}}{2 \pi} =
-        \dfrac{\theta_{ij}}{\pi}$
+        %$\prob[\{i,j\} \text{ is cut}] =
+        %\prob[(i \in S \wedge j \not\in S) \vee (i \not\in S \wedge \in S)] = 
+        %\prob[i \in S \wedge j \not\in S] + \prob[i \not\in S \wedge j \in S] =
+        %\prob[\underbar{v}_i \cdot \underbar{Y} \geq 0 \wedge \underbar{v}_j \cdot \underbar{Y} < 0] + \prob[\underbar{v}_i \cdot \underbar{Y} < 0 \wedge \underbar{v}_j \cdot \underbar{Y} \geq 0] =
+        %\dfrac{\theta_{ij}}{2 \pi} + \dfrac{\theta_{ij}}{2 \pi} =
+        %\dfrac{\theta_{ij}}{\pi}$
+
+        \begin{equation*}
+            \begin{split}
+                \prob[\{i,j\} \text{ is cut}] &= \prob[(i \in S \wedge j \not\in S) \vee (i \not\in S \wedge \in S)] =\\
+                    &= \prob[i \in S \wedge j \not\in S] + \prob[i \not\in S \wedge j \in S] =\\
+                    &= \prob[\underbar{v}_i \cdot \underbar{Y} \geq 0 \wedge \underbar{v}_j \cdot \underbar{Y} < 0] + \prob[\underbar{v}_i \cdot \underbar{Y} < 0 \wedge \underbar{v}_j \cdot \underbar{Y} \geq 0] =\\
+                    &= \dfrac{\theta_{ij}}{2 \pi} + \dfrac{\theta_{ij}}{2 \pi} = \dfrac{\theta_{ij}}{\pi}
+            \end{split}
+        \end{equation*}
     \end{proof}
 
     Observe that GW reduces to our original UAR-cut solution if $\theta_{ij} = \frac{\pi}{2}$, $\forall \{i,j\} \in \binom{V}{2}$.
@@ -1164,10 +1226,17 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     \end{theorem}
 
     \begin{proof}
-        $\expected[\cardinality{Cut(S,V \setminus S)}] =
-        \sum_{\{i,j\} \in E} \prob[\{i,j\} \text{ cut by } S] \overset{Lemma~\ref{lemma:gw1}}{=}
-        \sum_{\{i,j\} \in E} \dfrac{\theta_{\underbar{v}_i,\underbar{v}_j}}{\pi} = 
-        \sum_{\{i,j\} \in E} \dfrac{\arccos(\underbar{v}_i, \underbar{v}_j)}{\pi}$
+        %$\expected[\cardinality{Cut(S,V \setminus S)}] =
+        %\sum_{\{i,j\} \in E} \prob[\{i,j\} \text{ cut by } S] \overset{Lemma~\ref{lemma:gw1}}{=}
+        %\sum_{\{i,j\} \in E} \dfrac{\theta_{\underbar{v}_i,\underbar{v}_j}}{\pi} = 
+        %\sum_{\{i,j\} \in E} \dfrac{\arccos(\underbar{v}_i, \underbar{v}_j)}{\pi}$
+
+        \begin{equation*}
+            \begin{split}
+                \expected[\cardinality{Cut(S,V \setminus S)}] &= \sum_{\{i,j\} \in E} \prob[\{i,j\} \text{ cut by } S] \overset{Lemma~\ref{lemma:gw1}}{=}\\
+                    &= \sum_{\{i,j\} \in E} \dfrac{\theta_{\underbar{v}_i,\underbar{v}_j}}{\pi} = \sum_{\{i,j\} \in E} \dfrac{\arccos(\underbar{v}_i, \underbar{v}_j)}{\pi}
+            \end{split}
+        \end{equation*}
 
         Now, suppose $\alpha$ is s.t.  $\dfrac{\arccos(x)}{\pi} \geq \alpha (\frac{1}{2} - \frac{x}{2})$, for each $x \in (-1,1)$.
 
@@ -1193,9 +1262,14 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     We now prove a weaker claim.
     We consider a graph instance which has an IG slightly worse than $0.878\dots$.
 
-    Consider the following graph $C_5$ (i.e.~a cycle of length $5$).
+    Consider the graph $C_5$ (i.e.~a cycle of length $5$), as seen in figure~\ref{fig:c5}.
 
-    \fbox{INSERT $C_5$ drawing.}
+    \begin{figure}[h]
+        \centering
+        \input{graphs/C5.tex}
+        \caption{Graph $C_5$}
+        \label{fig:c5}
+    \end{figure}
 
     Let our cut be $S = \{ 0,1,4 \}$.
 
@@ -1225,23 +1299,41 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     For this solution to be feasible we must have that $\forall i \in V, \underbar{v}_i \cdot \underbar{v}_i = 1$.
     Before showing it, recall that $\forall x, \cos^2 x + \sin^2 x = 1$.
 
-    $\underbar{v}_i \cdot \underbar{v}_i =
-    \norm{\underbar{v}_i}_2^2 = 
-    \sum_{j=1}^{5} \underbar{v}_i(j) \cdot \underbar{v}_i(j) = 
-    \sum_{j=1}^{2} \underbar{v}_i(j) \cdot \underbar{v}_i(j) = 
-    \cos^2(i \frac{2\pi}{5}) + \sin^2(i \frac{2\pi}{5}) =
-    1$.
+    %$\underbar{v}_i \cdot \underbar{v}_i =
+    %\norm{\underbar{v}_i}_2^2 = 
+    %\sum_{j=1}^{5} \underbar{v}_i(j) \cdot \underbar{v}_i(j) = 
+    %\sum_{j=1}^{2} \underbar{v}_i(j) \cdot \underbar{v}_i(j) = 
+    %\cos^2(i \frac{2\pi}{5}) + \sin^2(i \frac{2\pi}{5}) =
+    %1$.
+
+    \begin{equation*}
+        \begin{split}
+            \underbar{v}_i \cdot \underbar{v}_i &= \norm{\underbar{v}_i}_2^2 =\\
+                &= \sum_{j=1}^{5} \underbar{v}_i(j) \cdot \underbar{v}_i(j) = \sum_{j=1}^{2} \underbar{v}_i(j) \cdot \underbar{v}_i(j) =\\
+                &= \cos^2(i \frac{2\pi}{5}) + \sin^2(i \frac{2\pi}{5}) = 1
+        \end{split}
+    \end{equation*}
 
     Thus the solution is feasible.
     Let us now calculate the value of such solution.
 
-    $SDP =
-    \sum_{\{i,j\} \in E} \frac{1 - \underbar{v}_i \cdot \underbar{v}_i}{2} = 
-    \frac{1 - \underbar{v}_0 \cdot \underbar{v}_2}{2} + \frac{1 - \underbar{v}_2 \cdot \underbar{v}_4}{2} + \frac{1 - \underbar{v}_4 \cdot \underbar{v}_1}{2} + \frac{1 - \underbar{v}_1 \cdot \underbar{v}_3}{2} + \frac{1 - \underbar{v}_3 \cdot \underbar{v}_0}{2} = 
-    \dfrac{1 - \cos(\theta_{02}) + 1 - \cos(\theta_{24}) + 1 - \cos(\theta_{41}) + 1 - \cos(\theta_{13}) + 1 - \cos(\theta_{30})}{2} = 
-    \frac{1 - \cos(\frac{4\pi}{5}) 5}{2} =
-    \frac{5}{2} (1 - \cos (\frac{4\pi}{5})) \approx
-    4.522\dots$
+    %$SDP =
+    %\sum_{\{i,j\} \in E} \frac{1 - \underbar{v}_i \cdot \underbar{v}_i}{2} = 
+    %\frac{1 - \underbar{v}_0 \cdot \underbar{v}_2}{2} + \frac{1 - \underbar{v}_2 \cdot \underbar{v}_4}{2} + \frac{1 - \underbar{v}_4 \cdot \underbar{v}_1}{2} + \frac{1 - \underbar{v}_1 \cdot \underbar{v}_3}{2} + \frac{1 - \underbar{v}_3 \cdot \underbar{v}_0}{2} = 
+    %\dfrac{1 - \cos(\theta_{02}) + 1 - \cos(\theta_{24}) + 1 - \cos(\theta_{41}) + 1 - \cos(\theta_{13}) + 1 - \cos(\theta_{30})}{2} = 
+    %\frac{1 - \cos(\frac{4\pi}{5}) 5}{2} =
+    %\frac{5}{2} (1 - \cos (\frac{4\pi}{5})) \approx
+    %4.522\dots$
+
+    \begin{equation*}
+        \begin{split}
+            SDP &=\\
+                &= \sum_{\{i,j\} \in E} \frac{1 - \underbar{v}_i \cdot \underbar{v}_i}{2} =\\
+                &= \frac{1 - \underbar{v}_0 \cdot \underbar{v}_2}{2} + \frac{1 - \underbar{v}_2 \cdot \underbar{v}_4}{2} + \frac{1 - \underbar{v}_4 \cdot \underbar{v}_1}{2} + \frac{1 - \underbar{v}_1 \cdot \underbar{v}_3}{2} + \frac{1 - \underbar{v}_3 \cdot \underbar{v}_0}{2} =\\
+                &= \dfrac{1 - \cos(\theta_{02}) + 1 - \cos(\theta_{24}) + 1 - \cos(\theta_{41}) + 1 - \cos(\theta_{13}) + 1 - \cos(\theta_{30})}{2} =\\
+                &= \frac{1 - \cos(\frac{4\pi}{5}) 5}{2} = \frac{5}{2} (1 - \cos (\frac{4\pi}{5})) \approx 4.522\dots
+        \end{split}
+    \end{equation*}
 
     Thus, the IG is no better than
     \[ 0.878\dots = \alpha_{GW} \overset{\forall G}{\leq} IG \overset{\exists G}{\leq} \dfrac{4}{4.522\dots} = 0.884\dots \]

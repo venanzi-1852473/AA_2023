@@ -31,7 +31,15 @@
 
         Let $\xi_1 = "v \in S \wedge w \not\in S"$ and $\xi_2 = "v \not\in S \wedge w \in S"$.
 
-        $\prob[\xi_1] = \prob[c_v = \text{Heads} \wedge c_w = \text{Tails}] = \text{(by independence of the coins) } \prob[c_v = \text{Heads}] \cdot \prob[c_w = \text{Tails}] = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}$
+        %$\prob[\xi_1] = \prob[c_v = \text{Heads} \wedge c_w = \text{Tails}] \overset{\text{(by independence of the coins)}}{=} \prob[c_v = \text{Heads}] \cdot \prob[c_w = \text{Tails}] = \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}$
+
+        \begin{equation*}
+            \begin{split}
+                \prob[\xi_1]    &= \prob[c_v = \text{Heads} \wedge c_w = \text{Tails}] \overset{\text{(by independence of the coins)}}{=}\\
+                                &= \prob[c_v = \text{Heads}] \cdot \prob[c_w = \text{Tails}] =\\
+                                &= \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}
+            \end{split}
+        \end{equation*}
 
         With same reasoning, $\prob[\xi_2] = \prob[c_v = \text{Tails}] \cdot \prob[c_w = \text{Heads}] = \frac{1}{4}$.
 
@@ -78,7 +86,19 @@
 
     Note that $\cardinality{E} = 2 \expected[C_i]$.
 
-    $\prob[N_i \geq (1+\varepsilon)\expected[N_i]] = \prob[\cardinality{E} - C_i \geq (1+\varepsilon)(\cardinality{E} - \expected[C_i])] = \prob[\cardinality{E} - (1 + \varepsilon) \cardinality{E} \geq C_i - (1 + \varepsilon) \expected[C_i]] = \prob[- \varepsilon \cardinality[E] \geq C_i - (1 + \varepsilon) \expected[C_i]] = \prob[-2 \varepsilon \expected[C_i] + (1+\varepsilon) \expected[C_i] \geq C_i] = \prob[C_i \leq (1-\varepsilon) \expected[C_i]]$
+    %$\prob[N_i \geq (1+\varepsilon)\expected[N_i]] = \prob[\cardinality{E} - C_i \geq (1+\varepsilon)(\cardinality{E} - \expected[C_i])] = \prob[\cardinality{E} - (1 + \varepsilon) \cardinality{E} \geq C_i - (1 + \varepsilon) \expected[C_i]] = \prob[- \varepsilon \cardinality[E] \geq C_i - (1 + \varepsilon) \expected[C_i]] = \prob[-2 \varepsilon \expected[C_i] + (1+\varepsilon) \expected[C_i] \geq C_i] = \prob[C_i \leq (1-\varepsilon) \expected[C_i]]$
+
+    \begin{equation*}
+        \begin{split}
+            \prob[N_i \geq (1+\varepsilon)\expected[N_i]]   &=\\
+                                                            &= \prob[\cardinality{E} - C_i \geq (1+\varepsilon)(\cardinality{E} - \expected[C_i])] =\\
+                                                            &= \prob[\cardinality{E} - (1 + \varepsilon) \cardinality{E} \geq\\
+                                                            &\geq C_i - (1 + \varepsilon) \expected[C_i]] = \prob[- \varepsilon \cardinality[E] \geq\\
+                                                            &\geq C_i - (1 + \varepsilon) \expected[C_i]] =\\
+                                                            &= \prob[-2 \varepsilon \expected[C_i] + (1+\varepsilon) \expected[C_i] \geq C_i] =\\
+                                                            &= \prob[C_i \leq (1-\varepsilon) \expected[C_i]]
+        \end{split}
+    \end{equation*}
 
     $C_i \leq (1-\varepsilon) \expected[C_i]$ is our "bad event".
 
@@ -86,7 +106,15 @@
 
     Suppose we run for $t = \lceil\frac{2}{3} \ln \frac{1}{\delta} \rceil $ ($\delta$ will be the probability of error).
 
-    $\prob[\forall i \in [t], C_i \leq (1-\varepsilon) \expected[C_i]] \overset{(\text{by ind.~of the } t \text{ runs})}{=} \prod_{i = 1}^t \prob[C_i \leq (1 - \varepsilon) \expected[C_i]] \leq \prod_{i = 1}^t (1 - \frac{\varepsilon}{2}) = (1 - \frac{\varepsilon}{2})^t \leq (e^{- \frac{\varepsilon}{2}})^t = e^{-\frac{\varepsilon}{2}t} \leq e^{-\frac{\varepsilon}{2} \frac{2}{\varepsilon} \ln \frac{1}{\delta} = e^{- \ln \frac{1}{\delta}} } = \delta$
+    %$\prob[\forall i \in [t], C_i \leq (1-\varepsilon) \expected[C_i]] \overset{(\text{by ind.~of the } t \text{ runs})}{=} \prod_{i = 1}^t \prob[C_i \leq (1 - \varepsilon) \expected[C_i]] \leq \prod_{i = 1}^t (1 - \frac{\varepsilon}{2}) = (1 - \frac{\varepsilon}{2})^t \leq (e^{- \frac{\varepsilon}{2}})^t = e^{-\frac{\varepsilon}{2}t} \leq e^{-\frac{\varepsilon}{2} \frac{2}{\varepsilon} \ln \frac{1}{\delta} = e^{- \ln \frac{1}{\delta}} } = \delta$
+
+    \begin{equation*}
+        \begin{split}
+            \prob[\forall i \in [t], C_i \leq (1-\varepsilon) \expected[C_i]] &\overset{(\text{by ind.~of the } t \text{ runs})}{=}\\
+                &=\prod_{i = 1}^t \prob[C_i \leq (1 - \varepsilon) \expected[C_i]] \leq \prod_{i = 1}^t (1 - \frac{\varepsilon}{2}) =\\
+                &= (1 - \frac{\varepsilon}{2})^t \leq (e^{- \frac{\varepsilon}{2}})^t = e^{-\frac{\varepsilon}{2}t} \leq  e^{-\frac{\varepsilon}{2} \frac{2}{\varepsilon} \ln \frac{1}{\delta} = e^{- \ln \frac{1}{\delta}} } = \delta
+        \end{split}
+    \end{equation*}
 
 
 \subsection{Vertex Cover problem}\label{subsec:vertcover}
