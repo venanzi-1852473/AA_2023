@@ -286,7 +286,10 @@
         \begin{equation*}
             \begin{split}
                 \lambda_i  + \lambda_{i+1} + \cdots + \lambda_{j-1} &= \sum_{t=1}^{n-1}(d_{S_t}(\pi(i), \pi(j)) \cdot \lambda_t) =\\
-                    &= (X_{\pi(j)} - X_{\pi(j-1)}) + (X_{\pi(j-1)} - X_{\pi(j-2)}) + \cdots + (X_{\pi(i+1)} - X_{\pi(i)}) =\\
+                    &= (X_{\pi(j)} - X_{\pi(j-1)}) +\\
+                    &+ (X_{\pi(j-1)} - X_{\pi(j-2)}) +\\
+                    & \vdots\\
+                    &+ (X_{\pi(i+1)} - X_{\pi(i)}) =\\
                     &= X_{\pi(j)} - X_{\pi(i)} = \cardinality{X_{\pi(j)} - X_{\pi(i)}}_1
             \end{split}
         \end{equation*}
@@ -401,6 +404,14 @@
     $2 = d_G(1,3) = d_G(2,4)$.
 
     If $G = C_4$, then $d_G$ can be embedded in $\ell_1$ with no distortion.
+    Embedding shown in figure~\ref{fig:c4_l1_embedding}.
+
+    \begin{figure}[h]
+        \centering
+        \input{graphs/C4_l1_embed.tex}
+        \caption{$C_4$ embedding into $\ell_1$}
+        \label{fig:c4_l1_embedding}
+    \end{figure}
 
     Recall that
     \[ \cardinality{X-Y}_1 = \sum_{i=1}^{d} \cardinality{X_i - Y_i} \]
@@ -419,6 +430,8 @@
     Thus, $f(i) = X_i$ is an embedding with no distortion.
 
     Say that now we want to embed $C_4$ into $\ell_2$.
+    The embedding can be represented like the $\ell_1$ embedding (i.e. see figure~\ref{fig:c4_l1_embedding}).
+    The difference with $\ell_1$, as it will be clear in a moment, is that points for which the shortest path is a diagonal, have a different distances in $\ell_2$ and $d_G$ (whereas in $\ell_1$ and $d_G$ it was the same).
 
     Recall that
     \[ \cardinality{X-Y}_2 = \sqrt{\sum_{i=1}^{d} (X_i - Y_i)^2} \]

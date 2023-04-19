@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+    \begin{axis}[xmin=-1, xmax=1, ymin=-1, ymax=1, axis x line=middle, axis y line=middle]
+        %\addplot[domain=-5:5]{2*x+2};
+        %\addplot[domain=-5:5, color=red]{2*x+2};
+        %\addplot[domain=-5:5, color=blue]{2*x+2};
+        %\addplot[matk=*] coordinates {(2,2)};
+        %\addplot[matk=*] coordinates {(0,0)};
+        %\addplot[matk=*] coordinates {(-2,-2)};
+        %\addplot[matk=*] coordinates {(0,2)};
+        \node[label={180:{$X_1$}},circle,fill,inner sep=2pt] at (axis cs:-0.5,0.5) {};
+        \node[label={180:{$X_2$}},circle,fill,inner sep=2pt] at (axis cs:0.5,0.5) {};
+        \node[label={180:{$X_3$}},circle,fill,inner sep=2pt] at (axis cs:0.5,-0.5) {};
+        \node[label={180:{$X_4$}},circle,fill,inner sep=2pt] at (axis cs:-0.5,-0.5) {};
+    \end{axis}
+\end{tikzpicture}
