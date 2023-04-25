@@ -1,0 +1,116 @@
+\section{Clustering problems}
+
+Given a set $X$ of points, a metric $d$ over $X$ and an integer $k \geq 1$.
+We want to find a set $C \in \binom{X}{k}$, of "centers", s.t. some function is minimized.
+
+Depending on the kind of function that we want to minimize, we have a different clustering problem.
+We are now going to see some of the most important ones.
+
+\textbf{K-Means} is defined over an $\ell_2$-loss. The function to minimize is:
+\[ \sum_{x \in X} \min_{c \in C} d^2(x,c) \]
+
+\textbf{K-Median} is defined over an $\ell_1$-loss. The function to minimize is:
+\[ \sum_{x \in X} \min_{c \in C} d2(x,c) \]
+
+\textbf{K-Center} is defined over an $\ell_\infty$-loss. The function to minimize is:
+\[ \max_{x \in X} \min_{c \in C} d^2(x,c) \]
+
+In general, one can define the clustering with any $\ell_p$-loss.
+
+K-Means is often defined as Lloyd's algorithm, which is an error.
+Lloyd's algorithm is an heuristic for solving K-Means. It is quite simple to understand, but in general it can have a bad approximation, and a bad running time.
+
+\subsection{K-Center}
+    We are going to study K-Center, which, among the three clustering problems defined above, is the one with the simplest approximation.
+    In Algorithm~\ref{alg:greedy_k_center} a greedy approximation for K-Center.
+
+    Recall that, for a point $x$, and a set of points $S$, we have defined
+    \[ d(x,S) = \min_{s \in S} d(x,s) \]
+
+    \input{algorithms/greedy_k_center.tex}
+
+    \begin{theorem}
+        \textsc{Greedy} returns a $2$-approximation for K-Center.
+    \end{theorem}
+
+    \begin{proof}
+        The algorithm defines sets $C_1, \dots, C_k$ and $x_1, \dots, x_k$, s.t. for each $i$, $C_i = \{ x_1, \dots, x_i \}$.
+        It also defines the distances $\Delta_1, \dots, \Delta_{k-1}$.
+
+        Let us define:
+        \begin{equation*}
+            \begin{split}
+                &\Delta_k = \max_{x \in X} d(x, C_k)\\
+                &x_{k+1} \in \argmax_{x \in X} d(x, C_k)\\
+                &C_{k+1} = C_k \cup \{ x_{k+1} \}
+            \end{split}
+        \end{equation*}
+        Note that we are simulating an extra iteration of the for loop.
+
+        \begin{claim}\label{claim:kcenter_1}
+            $C_k$, the set returned by \textsc{Greedy}, acts as a K-Center solution of value $\Delta_k$
+        \end{claim}
+        \begin{proof}
+            The value of $C_k$ is
+            \[ C_k = \max_{x \in X} \min_{y \in C_k} d(x,y) = \max_{x \in X} d(x, C_k) = \Delta_k \]
+        \end{proof}
+
+        \begin{claim}\label{claim:kcenter_2}
+            $\Delta_1 \geq \Delta_2 \geq \cdots \geq \Delta_k$ (monotone decreasing)
+        \end{claim}
+        \begin{proof}
+            Suppose $S \subseteq T \subseteq X$, and $x \in X$.
+            Then
+            \[ d(x,S) = \min_{y \in S} d(x,y) \overset{S \subseteq T}{\geq} \min_{y \in T} d(x,y) = d(x,T) \]
+
+            For each $i = 2, \dots, k$, it holds that
+            \[ \Delta_{i-1} = d(x_i, C_{i-1}) \overset{\text{greedy}}{\geq} d(x_{i+1}, C_{i-1}) \overset{C_{i-1} \subseteq C_i}{\geq} d(x_{i+1}, C_i) = \Delta_i \]
+        \end{proof}
+
+        \begin{claim}\label{claim:kcenter_3}
+            $\forall i = 2, \dots, k+1$, $\forall \{ x_j, x_{j'} \} \in \binom{C_i}{2}$, $d(x_j, x_{j'}) \geq \Delta_{i-1}$.
+        \end{claim}
+        \begin{proof}
+            By induction on $i$.
+
+            Base case ($i=2$).
+            $x_2$ is at distance $\Delta_1$ from $x_1$, and thus from $C_1 = \{x_1\}$.
+
+            Inductive case. Suppose the claim holds for $i \leq k$; we prove it for $i+1$.
+            Since the claim holds at $i$, we have $\forall \{ x_j, x_{j'} \} \in \binom{C_i}{2}$, $d(x_j, x_{j'}) \geq \Delta_{i-1}$.
+
+            The generic pair $\{ x_j, x_{j'} \} \in \binom{C_{i+1}}{2}$ either contains two points from $C_i$, or it contains $x_{i+1}$ and one point from $C_i$.
+            Since $\Delta_{i-1} \geq \Delta_i$, w.m.a. that one point is $x_{i+1}$. Wlog, $x_{j'} = x_{i+1}$.
+            We have $\Delta_i = \max_{x \in X} d(x, C_i) = d(x_{i+1}, C_i) = \min_{y \in C_i} d(x_{i+1}, y)$.
+
+            Thus, $\forall x_j \in C_i$, $d(x_{i+1}, x_j) \geq \Delta_i$.
+            Then, $\forall \{ x_j, x_{j'} \} \subseteq C_{i+1}$ s.t. $x_{i+1} \in \{ x_j, x_{j'} \}$, $d( x_j, x_{j'} ) \geq \Delta_i$.
+        \end{proof}
+
+        \begin{claim}\label{claim:kcenter_4}
+            If $C$ is any solution, that is, $C \in \binom{X}{k}$, then
+            \[ \max_{x \in X} \min_{y \in C} d(x,y) \geq \frac{\Delta_k}{2} \]
+        \end{claim}
+        \begin{proof}
+            Let $V = \max_{x \in X} \min_{y \in C} d(x,y)$ be the value of the solution $C$.
+            Then, $\forall x \in X$, $\exists y = y_x \in C$ s.t. $d(x, y_x) \leq V$.
+
+            Consider the set $C_{k+1} = C_k \cup \{ x_{k+1} \}$, then $\cardinality{C_{k+1}} = k+1$.
+            By the PigeonHole Principle (PHP), $\exists \{ x_j, x_{j'} \} \in \binom{C_{k+1}}{2}$ s.t. $y_{x_j} = y_{x_{j'}}$.
+
+            Let $x_j, x_{j'}$ be two points of $C_{k+1}$, $x_j \neq x_{j'}$, that have the same $y \overset{\Delta}{=} y_{x_j} = y_{x_{j'}} \in C$.
+
+            Then, $d(x_j, y) \leq V$, and $d(x_{j'}, y) \leq V$.
+            By the triangle inequality $d(x_j, x_{j'}) \leq d(x_j, y) + d(y, x_{j'}) \leq 2V$.
+
+            By Claim~\ref{claim:kcenter_3}, any two distinct points from $C_{k+1}$ are at distance at least $\Delta_k$ from one another.
+            Thurs,
+            \[ \Delta_k \leq d(x_j, x_{j'}) \leq 2V \rightarrow V \geq \frac{\Delta_k}{2} \]
+        \end{proof}
+
+        Claims~\ref{claim:kcenter_1} and~\ref{claim:kcenter_4} entail that \textsc{Greedy} returns a $2$-approximation.
+    \end{proof}
+
+    \begin{theorem}
+        $\forall \varepsilon > 0$, K-Center is NP-Hard to approximate to $2 - \varepsilon$.
+    \end{theorem}

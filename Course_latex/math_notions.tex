@@ -87,7 +87,7 @@
         A graph is said to be \textit{bipartite} if its set of vertices can be partitioned into two sets, $V,W$, s.t.~all the edges have one endpoint in one partition set, and the other endpoint in the other partition set.
         We denote such a graph $G((V,W),E)$.
 
-        Formally, $\forall e = \{v,w\} \in E$, is s.t. $v \in V$ and $w \in W$.
+        Formally, $\forall e = \{v,w\} \in E$, $e$ is s.t. $v \in V$ and $w \in W$.
 
 
 \subsection{Hypersphere}\label{subsec:hypersphere}
@@ -99,3 +99,22 @@
     \[ H_n = \{ x \in \mathbb{R}^n \st \norm{x}_2 = 1 \} \]
 
     $H_2$ is a circle. $H_3$ is a sphere.
+
+
+\subsection{Oracles}\label{subsec:oracles_cc}
+    An oracle can be seen as an abstract algorithm that can solve a problem in time $O(1)$.
+    It is often thought of having a giant table/matrix with all the answers to a problem; we query the oracle, asking for the solution of an instance, and it picks the answer from the table and gives it to us in one step of computation. A possibly more concrete way of seeing oracle, is they are just sub-routines, that only require time $O(1)$.
+
+    Oracles are used in many theorical fields of computer science; e.g. computational complexity and cryptography.
+    Depending on the field of application, they can be seen as algorithms, or Turing machines.
+
+    The way in which the interaction with an oracle is defined is usually the following.
+    We want to solve problem $A$, and we have an oracle that can solve problem $B$. While solving problem $A$, we "query" the oracle, that is, we give it an instance of problem $B$, and it gives us the answer in time $O(1)$. How much time do we need to solve problem $A$, given an oracle for problem $B$?
+
+    A trivial example of an oracle is the following.
+    Consider an oracle $O$ that solves Max-Cut. We can solve Max-Cut in time $O(1)$, simply by asking $O$ the solution, and returning it.
+
+    Oracles can be assumed to solve NP problems, and even undecidable problems. For instance, what problems can we solve, and in how much time, given an oracle for the Halting problem?
+    
+
+    

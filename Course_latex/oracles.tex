@@ -1,0 +1,245 @@
+\section{Oracle models}
+
+See~\ref{subsec:oracles_cc} for an explanation on oracles in Computational Complexity.
+Let us see an example.
+
+We have a database that assigns some value $v_i$ to each key $i \in \{ 0, \dots, 2^n-1 \}$.
+You can call an oracle, sending it some $i \in \{ 0, \dots, 2^n-1 \}$, and getting back $v_i$.
+
+How much time to the oracle do you need to find the maximum $v_i$.
+Or equivalently, how many "calls/queries" do you need to make to the oracle to find the maximum key?
+
+Suppose you have the following oracle.
+Given $\{ i,j \} \in \binom{[n]}{2}$, you get "$v_i < v_j$" or "$v_j < v_i$".
+Use the oracle to sort the $v_i$'s.
+
+We know that this problem can be solved with $O(n \log n)$ queries.
+Is it also $\Omega(n \log n)$?
+
+If $f(n) \in \Omega(g(n))$, then $\lim \frac{f(n)}{g(n)} \geq c$.
+There are $n!$ possible orderings/permutations.
+Therefore, one needs $\log_2 n!$ bits to represent an ordering.
+\[ n \log_2 n = \log_2 n^n \geq \log_2 n! \log_2 (\frac{n}{2})^{\frac{n}{2}} = \frac{n}{2} \log_2 \frac{n}{2} \]
+And $\log_2 n! = \Theta(n \log n)$ (if $f(n) \in \Theta(g(n))$, then $c \leq \lim \frac{f(n)}{g(n)} \leq c'$).
+
+Given that I need $\Theta(n \log n)$ bits, and that each oracle call gives me $Theta(1)$ bits, I need to call the oracle at least $\Omega(n \log n)$ times.
+
+
+\subsection{Unconstrained optimization of SM functions}
+    Problem: for $f$ submodular,
+    \[ \min_{S \subseteq [n]} f(S) \]
+
+    It can be used on covering functions, or on the following problem.
+    Let $G(V,E)$ be a graph, and let $c : 2^V \rightarrow \mathbb{R}$ be defines as $c(S) = \cardinality{Cut(S, V \setminus S)}$. Then, $\min_{S \subseteq [n]} c(S)$ is Min-Cut (solvable in polytime).
+
+    \begin{lemma}
+        $c(S)$ is submodular.
+    \end{lemma}
+
+    \begin{proof}
+        Let $S,T \subseteq V$ be given. We want to prove $c(S) + c(T) \geq c(S \cup T) + c(S \cap T)$.
+
+        Let us define the following sets.
+        $A_{00} = V \setminus (S \cup T)$, $A_{01} = T \setminus S$, $A_{10} = S \setminus T$, $A_{11} = S \cap T$.
+
+        Then the sets
+        \begin{equation*}
+            \begin{split}
+                Cut(A_{00}, A_{01}), Cut(A_{00}, A_{10}), Cut(A_{00}, A_{11})\\
+                Cut(A_{01}, A_{10}), Cut(A_{01}, A_{11}), Cut(A_{10}, A_{11})
+            \end{split}
+        \end{equation*}
+        are pairwise disjoint.
+
+        Then,
+        \begin{equation*}
+            \begin{split}
+                Cut(S, V \setminus S)  &= Cut(A_{11}, A_{01}) \cup Cut(A_{11}, A_{00}) \cup Cut(A_{10}, A_{01}) \cup Cut(A_{10}, A_{00}) = \\
+                &= \bigcup_{i \in B} \bigcup_{j \in \B} Cut(A_{1i}, A_{0j})
+            \end{split}
+        \end{equation*}
+
+        \begin{equation*}
+            \begin{split}
+                c(S) &= \cardinality{Cut(S, V \setminus S)} =\\
+                    &= \sum_{i \in \B} \sum_{j \in \B} \cardinality{Cut(A_{1i}, A_{0j})} = \\
+                    &= \cardinality{Cut(A_{11}, A_{01})} + \cardinality{Cut(A_{11}, A_{00})} + \cardinality{Cut(A_{10}, A_{01})} + \cardinality{Cut(A_{10}, A_{00})}
+            \end{split}
+        \end{equation*}
+
+        \begin{equation*}
+            \begin{split}
+                c(T) &= \cardinality{Cut(T, V \setminus T)} =\\
+                    &= \sum_{i \in \B} \sum_{j \in \B} \cardinality{Cut(A_{i1}, A_{j0})} = \\
+                    &= \cardinality{Cut(A_{11}, A_{10})} + \cardinality{Cut(A_{11}, A_{00})} + \cardinality{Cut(A_{10}, A_{01})} + \cardinality{Cut(A_{01}, A_{00})}
+            \end{split}
+        \end{equation*}
+
+        \begin{equation*}
+                c(S \cap T) = \cardinality{Cut(A_{11}, A_{00})} + \cardinality{Cut(A_{11}, A_{01})} + \cardinality{Cut(A_{11}, A_{10})}
+        \end{equation*}
+
+        \begin{equation*}
+                c(S \cup T) = \cardinality{Cut(A_{00}, A_{01})} + \cardinality{Cut(A_{00}, A_{10})} + \cardinality{Cut(A_{00}, A_{11})}
+        \end{equation*}
+
+        \begin{equation*}
+            \begin{split}                
+                c(S \cap T) + c(S \cup T) = 2 \cardinality{Cut(A_{11}, A_{00})} &+ \cardinality{Cut(A_{11}, A_{01})} + \cardinality{Cut(A_{11}, A_{10})} +\\
+                &+ \cardinality{Cut(A_{00}, A_{01})} + \cardinality{Cut(A_{00}, A_{10})}
+            \end{split}
+        \end{equation*}
+
+        \begin{equation*}
+            \begin{split}                
+                c(S) + c(T) = 2 \cardinality{Cut(A_{11}, A_{00})} &+ 2 \cardinality{Cut(A_{01}, A_{10})} + \cardinality{Cut(A_{11}, A_{01})} +\\
+                &+ \cardinality{Cut(A_{11}, A_{10})} + \cardinality{Cut(A_{00}, A_{01})} +\\
+                &+ \cardinality{Cut(A_{00}, A_{10})}
+            \end{split}
+        \end{equation*}
+
+        Thus, $(c(S) + c(T)) - (c(S \cup T) + c(S \cap T)) = 2 \cardinality{Cut(A_{01}, A_{10})} \geq 0$.
+    \end{proof}
+
+    \begin{observation}
+        $c$ in not in general monotone.
+    \end{observation}
+
+    \begin{observation}
+        $c$ is "symmetric", $c(S) = c(V \setminus S)$, $\forall S \subseteq V$.
+    \end{observation}
+
+    \begin{proof}
+        $c(S) = \cardinality{Cut(S, V \setminus S)} = c(V \setminus S)$.
+    \end{proof}
+
+    Then, Max-Cut is just $\max_{S \subseteq V} c(S)$ for a function $c$ that is submodular, symmetric and non-negative.
+
+    \begin{theorem}[Feige, Mirrokni, Vondrák, '07]
+        If $f : 2^{[n]} \rightarrow \mathbb{R}$ is submodular, non-negative and symmetric, then $\max_S f(S)$ can be $2$-approximated in polytime, in the oracle model.
+    \end{theorem}
+
+    \begin{lemma}\label{lemma:oracle_1}
+       Let $g : 2^{[n]} \rightarrow \mathbb{R}$ be a submodular function.
+       Then, $\forall S \subseteq [n]$,
+       \[ \avg_{T \subseteq S} g(T) = 2^{-\cardinality{S}} \cdot \sum_{T \subseteq S} g(T) \geq \frac{g(\emptyset) + g(S)}{2}\] 
+    \end{lemma}
+
+    \begin{proof}
+        We prove the lemma by induction on $\cardinality{S}$.
+
+        Base case ($\cardinality{S} = 0$). Trivial, since the LHS reduces to $2^{-0} \cdot g(\emptyset) = g(\emptyset)$, the the RHS $\frac{g(\emptyset) + g(\emptyset)}{2} = g(\emptyset)$.
+
+        Suppose the claim holds for each set of cardinality $i$.
+        Let $S$ be a set s.t. $\cardinality{S} = i+1$.
+        Let $x \in S$, and let $S' = S \setminus \{x\}$. Then $\cardinality{S'} = i$.
+
+        \begin{equation*}
+            \begin{split}
+                \sum_{T \subseteq S} g(T) &= \sum_{T' \subseteq S'} g(T') + \sum_{T' \subseteq S'} g(T' \cup \{x\}) =\\
+                    &= 2 \sum_{T' \subseteq S'} g(T') + \sum_{T' \subseteq S'} (g(T' \cup \{x\}) - g(T')) =\\
+                    &= 2 \sum_{T' \subseteq S'} g(T') + \sum_{T \subseteq S : x \in T} (g(T) - g(T' \cap S')) \geq\\
+                    &\geq 2 \sum_{T' \subseteq S'} g(T') + \sum_{T \subseteq S : x \in T} (g(T \cup S') - g(S')) =\\
+                    &= 2 \sum_{T' \subseteq S'} g(T') + \sum_{T \subseteq S : x \in T} (g(S) - g(S')) =\\
+                    &= 2 \sum_{T' \subseteq S'} g(T') + 2^i (g(S) - g(S'))
+            \end{split}
+        \end{equation*}
+
+        So,
+        \[ 2^{- \cardinality{S}} \sum_{T \subseteq S} g(T) \geq 2^{1 - \cardinality{S}} \sum_{T' \subseteq S'} g(T') + 2^{i - \cardinality{S}} (g(S) - g(S')) \]
+
+        And
+        \begin{equation*}
+            \begin{split}
+                \avg_{T \subseteq S} g(T) &\geq 2^{-i} \sum_{T' \subseteq S'} g(T') + 2^{-1} (g(S) - g(S')) =\\
+                    &= \avg_{T' \subseteq S'} g(T') + \frac{g(S) - g(S')}{2} \overset{\text{IH}}{\geq}\\
+                    &\geq \frac{g(\emptyset) + g(S')}{2} ' \frac{g(S) - g(S')}{2} = \frac{g(S) + g(\emptyset)}{2}
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    \begin{lemma}\label{lemma:oracle_2}
+        Let $g : 2^{[n]} \rightarrow \mathbb{R}$ be submodular, then $\forall S_1, S_2 \subseteq [n]$
+        \[ \avg_{T_1 \subseteq S_1} \avg_{T_2 \subseteq S_2} g(T_1 \cup T_2) \geq \frac{g(\emptyset) + g(S_1) + g(S_2) + g(S_1 \cup S_2)}{4} \]
+    \end{lemma}
+
+    \begin{proof}
+        Given $X \subseteq [n]$, we define $h_X(T) = g(X \cup T)$.
+        Then, $h_X$ is submodular, because $g$ is submodular ($h_X$ is a sort of projection of $g$).
+        In fact,
+        \begin{equation*}
+            \begin{split}
+                h_X(A) + h_X(B) &= g(X \cup A) + g(X \cup B) \overset{\text{submodularity}}{\geq}\\
+                    &\geq g(X \cup A \cup B) + g((X \cup A) \cap (X \cup B)) =\\
+                    &= g(X \cup A \cup B) + g(X \cup (A \cap B)) = h_X(A \cup B) + h_X(A \cap B)
+            \end{split}
+        \end{equation*}
+
+        By Lemma~\ref{lemma:oracle_1},
+        \[ \avg_{T \subseteq S} h_X(T) \geq \frac{h_X(\emptyset) + h_X(S)}{2} = \frac{g(X) + g(X \cup S)}{2} \]
+
+        Then,
+        \begin{equation*}
+            \begin{split}
+                \avg_{T_1 \subseteq S_1} \avg_{T_2 \subseteq S_2} g(T_1 \cup T_2) &= \avg_{T_1 \subseteq S_1} \left( \avg_{T_2 \subseteq S_2} g(T_1 \cup T_2) \right) =\\
+                    &= \avg_{T_1 \subseteq S_1} \left( \avg_{T_2 \subseteq S_2} h_{T_1}(T_2) \right) \geq\\
+                    &\geq \avg_{T_1 \subseteq S_1} \frac{g(T_1) + g(T_1 \cup S_2)}{2} =\\
+                    &= \frac{1}{2} \left( \avg_{T_1 \subseteq S_1} g(T_1) + \avg_{T_1 \subseteq S_1} g(T_1 \cup S_2) \right) =\\
+                    &= \frac{1}{2} \left( \avg_{T_1 \subseteq S_1} g(T_1) + \avg_{T_1 \subseteq S_1} h_{S_2}(T_1) \right) \geq\\
+                    &\geq \frac{1}{2} \left( \frac{g(\emptyset) + g(S_1)}{2} + \frac{g(S_2) + g(S_1 \cup S_2)}{2} \right) =\\
+                    &= \frac{g(\emptyset) + g(S_1) + g(S_2) + g(S_1 \cup S_2)}{4}
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    \begin{theorem}\label{thm:oracle_r_uar}
+        Let $f : 2^{[n]} \rightarrow \mathbb{R}$ be submodular, symmetric, non-negative.
+        Then, if $R$ is a UAR subset of the groundset $[n]$, then
+        \[ \expected[f(R)] \geq \frac{1}{2} \max_{S \subseteq [n]} f(S) \]
+        Where $R$ is sampled as in algorithm~\ref{alg:oracle_sample_R}
+    \end{theorem}
+
+    \input{algorithms/oracle_R_sample.tex}
+    Note that this algorithm is basically the same algorithm for $2$-approximating Max-Cut (see algorithm~\ref{alg:randomcut}).
+
+    It is impossible for a polytime algorithm to return a set $R$ that, in general, is a $0.5 + \varepsilon$-approximation.
+
+    \begin{proof}
+        Let $S^*$ be an optimal solution, then
+        \[ f(S^*) = \max_{S \subseteq [n]} f(S) \]
+
+        We apply Lemma~\ref{lemma:oracle_2}, with $S_1 = S^*$ and $S_2 = [n] \setminus S^*$.
+
+        \begin{equation*}
+            \begin{split}
+                &\frac{f(\emptyset) + f(S^*) + f([n] \setminus S^*) + f([n])}{4} \overset{\text{Lemma~\ref{lemma:oracle_2}}}{\geq}\\
+                &\leq 2^{- \cardinality{S^*}} \cdot 2^{-n + \cardinality{S^*}} \cdot \sum_{T_1 \subseteq S_1} \sum_{T_2 \subseteq S_2} f(T_1 \cup T_2) =\\
+                &= 2^{-n} \sum_{T_1 \subseteq S_1} \sum_{T_2 \subseteq S_2} f(T_1 \cup T_2) \overset{S_1 \cap S_2 = \emptyset \wedge S_1 \cup S_2 = [n]}{=}\\
+                &= 2^{-n} \sum_{T \subseteq [n]} f(T) = \expected[f(R)]
+            \end{split}
+        \end{equation*}
+
+        Then,
+        \begin{equation*}
+            \begin{split}
+                \expected[f(R)] &\geq \frac{f(\emptyset) + f(S^*) + f([n] \setminus S^*) + f([n])}{4} \overset{\text{non-negative}}{\geq}\\
+                    &\geq \frac{f(S^*) + f([n] \setminus S^*)}{4} \overset{\text{symmetric}}{=} \frac{2 \cdot f(S^*)}{4} = \frac{1}{2} f(S^*)
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    \begin{theorem}
+        Let $f : 2^{[n]} \rightarrow \mathbb{R}$ be submodular, non-negative and not symmetric.
+        Then, if $R$ is a UAR subset of the groundset $[n]$, then
+        \[ \expected[f(R)] \geq \frac{1}{4} \max_{S \subseteq [n]} f(S) \]
+    \end{theorem}
+
+    \begin{proof}
+        The proof is exactly like the proof of Theorem~\ref{thm:oracle_r_uar}, except for the last passage:
+        \begin{equation*}
+            \begin{split}
+                \expected[f(R)] &\geq \frac{f(\emptyset) + f(S^*) + f([n] \setminus S^*) + f([n])}{4} \geq\\
+                    &\geq \frac{f(S^*) + f([n] \setminus S^*)}{4} \geq \frac{f(S^*)}{4}
+            \end{split}
+        \end{equation*}
+    \end{proof}

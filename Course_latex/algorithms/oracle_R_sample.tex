@@ -1,0 +1,15 @@
+\begin{algorithm}
+    \caption{Sample UAR $R \subseteq [n]$}\label{alg:oracle_sample_R}
+    \begin{algorithmic}%[1]
+        %\Procedure{Random-Cut}{$V,E$}
+        \State~$R \gets \emptyset$
+        \For{$i = 1, \dots, n$}
+            \State~flip an iid coin $c_i$
+            \If{$c_i$ is heads}
+                \State~$R \gets R \cup \{ i \}$
+            \EndIf\@
+        \EndFor\@
+        \State~\Return~$R$
+        %\EndProcedure
+    \end{algorithmic}
+\end{algorithm}

@@ -1,0 +1,20 @@
+\begin{algorithm}
+    \caption{Greedy for K-Center}\label{alg:greedy_k_center}
+    \begin{algorithmic}%[1]
+        \Procedure{Greedy}{$X,d,k$}
+            \If{$\cardinality{X} \leq k$}
+                \State\Return $X$
+            \EndIf
+            
+            \State~pick arbitrarily $x_1 \in X$
+            \State~$c_1 \gets \{ x_1 \}$
+            \For{$i = 2, \dots, k$}
+                \State~let $\Delta_{i-1} = \max_{x \in X} d(x, C_{i-1})$
+                \State~let $x_i \in \argmax_{x \in X} d(x, C_{i-1})$
+                \State~$C_i \gets C_{i-1} \cup \{x_i\}$
+            \EndFor
+            
+            \Return~$C_k$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
