@@ -1,19 +1,19 @@
 \section{Oracle models}
 
-See~\ref{subsec:oracles_cc} for an explanation on oracles in Computational Complexity.
-Let us see an example.
+See~\ref{subsec:oracles_cc} for an explanation of oracles.
 
+Let us see an example.
 We have a database that assigns some value $v_i$ to each key $i \in \{ 0, \dots, 2^n-1 \}$.
 You can call an oracle, sending it some $i \in \{ 0, \dots, 2^n-1 \}$, and getting back $v_i$.
 
-How much time to the oracle do you need to find the maximum $v_i$.
+How much time do you need to find the maximum $v_i$?
 Or equivalently, how many "calls/queries" do you need to make to the oracle to find the maximum key?
 
 Suppose you have the following oracle.
 Given $\{ i,j \} \in \binom{[n]}{2}$, you get "$v_i < v_j$" or "$v_j < v_i$".
 Use the oracle to sort the $v_i$'s.
 
-We know that this problem can be solved with $O(n \log n)$ queries.
+We know that this problem can be solved with $O(n \log n)$ queries (heapsort, mergesort, \dots).
 Is it also $\Omega(n \log n)$?
 
 If $f(n) \in \Omega(g(n))$, then $\lim \frac{f(n)}{g(n)} \geq c$.
@@ -22,7 +22,7 @@ Therefore, one needs $\log_2 n!$ bits to represent an ordering.
 \[ n \log_2 n = \log_2 n^n \geq \log_2 n! \log_2 (\frac{n}{2})^{\frac{n}{2}} = \frac{n}{2} \log_2 \frac{n}{2} \]
 And $\log_2 n! = \Theta(n \log n)$ (if $f(n) \in \Theta(g(n))$, then $c \leq \lim \frac{f(n)}{g(n)} \leq c'$).
 
-Given that I need $\Theta(n \log n)$ bits, and that each oracle call gives me $Theta(1)$ bits, I need to call the oracle at least $\Omega(n \log n)$ times.
+Given that I need $\Theta(n \log n)$ bits, and that each oracle call gives me $\Theta(1)$ bits, I need to call the oracle at least $\Omega(n \log n)$ times.
 
 
 \subsection{Unconstrained optimization of SM functions}
@@ -61,16 +61,14 @@ Given that I need $\Theta(n \log n)$ bits, and that each oracle call gives me $T
 
         \begin{equation*}
             \begin{split}
-                c(S) &= \cardinality{Cut(S, V \setminus S)} =\\
-                    &= \sum_{i \in \B} \sum_{j \in \B} \cardinality{Cut(A_{1i}, A_{0j})} = \\
+                c(S) &= \cardinality{Cut(S, V \setminus S)} = \sum_{i \in \B} \sum_{j \in \B} \cardinality{Cut(A_{1i}, A_{0j})} = \\
                     &= \cardinality{Cut(A_{11}, A_{01})} + \cardinality{Cut(A_{11}, A_{00})} + \cardinality{Cut(A_{10}, A_{01})} + \cardinality{Cut(A_{10}, A_{00})}
             \end{split}
         \end{equation*}
 
         \begin{equation*}
             \begin{split}
-                c(T) &= \cardinality{Cut(T, V \setminus T)} =\\
-                    &= \sum_{i \in \B} \sum_{j \in \B} \cardinality{Cut(A_{i1}, A_{j0})} = \\
+                c(T) &= \cardinality{Cut(T, V \setminus T)} = \sum_{i \in \B} \sum_{j \in \B} \cardinality{Cut(A_{i1}, A_{j0})} = \\
                     &= \cardinality{Cut(A_{11}, A_{10})} + \cardinality{Cut(A_{11}, A_{00})} + \cardinality{Cut(A_{10}, A_{01})} + \cardinality{Cut(A_{01}, A_{00})}
             \end{split}
         \end{equation*}
@@ -202,7 +200,7 @@ Given that I need $\Theta(n \log n)$ bits, and that each oracle call gives me $T
     \input{algorithms/oracle_R_sample.tex}
     Note that this algorithm is basically the same algorithm for $2$-approximating Max-Cut (see algorithm~\ref{alg:randomcut}).
 
-    It is impossible for a polytime algorithm to return a set $R$ that, in general, is a $0.5 + \varepsilon$-approximation.
+    It is impossible for a polytime algorithm to return a set $R$ that, in general, is a $(0.5 + \varepsilon)$-approximation.
 
     \begin{proof}
         Let $S^*$ be an optimal solution, then
@@ -212,7 +210,7 @@ Given that I need $\Theta(n \log n)$ bits, and that each oracle call gives me $T
 
         \begin{equation*}
             \begin{split}
-                &\frac{f(\emptyset) + f(S^*) + f([n] \setminus S^*) + f([n])}{4} \overset{\text{Lemma~\ref{lemma:oracle_2}}}{\geq}\\
+                &\frac{f(\emptyset) + f(S^*) + f([n] \setminus S^*) + f([n])}{4} \overset{\text{Lemma~\ref{lemma:oracle_2}}}{\leq}\\
                 &\leq 2^{- \cardinality{S^*}} \cdot 2^{-n + \cardinality{S^*}} \cdot \sum_{T_1 \subseteq S_1} \sum_{T_2 \subseteq S_2} f(T_1 \cup T_2) =\\
                 &= 2^{-n} \sum_{T_1 \subseteq S_1} \sum_{T_2 \subseteq S_2} f(T_1 \cup T_2) \overset{S_1 \cap S_2 = \emptyset \wedge S_1 \cup S_2 = [n]}{=}\\
                 &= 2^{-n} \sum_{T \subseteq [n]} f(T) = \expected[f(R)]

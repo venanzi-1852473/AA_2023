@@ -56,7 +56,15 @@
 
         $f(S) = \sum_{i=1}^{t} f_i(S)$·
 
-        Let $S,T \subseteq [n]$, then $f(S) + f(T) = \sum_{i=1}^{t} (f_i(S) + f_i(T)) \overset{f_i \text{ submodular}}{\geq} \sum_{i=1}^{t}(f_i(S \cup T) + f_i(S \cap T)) = \sum_{i=1}^{t} f_i(S \cup T) + \sum_{i=1}^{t} f_i (S \cap T) = f(S \cup T) + f(S \cap T)$.
+        Let $S,T \subseteq [n]$, then
+        \begin{equation*}
+            \begin{split}
+                f(S) + f(T) &= \sum_{i=1}^{t} (f_i(S) + f_i(T)) \overset{f_i \text{ submodular}}{\geq}\\
+                    &\geq \sum_{i=1}^{t}(f_i(S \cup T) + f_i(S \cap T)) =\\
+                    &= \sum_{i=1}^{t} f_i(S \cup T) + \sum_{i=1}^{t} f_i (S \cap T) =\\
+                    &= f(S \cup T) + f(S \cap T)
+            \end{split}
+        \end{equation*}
     \end{proof}
 
     We now study Max-cover as being a special case of submodular functions.

@@ -10,15 +10,15 @@ We are now going to see some of the most important ones.
 \[ \sum_{x \in X} \min_{c \in C} d^2(x,c) \]
 
 \textbf{K-Median} is defined over an $\ell_1$-loss. The function to minimize is:
-\[ \sum_{x \in X} \min_{c \in C} d2(x,c) \]
+\[ \sum_{x \in X} \min_{c \in C} d(x,c) \]
 
 \textbf{K-Center} is defined over an $\ell_\infty$-loss. The function to minimize is:
-\[ \max_{x \in X} \min_{c \in C} d^2(x,c) \]
+\[ \max_{x \in X} \min_{c \in C} d(x,c) \]
 
 In general, one can define the clustering with any $\ell_p$-loss.
 
-K-Means is often defined as Lloyd's algorithm, which is an error.
-Lloyd's algorithm is an heuristic for solving K-Means. It is quite simple to understand, but in general it can have a bad approximation, and a bad running time.
+K-Means is often defined as \href{https://en.wikipedia.org/wiki/Lloyd%27s_algorithm}{Lloyd's algorithm}, which is an error.
+Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is quite simple to understand, but in general it can have a bad approximation, and a bad running time.
 
 \subsection{K-Center}
     We are going to study K-Center, which, among the three clustering problems defined above, is the one with the simplest approximation.
