@@ -5,7 +5,7 @@
             \State~$S_0 \gets V$
             \State~$i \gets 0$
                 \While{$S_i \neq \emptyset$}
-                    \State~$A_i \gets \{ v_i \st \deg_{S_i}(v_i) \leq avg_{v \in S_i} \deg_{S_i}(v) \}$
+                    \State~$A_i \gets \{ v_i \st \deg_{S_i}(v_i) \leq \avg_{v \in S_i} \deg_{S_i}(v) \}$
                     \State~$S_{i+1} \gets S_i \setminus A_i$
                     \State~$i \gets i+1$
                 \EndWhile

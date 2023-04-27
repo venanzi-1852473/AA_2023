@@ -503,7 +503,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     \begin{exercise}
         Prove that Greedy does not always return an optimal solution.
 
-        Hint: construct a graph s.t.~the algorithm returna a non optimal solution.
+        Hint: construct a graph s.t.~the algorithm returns a non optimal solution.
     \end{exercise}
 
     \begin{definition}[Orientation]
@@ -553,8 +553,13 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     \begin{proof}
         For $i = 1, 2, \dots, n$, $v_i$ is a node of minumum degree in $G[S_{i-1}]$.
         In general, the minumum degree in a graph is not larger than the average degree of the same graph.
-        Thus $d_{\phi_{GR}}(v_i) = \min_{v \in S_{i-1}} d_{S_{i-1}}(v) \leq avg_{v \in S_{i-1}} d_{S_{i-1}}(v) =
-        \dfrac{\sum_{v \in S_{i-1}} d_{S_{i-1}}(v)}{\cardinality{S_{i-1}}} = \dfrac{2 \cardinality{E(S_{i-1})}}{\cardinality{S_{i-1}}} = 2\rho(S_{i-1})$.
+        Thus
+        \begin{equation*}
+            \begin{split}
+                d_{\phi_{GR}}(v_i) &= \min_{v \in S_{i-1}} d_{S_{i-1}}(v) \leq \avg_{v \in S_{i-1}} d_{S_{i-1}}(v) =\\
+                    &= \dfrac{\sum_{v \in S_{i-1}} d_{S_{i-1}}(v)}{\cardinality{S_{i-1}}} = \dfrac{2 \cardinality{E(S_{i-1})}}{\cardinality{S_{i-1}}} = 2\rho(S_{i-1})
+            \end{split}
+        \end{equation*}
 
         Then
         \[ \Delta_{\phi_{GR}} = \max_{v_i \in V} d_{\phi_{GR}}(v_i) = \max_{i=1, \dots, n} d_{\phi_{GR}}(v_i) \leq
@@ -835,7 +840,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
         Our second claim is that at least $1$ node isremoved in each iteration (this is more technical, note in fact that, if it wasn't like that, the algorithm might run forever).
 
-        \[ \min_{v \in S_i} \deg_{S_i}(v) \leq avg_{v \in S_i} \deg_{S_i}(v) \leq (1+\varepsilon)avg_{v \in S_i} \deg_{S_i}(v) \]
+        \[ \min_{v \in S_i} \deg_{S_i}(v) \leq \avg_{v \in S_i} \deg_{S_i}(v) \leq (1+\varepsilon) \avg_{v \in S_i} \deg_{S_i}(v) \]
 
         Thus $v \in A_i$ (i.e.~if $\cardinality{S_i} \geq 1 \rightarrow \cardinality{A_i} \geq 1$).
 
@@ -856,7 +861,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
         \begin{equation*}
             \begin{split}
                 \rho(S^*)   &\overset{(\text{claim 1})}{\leq} \deg_{S^*}(v) \overset{(S_i \supseteq S^*)}{\leq} \deg_{S_i}(v) \overset{(\text{greedy choice})}{\leq}\\
-                            &\leq (1+\varepsilon) avg_{u \in S_i} \deg_{S_i}(u) = (1+\varepsilon) \dfrac{\sum_{u \in S_i} \deg_{S_i}(u)}{\cardinality{S_i}} =\\
+                            &\leq (1+\varepsilon) \avg_{u \in S_i} \deg_{S_i}(u) = (1+\varepsilon) \dfrac{\sum_{u \in S_i} \deg_{S_i}(u)}{\cardinality{S_i}} =\\
                             &= (1+\varepsilon) \dfrac{2 \cardinality{E(S_i)}}{\cardinality{S_i}} = 2 (1+\varepsilon) \rho(S_i)
             \end{split}
         \end{equation*}
