@@ -114,3 +114,133 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
     \begin{theorem}
         $\forall \varepsilon > 0$, K-Center is NP-Hard to approximate to $2 - \varepsilon$.
     \end{theorem}
+
+
+\subsection{Dominating set}
+    Input: undirected graph $G(V,E)$, $k \geq 1$
+
+    Question: does there exist $S \in \binom{V}{k}$ s.t. $\forall v \in V$, $v \in S$ or $\exists w \in S$ s.t. $\{ v,w \} \in E$
+
+    That is, a dominating set is one that either touches all the vertices, or it touches all the edges.
+
+    \begin{theorem}
+        The Dominating set is NP-Hard
+    \end{theorem}
+
+    Let us define the cost of a K-Center solution $S$ as
+    \[ Cen(S) = \max_{v \in V} \min_{c \in S} d(v,c) \]
+
+    \begin{theorem}
+        It is NP-Hard to approximate K-Center to $\alpha$, $\forall \alpha < 2$.
+    \end{theorem}
+
+    \begin{proof}
+        Let $G(V,E),k$ be an instance of Dominating Set.
+
+        We construct a metric $d : V \times V \rightarrow \mathbb{R}$ as follows.
+        For the set of points $V$:
+        \begin{itemize}
+            \item $d(v,w)=1$ if $\{v,w\} \in E$
+            \item $d(v,w)=2$ if $\{v,w\} \in \binom{V}{2} \setminus E$
+            \item $d(v,v)=0$ if $v \in V$
+        \end{itemize}
+
+        \begin{claim}
+            Suppose that $S$ is a set of points s.t. $Cen(S)=1$.
+            Then $S$ is a dominating set of $G(V,E)$.
+        \end{claim}
+        \begin{proof}
+            If $S$ is s.t. $Cen(S)=1$, then $\forall v \in V$, $\exists w \in S$ s.t. either $v=w$ or $\{v,w\} \in E$. Therefore, $S$ is a dominating set of $G(V,E)$.
+        \end{proof}
+
+        Thus, if $\exists$ dominating set $S$ of $k$ nodes, then $Cen(S)=1$.
+
+        Suppose that, instead, $\not\exists S \in \binom{V}{k}$ s.t. $S$ is a dominating set of $G(V,E)$.
+        Then, no matter which $k$ nodes I pick, there will be one node $v$ of the graph that is not covered by the $k$ nodes: $\forall S \in \binom{V}{k}$, $\exists v \in V \setminus S$ s.t. $\forall w \in S$ : $\{v,w\} \not\in E$.
+        Then, $d(v,S) = 2$.
+
+        Thus, the inapproximability has been proved.
+        We only need to prove that $d$ is a metric.
+
+        Let $\{v,w,x\} \in \binom{V}{3}$.
+        The triangle inequality requires that $d(v,w) + d(w,x) \geq d(v,x)$.
+        We have that
+        \[ d(v,w) + d(w,x) \geq 2 \geq d(v,x) \]
+    \end{proof}
+
+    Without the triangle inequality, we could have set
+    \[ d(v,w) = T \gg 2 \]
+    for $\{ v,w \} \in \binom{V}{2} \setminus E$.
+    The inapproximability ratio would have been $\geq T$.
+
+
+\subsection{K-Median}
+    Given a solution $S$ for K-Median, we define the cost of $S$ as
+    \[ Med(S) = \sum_{v \in V} \min_{c \in S} d(v,c) \]
+
+    We define the problem as follows.
+    Given as input a metric $d$, $V$ and $k$.
+    We want to find $S \in \binom{V}{k}$ that (approximately) minimizes $Med(S)$.
+
+    \begin{observation}
+        K-Median admits a $(2n)$-approximation, where $n = \cardinality{V}$.
+    \end{observation}
+
+    \begin{proof}
+        $\forall S \in \binom{V}{k}$,
+        \[ Med(S) = \sum_{v \in V} \min_{c \in S} d(v,c) \]
+        \[ Cen(S) = \max_{v \in V} \min_{c \in S} d(v,c) \]
+
+        Also,
+        \begin{equation*}
+            \begin{split}
+                Cen(S) &\leq Med(S) = \sum_{v \in V} \min_{c \in S} d(v,c) \leq\\
+                    &\leq \cardinality{V} \max_{v \in V} \min_{c \in S} d(v,c) = \cardinality{V} Cen(S)
+            \end{split}
+        \end{equation*}
+
+        Suppose that $S'$ is a $2$-approximation for K-Center.
+        Then,
+        \[ Cen(S') \leq 2 \min_{S \in \binom{V}{k}} Cen(S) \]
+
+        So,
+        \[ Med(S') \leq n \cdot Cen(S') \leq 2n \min_{S \in \binom{V}{k}} Cen(S) \leq 2n \min_{S \in \binom{V}{k}} Med(s)  \]
+    \end{proof}
+
+    Let us now see an algorithm for approximating K-Median, presented in Algorithm~\ref{alg:local_search}.
+
+    \input{algorithms/local_search.tex}
+
+    Questions:
+    \begin{enumerate}
+        \item For how many iterations does the algorithm run?
+        \item Once I get to a local minimum, how close will it be to a global minimum?
+    \end{enumerate}
+
+    Let $L = \{ l_1, \dots, l_k \}$ be the solution returned by \textsc{LocalSearch}.
+
+    Let $Q = \{q_1, \dots, q_k\}$ be an optimal solution.
+
+    Let $\pi : Q \rightarrow L$ be a function that maps each optimal center to one of its closest \textsc{LocalSearch} center.
+
+    Let $D_j^* = \min_{q \in Q} d(j,q)$, $\forall j \in V$. $D_j^*$ is the cost paid by the optimal solution for point $j$.
+
+    Let $D_j = \min_{l \in L} d(j,l)$, $\forall j \in V$. $D_j$ is the cost paid by the LS solution, for point $j$.
+
+    Let $L_1, L_2, \dots, L_k$ be the partition of $V$ induced by the centers of $L$.
+    That is, $\forall l \in L$, $j \in L_i \rightarrow d(j,l_i) \leq d(j,l)$.
+
+    Let $Q_1, Q_2, \dots, Q_k$ be the partition of $B$ induced be the center of $Q$.
+    That is, $\forall q \in Q$, $j \in Q_i \rightarrow d(j,q_i) \leq d(j,q)$.
+
+    \begin{equation*}
+        \begin{split}
+            &\textsc{OPT} = \sum_{j \in V} D_j^* = \sum_{j \in V} \min_{q \in Q} d(j,q) = \sum_{i=1}^{k} \sum_{j \in Q_i} d(j,q_i)\\
+            &\textsc{ALG} = \sum_{j \in V} D_j = \sum_{j \in V} \min_{l \in L} d(j,l) = \sum_{i=1}^{k} \sum_{j \in L_i} d(j,l_i)
+        \end{split}
+    \end{equation*}
+
+    Our goal is to bound $\frac{\textsc{ALG}}{\textsc{OPT}}$.
+
+    We first consider the special case where $\pi$ is a bijection.
+    If $\pi$ is a bijection, we can assume, wlog, that $\pi(q_i) = l_i$, $\forall i \in \{ 1, \dots, k \}$.

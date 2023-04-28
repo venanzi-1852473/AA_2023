@@ -1,0 +1,12 @@
+\begin{algorithm}
+    \caption{Arya et al., '03}\label{alg:local_search}
+    \begin{algorithmic}%[1]
+        \Procedure{LocalSearch}{$d,k$}
+            \State~pick any $S \in \binom{V}{k}$
+            \While{$\exists o \in S, i \in V \setminus S$ s.t. $Med(S \setminus \{o\} \cup \{i\}) < Med(S)$}
+                \State~$S \gets S \setminus \{o\} \cup \{i\}$
+            \EndWhile\@
+            \State~\Return~$S$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
