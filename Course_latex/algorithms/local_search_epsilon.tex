@@ -1,0 +1,13 @@
+\begin{algorithm}
+    \caption{ }\label{alg:local_search_epsilon}
+    \begin{algorithmic}%[1]
+        \Procedure{$\textsc{LocalSearch}_\varepsilon$}{$V,d,k$}
+            \State~let $S_0 \in \binom{V}{k}$ be a $2$-approximation to K-Center
+            \State~$S \gets S_0$
+            \While{$\exists o \in S, i \in V \setminus S$ s.t. $Med(S \setminus \{o\} \cup \{i\}) < Med(S) - \frac{\varepsilon Med(S_0)}{2 n k}$}
+                \State~$S \gets S \setminus \{o\} \cup \{i\}$
+            \EndWhile\@
+            \State~\Return~$S$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

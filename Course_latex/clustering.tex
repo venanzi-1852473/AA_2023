@@ -244,3 +244,233 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
 
     We first consider the special case where $\pi$ is a bijection.
     If $\pi$ is a bijection, we can assume, wlog, that $\pi(q_i) = l_i$, $\forall i \in \{ 1, \dots, k \}$.
+
+    \begin{lemma}\label{lemma:kmedian}
+        Let $L$ be the set of points returned by LS.
+        Then, $\forall i \in [k]$,
+        \[ 0 \leq Med(L \setminus \{l_i\} \cup \{q_i\}) - Med(L) \leq \sum_{j \in Q_i}(D_j^* - D_j) + 2 \sum_{j \in L_i} d_j^* \]
+    \end{lemma}
+
+    \begin{proof}
+        Let us define $L' = L \setminus \{l_i\} \cup \{q_i\}$.
+
+        By the LS stopping condition, $Med(L') \geq Med(L)$, thus $Med(L') - Med(L) \geq 0$.
+
+        $Med(L') = \sum_{j \in V} d(j,L') = \sum_{j \in V} \min_{l \in L'} d(j,l)$.
+
+        We now bound $\sum_{j \in V} d(j,L')$, term-by-term.
+        Consider three cases:
+        \begin{enumerate}
+            \item $j \in Q_i$
+            \item $j \in L_i \setminus Q_i$
+            \item $j \in V \setminus (L_i \cup Q_i)$
+        \end{enumerate}
+
+        Case 1. If $j \in Q_i$, we could serve $j$ with $q_i \in L'$. Thus,
+        \begin{equation*}
+            d(j,L') = \min_{q \in L'} d(j,q) \overset{q_i \in L'}{\leq} d(j,q_i) = D_j^*
+        \end{equation*}
+
+        Case 2. If $j \in L_i \setminus Q_i$, then $j$ is not served by $q_i$ in the optimal solution we chose.
+        Say that the optimal solution serves $j$ with $q_r \in Q$.
+        Then, $q_r \neq q_i$. Also, recall that $\pi(q_r) = l_r \neq l_i$, since we have assumed that $\pi$ is a bijection. Thus $\pi(q_r) \in L'$.
+        \begin{equation*}
+            \begin{split}
+                d(j,L') &\overset{\pi(q_r)\in L'}{\leq} d(d, \pi(q_r)) =\\
+                    &= d(j,l_r) \overset{\text{tr. ineq.}}{\leq}\\
+                    &\leq d(j,q_r) + d(q_r, l_r) =\\
+                    &= D_j^* + d(q_r, l_r) \overset{\pi(q_r) = lr}{\leq}\\
+                    &\leq D_j^* + d(q_r, l_i) \leq\\
+                    &\leq D_j^* + d(q_r, j) + d(j, l_i) =\\
+                    &= D_j^* + D_j^* + D_j =\\
+                    &= 2D_j^* + D_j
+            \end{split}
+        \end{equation*}
+
+        Case 3. If $j \in V \setminus (L_i \cup Q_i)$, then $j$ can be served by its closest center in the LS solution, thus
+        \begin{equation*}
+            d(j,L') \leq D_j
+        \end{equation*}
+
+        Thus,
+        \begin{equation*}
+            \begin{split}
+                Med(L') &= \sum_{j \in V} d(j,L') =\\
+                    &= \sum_{j \in Q_i} d(j,L') + \sum_{j \in L_i \setminus Q_i} d(j,L') + \sum_{j \in V \setminus (L_i \cup Q_i)} d(j,L') \leq\\
+                    &\leq \sum_{j \in Q_i} D_j^* + \sum_{j \in L_i \setminus Q_i} (2 D_j^* + D_j) + \sum_{j \in V \setminus (L_i \cup Q_i)} D_j
+            \end{split}
+        \end{equation*}
+
+        And
+        \[ Med(L) = \sum_{j \in V} D_j \]
+
+        \begin{equation*}
+            \begin{split}
+                Med(L') - Med(L) &\leq \sum_{j \in Q_i} (D_j^* - D_j) + \sum_{j \in L_i \setminus Q_i} (2 D_j^* + D_j - D_j) + \sum_{j \in V \setminus (L_i \cup Q_i)} (D_j - D_j) =\\
+                    &= \sum_{j \in Q_i} (D_j* - D_j) + 2 \sum_{j \in L_i \setminus Q_i} D_j^* \leq\\
+                    &\leq \sum_{j \in Q_i} (D_j* - D_j) + 2 \sum_{j \in L_i} D_j^*
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    \begin{theorem}
+        If $\pi$ is a bijection, the LS solutions is a $3$-approximation to K-Median.
+    \end{theorem}
+
+    \begin{proof}
+        We use Lemma~\ref{lemma:kmedian} to sum up the $k$ bounds ($i = 1, 2, \dots, k$):
+        \begin{equation*}
+            \begin{split}
+                0 &\leq \sum_{i=1}^{k} Med(L \setminus \{l_i\} \cup \{q_i\}) - k \cdot Med(L) \leq\\
+                    &\leq \sum_{i=1}^{k} \sum_{j \in Q_i} (D_j^* - D_j) + 2 \sum_{i=1}^{k} \sum_{j \in L_i} D_j^* =\\
+                    &= \sum_{j \in V} (D_j^* - D_j) + 2 \sum_{j \in V} D_j^* =\\
+                    &= 3 \sum_{j \in V} D_j^* - \sum_{j \in V} D_j =\\
+                    &= 3 \textsc{OPT} - \textsc{ALG}
+            \end{split}
+        \end{equation*}
+
+        Then, $\textsc{ALG} \leq 3 \textsc{OPT}$.
+    \end{proof}
+
+    The case just studied, where $\pi$ is a bijection, although quite common in real life, is not true in general.
+    Let us now consider the case in which $\pi$ is not a bijection; that is, where multiple $q_i$'s get mapped to the same $l_j$.
+
+    Note that now, some $q_i$'s end up being mapped to the same $l_j$. Some $q_i$ are still mapped one-to-one to some $l_j$ (as in the bijective case). Some $l_i$'s end up not being mapped at all.
+
+    Let $T \subseteq L$ be defined as
+    \[ T = \{ l \st l \in L \wedge \exists \{q,q'\} \in \binom{Q}{2} : \pi(q) = \pi(q') = l \} \]
+
+    Let $Z \subseteq L$ be defined as
+    \[ Z = \{ l \st l \in L \wedge \not\exists q \in Q : \pi(q) = l \} \]
+
+    Let $M \subseteq Q$ be defined as
+    \[ M = \{ q \st q \in Q \wedge \exists q' \in Q \setminus \{q\} : \pi(q) = \pi(q') \} \]
+
+    \begin{lemma}
+        $2 \cardinality{Z} \geq \cardinality{M}$
+    \end{lemma}
+
+    \begin{proof}
+        We have that $\cardinality{Z} + \cardinality{T} = \cardinality{M}$.
+        Because $\cardinality{L} = \cardinality{Q} = k$, and there are as many $1$-matched $q$'s as there are $1$-matched $l$'s, so the only points that remain are the ones in $Z, T$ and $M$.
+
+        Moreover, the number of "arcs" between points fo $M \cup Z \cup T$ is equal to $M$.
+
+        Also, the number of "arcs" is at least $2 \cardinality{T}$, since each node in $T$ is hit by at least $2$ arcs.
+
+        \begin{equation*}
+            \begin{split}
+                &\cardinality{T} = \cardinality{M} - \cardinality{Z}\\
+                &2 (\cardinality{M} - \cardinality{Z}) = 2 \cardinality{T} \leq (\text{\# of arcs in } M \cup Z \cup T) = \cardinality{M}\\
+                &2 \cardinality{M} - 2 \cardinality{Z} \leq \cardinality{M}\\
+                &2 \cardinality{Z} \geq \cardinality{M}
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    Now, let us define an $L,Q$-match as a pair $(l,q)$ s.t. $l \in L$ and $q \in Q$.
+    We will consider the following set of $L,Q$ matches.
+
+    If $\pi(q)$ is unique to $q$ (if $q \in Q \setminus M$), then we add the match $(\pi(q), q)$.
+
+    For each of the remaining $q$'s, we act as follows.
+    We match $q \in M$ to elements of $z$ in such a way that:
+    \begin{itemize}
+        \item each $q \in M$ is part of exactly 1 match
+        \item each $l \in Z$ is part of exactly 0, 1 or 2 matches
+    \end{itemize}
+
+    These matches can be created, since $\cardinality{M} \leq 2 \cardinality{Z}$.
+    Thus, if you have some extra $q \in M$ to match, just match it to some $l \in Z$ that has been matches the fewest times.
+
+    Let $P$ be the set of matches created by this algorithm.
+    Note that we don't really have to come up with $P$ when we run the LS, we just consider $P$ for analysis' sake.
+
+    \begin{lemma}\label{lemma:kmedian_lqmatches}
+        $\forall (l_y, q_x) \in P$,
+        \[ 0 \leq Med(L \setminus \{l_y\} \cup \{q_x\}) - Med(L) \leq \sum_{j \in Q_x} D_j^* - \sum_{j in Q_x} D_j + 2 \sum_{j \in L_y} D_j^* \]
+    \end{lemma}
+
+    \begin{exercise}
+        Prove Lemma~\ref{lemma:kmedian_lqmatches}.
+    \end{exercise}
+
+    \begin{theorem}
+        In the general where (where $\pi$ is not a bijection), LS provides a $5$-approximation.
+    \end{theorem}
+
+    \begin{proof}
+        We sum up the $k$ inequalities, one for each $(l_y, q_x) \in P$.
+        \begin{equation*}
+            \begin{split}
+                0 &\leq \sum_{(l_y, q_x) \in P} (Med(L \setminus \{l_y\} \cup \{q_x\}) - Med(L)) \leq\\
+                &\leq \sum_{(l_y,q_x) \in P} \sum_{j \in Q_x} D_j^* - \sum_{(l_y,q_x) \in P} \sum_{j \in Q_x} D_j + 2 \sum_{(l_y,q_x) \in P} \sum_{j \in L_y} D_j^* \overset{\substack{\text{each } q_x \in Q\\\text{ appears in exactly 1 match}}}{=}\\
+                &= \sum_{j \in V} D_j^* - \sum_{j \in V} D_j + 2 \sum_{(l_y,q_x) \in P} \sum_{j \in L_y} D_j^* \overset{\substack{\text{each } l_y \in L\\ \text{ appears in at most 2 matches}}}{\leq}\\
+                &\leq 5 \textsc{OPT} = 5 \sum_{j \in V} D_j^* \geq \sum_{j \in V} D_j = \textsc{ALG}
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    A couple of observations on the running time of Algorithm~\ref{alg:local_search}:
+    \begin{itemize}
+        \item If, at the outset (i.e.~beginning), $S$ is a local optimum, then the algorithm and the analysis provides a short (i.e.~polynomial-size) proof that $S$ is a $5$-approximation
+        \item In practive, this LS converges pretty quickly, after 10s of iterations
+    \end{itemize}
+
+    \input{algorithms/local_search_epsilon.tex}
+
+    \begin{theorem}
+        $LS_\varepsilon$ provides a $(5+\varepsilon)$-approximation to K-Median.
+    \end{theorem}
+
+    \begin{proof}
+        \begin{equation*}
+            \begin{split}
+                \sum_{(l_y,q_x) \in P} (-\varepsilon \frac{Med(S_0)}{2 n k}) &\leq \sum_{(l_y, q_x) \in P} (Med(L \setminus \{l_y\} \cup \{q_x\}) - Med(L)) \leq\\
+                    & \leq 5 \textsc{OPT} - \textsc{ALG}
+            \end{split}
+        \end{equation*}
+
+        \begin{equation*}
+            \begin{split}
+                &5 \textsc{OPT} - \textsc{ALG} \geq \cardinality{P} (- \varepsilon \frac{Med(S_0)}{2 n k})\\
+                &5 \textsc{OPT} - \textsc{ALG} \geq - \varepsilon k \frac{Med(S_0)}{2 n k}
+            \end{split}
+        \end{equation*}
+
+        \begin{equation*}
+            \begin{split}
+                \textsc{ALG} &\leq 5 \textsc{OPT} + \varepsilon \frac{Med(S_0)}{2n} \leq 5 \textsc{OPT} + \varepsilon \frac{2 n \textsc{OPT}}{2 n} = (5 + \varepsilon) \textsc{OPT}
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    \begin{theorem}
+        $LS_\varepsilon$ runs for at most $O(\frac{n k}{\varepsilon})$ iterations (thus, in polytime).
+    \end{theorem}
+
+    \begin{proof}
+        Let $S_i$ be the value of $S$ when the $i$-th iteration ends.
+
+        Suppose that the loop runs for $\ell$ iterations.
+        $\forall i = 0, \dots, \ell - 1$, the following holds
+        \[ Med(S_{i+1}) \leq Med(S_i) - \varepsilon \frac{Med(S_0)}{2 n k} \]
+
+        Then,
+        \begin{equation*}
+            \begin{split}
+                &Med(S_1) \leq Med(S_0) - \varepsilon \frac{Med(S_0)}{2 n k} = (1 - \frac{\varepsilon}{2 n k}) Med(S_0)\\
+                &Med(S_2) \leq Med(S_1) - \varepsilon \frac{Med(S_0)}{2 n k} \leq (1 - \frac{2 \varepsilon}{2 n k}) Med(S_0)\\
+                \vdots\\
+                &Med(S_i) \leq (1 - \frac{i \varepsilon}{2 n k}) Med(S_0)\\
+                \vdots
+            \end{split}
+        \end{equation*}
+
+        Then,
+        \[ 0 \leq Med(S_\ell) \leq (1 - \frac{\ell \varepsilon}{2 n k}) Med(S_0) \]
+
+        Thus, given that $Med(S_0) > 0$, it must hold that $1 - \frac{\ell \varepsilon}{2 n k} \geq 0$.
+        
+        Then $\ell \leq \frac{2 n k}{\varepsilon}$.
+    \end{proof}

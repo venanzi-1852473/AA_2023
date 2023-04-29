@@ -82,7 +82,14 @@
 
     Let $0 < \varepsilon < 1$.
 
-    $\prob[N_i \geq (1+\varepsilon)\expected[N_i]] \overset{\text{(by \nameref{subsec:markov_ineq})}}{\leq} \dfrac{1}{1+\varepsilon} = \dfrac{1+\varepsilon}{1+\varepsilon} - \dfrac{\varepsilon}{1 + \varepsilon} = 1 - \dfrac{\varepsilon}{1 + \varepsilon} \leq 1 - \dfrac{\varepsilon}{2}$
+    \begin{equation*}
+        \begin{split}
+            \prob[N_i \geq (1+\varepsilon)\expected[N_i]] \overset{\text{(by \nameref{subsec:markov_ineq})}}{\leq} \dfrac{1}{1+\varepsilon} &=\\
+                &= \dfrac{1+\varepsilon}{1+\varepsilon} - \dfrac{\varepsilon}{1 + \varepsilon} =\\
+                &= 1 - \dfrac{\varepsilon}{1 + \varepsilon} \leq\\
+                &\leq 1 - \dfrac{\varepsilon}{2}
+        \end{split}
+    \end{equation*}
 
     Note that $\cardinality{E} = 2 \expected[C_i]$.
 
