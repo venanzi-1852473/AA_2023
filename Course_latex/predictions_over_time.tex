@@ -1,0 +1,152 @@
+\section{Predictions over time (ML)}
+
+We want to predict future events.
+\begin{itemize}
+    \item Will the stocks of company $A$ increase in value today?
+    \item Will it rain today?
+\end{itemize}
+
+For instance, you have some training data, that you split in, say, $n$ chunks.
+You train, independently, a model on each chunk.
+At testing time, you get the prediction of each of the $n$ models, and you have to select one of them.
+
+
+\subsection{Expert model}
+    We consider the expert model.
+    We have $n$ "experts" that make (binary) predictions for future events. We take into consideration these predictions, and we then compare them with what actually happens.
+
+    That is, for $i = 1, 2, \dots, T$, we are given a vector $(Y_{1t}, Y_{2t}, \dots, Y_{nt})$, where $Y_{it} \in \B$ is the prediction of expert $i$ for time $t$.
+
+    We then have to "bet" on whether nature will, at time $t$, show us $0$ or $1$.
+    Let $z_t \in \B$ be our prediction for time $t$.
+
+    Nature shows us her bit $x_t \in \B$ for time $t$.
+
+    We pay $1$€ is $z_t \neq x_t$.
+
+    In Algorithm~\ref{alg:halving} a simple procedure for choosing experts' predictions.
+
+    \input{algorithms/halving.tex}
+
+    What Algorithm~\ref{alg:halving} does is it considers what the majority of the experts are predicting at time $t$, and all that are wrong will not be considered anymore.
+
+    \begin{theorem}
+        If there exists a perfect expert (that is, if $\exists i^* \in [n]$ s.t. $\forall t$, $Y_{i^*t} = x_t$), then the halving algorithm makes $m$ mistakes, with $m \leq \lfloor \log_2 n \rfloor$.
+    \end{theorem}
+
+    \begin{proof}[Proof (sketch)]
+        If we make a mistake at time $t$, then at least $\frac{\cardinality{S}}{2}$ (currently trustworthy) experts make a mistake at time $t$.
+        At the outset, $\cardinality{S} = n$.
+    \end{proof}
+
+    In Algorithm~\ref{alg:iter_halving} we consider a slightly modified version of Algorithm~\ref{alg:halving}, where, in case we've removed all the experts, we put them all back.
+
+    \input{algorithms/iter_halving.tex}
+
+    Let $m^* = m_T^*$ be the number of mistakes of the best expert in the $T$ rounds.
+
+    \begin{theorem}
+        The number of mistakes of Algorithm~\ref{alg:iter_halving} is
+        \[ m \leq (m^* + 1)(\log_2 n + 1) \]
+    \end{theorem}
+
+    \begin{proof}[Proof (sketch)]
+        We could cut the timespan in $m^* + 1$ pieces (cut at the mistakes of a best expert).
+    \end{proof}
+
+    In Algorithm~\ref{alg:weight_majority} we consider a different approach.
+    Instead of simply counting how many $0$'s and $1$'s we get for the experts (removing them when they are wrong), we always consider all the experts, but weighting their answers based on how reliable they've been so far.
+    At the outset, we assume every expert is perfectly reliable, and dimish their "reliability" each time they are wrong (that is, we give less weight to their answers).
+
+    \input{algorithms/weighted_majority.tex}
+
+    \begin{theorem}
+        Algorithm~\ref{alg:weight_majority} makes number of mistakes
+        \[ m \leq 2.41(m^* + \log_2 n) \]
+    \end{theorem}
+
+    \begin{proof}
+        Let $w_i^t$ be the weight of expert $i$ at the end of round $t$ (after the weight-update step).
+        Also, let $w_i^0 = 1$, $\forall i \in [n]$.
+
+        We define a potential
+        \[ W^t = \sum_{i=1}^{n} w_i^t \]
+
+        A.
+        \[ W^0 = \sum_{i=1}^{n} w_i^0 = \sum_{i=1}^{n} 1 = n \]
+
+        B. $W^t = \sum_{i=1}^{n} w_i^t \geq \sum_{i=1}^{n} w_i^{t+1} = W^{t+1}$.
+        Thus,
+        \[ W^t \geq W^{t+1} \]
+
+        C. If $z_t \neq x_t$ (if we make a mistake at time $t$), then at the beginning of round $t$ the total weight $I^{t-1}$ of the experts that make a mistake in round $t$ satisfies $I^{t-1} \geq \frac{W^{t-1}}{2}$.
+
+        Then,
+        \begin{equation*}
+            \begin{split}
+                W^t &= \frac{I^{t-1}}{2} + (W^{t-1} - I^{t-1}) = W^{t-1} - \frac{I^{t-1}}{2} \leq\\
+                    &\leq W^{t-1} - \frac{W^{t-1}}{4} = \frac{3}{4} W^{t-1}
+            \end{split}
+        \end{equation*}
+
+        D. After round $T$, if our algorithm has made $m$ mistakes, then
+        \[ W^t \leq \left( \frac{3}{4} \right)^m \cdot W^0 = \left( \frac{3}{4} \right)^m \cdot n \]
+
+        E. If $i^*$ is an expert that has made the fewest number of mistakes $m^*$, then
+        \[ W^T = \sum_{i=1}^{m} w_i^T \geq w_{i^*}^T \]
+
+        \begin{equation*}
+            \begin{split}
+                &2^{-m^*} = w_{i^*}^T \leq W^T \leq \left( \frac{3}{4} \right)^m \cdot n\\
+                &m \log_2 \frac{3}{4} + \log_2 n \geq -m^*\\
+                &-m \log_2 \frac{4}{3} + \log_2 n \geq -m^*\\
+                &m^* + \log_2 n \geq m \log_2 \frac{4}{3}\\
+                m \leq \frac{1}{\log_2 \frac{4}{3}} (m^* + \log_2 n) \leq 2.41(m^* + \log_2 n)
+            \end{split}
+        \end{equation*}
+    \end{proof}
+
+    By changing the $\frac{1}{2}$ factor, we can get to a $(2 + \varepsilon)m^* + \frac{O(1)}{\varepsilon} \log n$ upper bound.
+
+
+\subsection{Deterministic algorithms for the Expert problem}
+    Let us consider the worst possibile deterministic algorithm, that says always the opposite of nature.
+
+    Consider for instance Table~\ref{table:expert_example}.
+
+    \begin{table}[h]
+        \begin{tabular}{|l|c|c|c|r|c|}
+        \hline
+                                & $t=1$                          & $t=2$                          & $t=2$                          & \multicolumn{1}{c|}{$\cdots$} & $t = T$   \\ \hline
+        $\text{Expert}_0$       & 0                              & 0                              & 0                              & $\cdots 0$                    & 0         \\ \hline
+        $\text{Expert}_1$       & 1                              & 1                              & 1                              & $\cdots 1$                    & 1         \\ \hline
+        Deterministic algorithm & $a_1$                          & $a_2$                          & $a_3$                          & $\dots a_{t-1}$               & $a_T$     \\ \hline
+        Nature                  & \multicolumn{1}{l|}{$1 - a_1$} & \multicolumn{1}{l|}{$1 - a_2$} & \multicolumn{1}{l|}{$1 - a_3$} & $\dots 1 - a_{t-1}$           & $1 - a_T$ \\ \hline
+        \end{tabular}
+        \caption{Example of a bad deterministic algorithm}
+        \label{table:expert_example}
+    \end{table}
+
+    Let the deterministic algorithm be any (fixed) deterministic algorithm.
+
+    \begin{claim}
+        At time $T$, the deterministic algorithm will have made $T$ mistakes
+    \end{claim}
+
+    \begin{proof}
+        $z_t = a_t$, and $x_t = 1 - a_t \neq z_t$.    
+    \end{proof}
+
+    \begin{claim}
+        At time $T$, $\text{Expert}_0$ or $\text{Expert}_1$ will have made at most $\frac{T}{2}$ mistakes.
+    \end{claim}
+
+    \begin{proof}
+        If nature chooses a majority of $0$'s (if the deterministic algorithm chooses a majority of $1$'s) then $\text{Expert}_0$ will make no more than $\frac{T}{2}$ mistakes.
+
+        Analogously, if nature chooses a majority of $1$'s (if the deterministic algorithm chooses a majority of $0$'s) then $\text{Expert}_1$ will make no more than $\frac{T}{2}$ mistakes.
+    \end{proof}
+
+    \begin{corollary}
+        No deterministic algorithm can guarantee a number of mistakes $m \leq 2 m^*$.
+    \end{corollary}

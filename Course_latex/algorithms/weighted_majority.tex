@@ -1,0 +1,24 @@
+\begin{algorithm}
+    \caption{Weighted majority}\label{alg:weight_majority}
+    \begin{algorithmic}%[1]
+            \State~assign a weight $w_i = 1$ to expert $i$, $\forall i \in [n]$
+
+            \For{$t = 1, \dots, T$}
+                \State~$A_t \gets \sum_{i : Y_{it}=1} w_i$
+                \State~$B_t \gets \sum_{i : Y_{it}=0} w_i$
+
+                \If{$A_t \geq B_t$}
+                    \State~$z_t \gets 1$
+                \Else
+                    \State~$z_t \gets 0$
+                \EndIf
+                \State~we "see" nature's $x_t$ (and pay $1$€ is $x_t \neq z_t$)
+
+                \For{$i = 1, \dots, n$}
+                    \If{$Y_{it} \neq x_t$}
+                        \State~$w_i \gets \frac{w_i}{2}$
+                    \EndIf
+                \EndFor
+            \EndFor
+    \end{algorithmic}
+\end{algorithm}

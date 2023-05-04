@@ -1,0 +1,18 @@
+\begin{algorithm}
+    \caption{Halving algorithm}\label{alg:halving}
+    \begin{algorithmic}%[1]
+            \State~$S \gets [n]$
+
+            \For{$t = 1, \dots, T$}
+                \State~$A_t \gets \cardinality{ \{ i \st i \in S \wedge Y_{it} = 1 \} }$
+                \State~$B_t \gets \cardinality{ \{ i \st i \in S \wedge Y_{it} = 0 \} }$
+                \If{$A_t \geq B_t$}
+                    \State~$z_t \gets 1$
+                \Else
+                    \State~$z_t \gets 0$
+                \EndIf
+                \State~we "see" nature's $x_t$ (and pay $1$€ is $x_t \neq z_t$)
+                \State~$S \gets S \setminus \{ i \st Y_{it} \neq x_t \}$
+            \EndFor
+    \end{algorithmic}
+\end{algorithm}

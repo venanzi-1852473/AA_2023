@@ -121,7 +121,7 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
 
     Question: does there exist $S \in \binom{V}{k}$ s.t. $\forall v \in V$, $v \in S$ or $\exists w \in S$ s.t. $\{ v,w \} \in E$
 
-    That is, a dominating set is one that either touches all the vertices, or it touches all the edges.
+    That is, a dominating set is one that either contains all the vertices, or it touches all the edges.
 
     \begin{theorem}
         The Dominating set is NP-Hard
@@ -204,7 +204,7 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
         \[ Cen(S') \leq 2 \min_{S \in \binom{V}{k}} Cen(S) \]
 
         So,
-        \[ Med(S') \leq n \cdot Cen(S') \leq 2n \min_{S \in \binom{V}{k}} Cen(S) \leq 2n \min_{S \in \binom{V}{k}} Med(s)  \]
+        \[ Med(S') \leq n \cdot Cen(S') \leq 2n \min_{S \in \binom{V}{k}} Cen(S) \leq 2n \min_{S \in \binom{V}{k}} Med(S)  \]
     \end{proof}
 
     Let us now see an algorithm for approximating K-Median, presented in Algorithm~\ref{alg:local_search}.
@@ -230,7 +230,7 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
     Let $L_1, L_2, \dots, L_k$ be the partition of $V$ induced by the centers of $L$.
     That is, $\forall l \in L$, $j \in L_i \rightarrow d(j,l_i) \leq d(j,l)$.
 
-    Let $Q_1, Q_2, \dots, Q_k$ be the partition of $B$ induced be the center of $Q$.
+    Let $Q_1, Q_2, \dots, Q_k$ be the partition of $V$ induced be the centers of $Q$.
     That is, $\forall q \in Q$, $j \in Q_i \rightarrow d(j,q_i) \leq d(j,q)$.
 
     \begin{equation*}
@@ -248,7 +248,7 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
     \begin{lemma}\label{lemma:kmedian}
         Let $L$ be the set of points returned by LS.
         Then, $\forall i \in [k]$,
-        \[ 0 \leq Med(L \setminus \{l_i\} \cup \{q_i\}) - Med(L) \leq \sum_{j \in Q_i}(D_j^* - D_j) + 2 \sum_{j \in L_i} d_j^* \]
+        \[ 0 \leq Med(L \setminus \{l_i\} \cup \{q_i\}) - Med(L) \leq \sum_{j \in Q_i}(D_j^* - D_j) + 2 \sum_{j \in L_i} D_j^* \]
     \end{lemma}
 
     \begin{proof}
@@ -256,7 +256,8 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
 
         By the LS stopping condition, $Med(L') \geq Med(L)$, thus $Med(L') - Med(L) \geq 0$.
 
-        $Med(L') = \sum_{j \in V} d(j,L') = \sum_{j \in V} \min_{l \in L'} d(j,l)$.
+        So,
+        \[ Med(L') = \sum_{j \in V} d(j,L') = \sum_{j \in V} \min_{l \in L'} d(j,l) \]
 
         We now bound $\sum_{j \in V} d(j,L')$, term-by-term.
         Consider three cases:
@@ -276,10 +277,10 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
         Then, $q_r \neq q_i$. Also, recall that $\pi(q_r) = l_r \neq l_i$, since we have assumed that $\pi$ is a bijection. Thus $\pi(q_r) \in L'$.
         \begin{equation*}
             \begin{split}
-                d(j,L') &\overset{\pi(q_r)\in L'}{\leq} d(d, \pi(q_r)) =\\
+                d(j,L') &\overset{\pi(q_r)\in L'}{\leq} d(j, \pi(q_r)) =\\
                     &= d(j,l_r) \overset{\text{tr. ineq.}}{\leq}\\
                     &\leq d(j,q_r) + d(q_r, l_r) =\\
-                    &= D_j^* + d(q_r, l_r) \overset{\pi(q_r) = lr}{\leq}\\
+                    &= D_j^* + d(q_r, l_r) \overset{\substack{\pi(q_r) = lr\\ \text{the closest center}}}{\leq}\\
                     &\leq D_j^* + d(q_r, l_i) \leq\\
                     &\leq D_j^* + d(q_r, j) + d(j, l_i) =\\
                     &= D_j^* + D_j^* + D_j =\\
@@ -307,8 +308,8 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
         \begin{equation*}
             \begin{split}
                 Med(L') - Med(L) &\leq \sum_{j \in Q_i} (D_j^* - D_j) + \sum_{j \in L_i \setminus Q_i} (2 D_j^* + D_j - D_j) + \sum_{j \in V \setminus (L_i \cup Q_i)} (D_j - D_j) =\\
-                    &= \sum_{j \in Q_i} (D_j* - D_j) + 2 \sum_{j \in L_i \setminus Q_i} D_j^* \leq\\
-                    &\leq \sum_{j \in Q_i} (D_j* - D_j) + 2 \sum_{j \in L_i} D_j^*
+                    &= \sum_{j \in Q_i} (D_j^* - D_j) + 2 \sum_{j \in L_i \setminus Q_i} D_j^* \leq\\
+                    &\leq \sum_{j \in Q_i} (D_j^* - D_j) + 2 \sum_{j \in L_i} D_j^*
             \end{split}
         \end{equation*}
     \end{proof}
@@ -335,7 +336,12 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
     The case just studied, where $\pi$ is a bijection, although quite common in real life, is not true in general.
     Let us now consider the case in which $\pi$ is not a bijection; that is, where multiple $q_i$'s get mapped to the same $l_j$.
 
-    Note that now, some $q_i$'s end up being mapped to the same $l_j$. Some $q_i$ are still mapped one-to-one to some $l_j$ (as in the bijective case). Some $l_i$'s end up not being mapped at all.
+    Note that now:
+    \begin{itemize}
+        \item some $q_i$'s end up being mapped to the same $l_j$
+        \item some $q_i$ are still mapped one-to-one to some $l_j$ (as in the bijective case)
+        \item some $l_i$'s end up not being mapped at all
+    \end{itemize}
 
     Let $T \subseteq L$ be defined as
     \[ T = \{ l \st l \in L \wedge \exists \{q,q'\} \in \binom{Q}{2} : \pi(q) = \pi(q') = l \} \]
@@ -374,7 +380,7 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
     If $\pi(q)$ is unique to $q$ (if $q \in Q \setminus M$), then we add the match $(\pi(q), q)$.
 
     For each of the remaining $q$'s, we act as follows.
-    We match $q \in M$ to elements of $z$ in such a way that:
+    We match $q \in M$ to elements of $Z$ in such a way that:
     \begin{itemize}
         \item each $q \in M$ is part of exactly 1 match
         \item each $l \in Z$ is part of exactly 0, 1 or 2 matches
@@ -388,7 +394,7 @@ Lloyd's algorithm has been proposed as an heuristic for solving K-Means. It is q
 
     \begin{lemma}\label{lemma:kmedian_lqmatches}
         $\forall (l_y, q_x) \in P$,
-        \[ 0 \leq Med(L \setminus \{l_y\} \cup \{q_x\}) - Med(L) \leq \sum_{j \in Q_x} D_j^* - \sum_{j in Q_x} D_j + 2 \sum_{j \in L_y} D_j^* \]
+        \[ 0 \leq Med(L \setminus \{l_y\} \cup \{q_x\}) - Med(L) \leq \sum_{j \in Q_x} D_j^* - \sum_{j \in Q_x} D_j + 2 \sum_{j \in L_y} D_j^* \]
     \end{lemma}
 
     \begin{exercise}
