@@ -1,0 +1,18 @@
+\begin{algorithm}
+    \caption{$\text{Randomized Weighted Majority}_\varepsilon$}\label{alg:rand_weight_maj}
+    \begin{algorithmic}%[1]
+            \State assign weight $w_i = 1$, $\forall i \in [n]$
+
+            \For{$t = 1, \dots, T$}
+                \State choose randomly expert $i$ w.p. $\frac{w_i}{\sum_{j \in [n]} w_j}$
+                \State suppose $i$ is sampled
+                \State predict $z_t \overset{\Delta}{=} Y_{it}$
+                \State see $x_t$ (and pay $1$€ is $x_t \neq z_t$)
+                \For{$i = 1, \dots, n$}
+                    \If{$Y_{it} \neq x_t$}
+                        \State $w_i \gets (1 - \varepsilon) w_i$
+                    \EndIf
+                \EndFor
+            \EndFor
+    \end{algorithmic}
+\end{algorithm}

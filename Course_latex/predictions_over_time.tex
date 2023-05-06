@@ -101,7 +101,7 @@ At testing time, you get the prediction of each of the $n$ models, and you have 
                 &m \log_2 \frac{3}{4} + \log_2 n \geq -m^*\\
                 &-m \log_2 \frac{4}{3} + \log_2 n \geq -m^*\\
                 &m^* + \log_2 n \geq m \log_2 \frac{4}{3}\\
-                m \leq \frac{1}{\log_2 \frac{4}{3}} (m^* + \log_2 n) \leq 2.41(m^* + \log_2 n)
+                &m \leq \frac{1}{\log_2 \frac{4}{3}} (m^* + \log_2 n) \leq 2.41(m^* + \log_2 n)
             \end{split}
         \end{equation*}
     \end{proof}
@@ -150,3 +150,94 @@ At testing time, you get the prediction of each of the $n$ models, and you have 
     \begin{corollary}
         No deterministic algorithm can guarantee a number of mistakes $m \leq 2 m^*$.
     \end{corollary}
+
+
+\subsection{Randomized algorithms}
+
+    We will now consider randomized algorithms.
+    The expert problem is an instance of a problem where randomization helps us a lot.
+    In fact, it will let us "fool" nature; that is, nature won't be able to construct instances s.t. we are wrong w.p. $\frac{1}{2}$ (as it happend with deterministic algorithms).
+
+    Consider Algorithm~\ref{alg:rand_weight_maj}.
+
+    \input{algorithms/rand_wight_majority.tex}
+
+    \begin{theorem}
+        Fix $0 < \varepsilon < \frac{1}{2}$. The expected number of mistakes of Algorithm~\ref{alg:rand_weight_maj} is
+        \[ \expected[m] \leq (1 + \varepsilon)m^* + \frac{1}{\varepsilon} \ln n \]
+        Where $m^*$ is the number of mistakes of a best expert.
+    \end{theorem}
+
+    Above inequality is often written as
+    \[ \expected[m] \leq m^* + \varepsilon \cdot m^* + \frac{1}{\varepsilon} \ln n \]
+    Where $\varepsilon \cdot m^* + \frac{1}{\varepsilon} \ln n$ is called the "regret" of the algorithm.
+
+    \begin{proof}
+        Let $w_i^t$ be the weight of expert $i$ at the end of round $t$.
+
+        Let $w_i^0 = 1$, $\forall i \in [n]$.
+
+        Let $W^t = \sum_{i=1}^{m} w_i^t$ be our "potential".
+
+        Let $I^t$ be the weighted fraction of experts that are wrong at time $t$,
+        \[ I^t = \frac{\sum_{i : Y_{it} \neq x_t} w_i^{t-1}}{\sum_{i=1}^{n} w_i^{t-1}} = \frac{\sum_{i : Y_{it} \neq x_t} w_i^{t-1}}{W^{t-1}} \]
+
+        Suppose $i^*$ is a best expert, and it makes $m^*$ mistakes.
+        Then,
+        \[ w_{i^*}^T = w_i^0 \cdot (1 - \varepsilon)^{m^*} = 1 \cdot (1 - \varepsilon)^{m^*} = (1 - \varepsilon)^{m^*} \]
+
+        Thus,
+        \[ W^T \geq w_{i^*}^T = (1 - \varepsilon)^{m^*} \]
+
+        Moreover,
+        \begin{equation*}
+            \begin{split}
+                \expected[m] &= \sum_{t=1}^{T} \prob[\text{\textsc{RWM} makes a mistake in round } t] =\\
+                    &= \sum_{t=1}^{T} \prob[\text{\textsc{RWM} selects an incorrect expert in round } t] =\\
+                    &= \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \prob[\text{\textsc{RWM} selects expert } i \text{ in round } t] =\\
+                    &= \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \frac{w_i^{t-1}}{\sum_{j \in [n]} w_j^{t-1}} = \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \frac{w_i^{t-1}}{\sum_{j \in [n]} W^{t-1}} =\\
+                    &= \sum_{t=1}^{T} I^t
+            \end{split}
+        \end{equation*}
+
+        Let $t \geq 0$, then
+        \begin{equation*}
+            \begin{split}
+                W^{t+1} &= \sum_{i=1}^{n} w_i^t = \sum_{i=1}^{n}(w_i^t (1 - \varepsilon [Y_{i, t+1} \neq x_{t+1}])) =\\
+                    &= \sum_{i=1}^{n} w_i^t - \varepsilon \sum_{i=1}^{n} (w_i^t [Y_{i, t+1} \neq x_{t+1}]) = \sum_{i=1}^{n} w_i^t - \varepsilon \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} w_i^t =\\
+                    &= \sum_{i=1}^{n} w_i^t - \varepsilon W^t \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \frac{w_i^t}{W^t} = W^t - \varepsilon W^t I^{t+1} = W^t (1 - \varepsilon I^{t+1})
+            \end{split}
+        \end{equation*}
+
+        We then have
+        \begin{equation*}
+            \begin{split}
+                &W^0 = \sum_{i=1}^{n} w_i^0 = n\\
+                &W^1 = W^0 (1 - \varepsilon I^1) = n (1 - \varepsilon I^1)\\
+                &W^2 = W^1 (1 - \varepsilon I^2) = n (1 - \varepsilon I^1)(1 - \varepsilon I^2)\\
+                &\vdots\\
+                &W^t = n \prod_{s=1}^t (1 - \varepsilon I^s)
+            \end{split}
+        \end{equation*}
+
+        Then,
+        \begin{equation*}
+            \begin{split}
+                &n \prod_{s=1}^{T} (1 - \varepsilon I^s) = W^T \geq (1 - \varepsilon)^{m^*}\\
+                &\ln n - \varepsilon \sum_{s=1}^T I^S \geq \ln n + \sum_{s=1}^T \ln(1 - \varepsilon \cdot I^S) \geq m^* \ln (1 - \varepsilon)\\
+                &\ln n \geq m^* \ln (1 - \varepsilon) + \varepsilon \sum_{s=1}^{T} I^s\\
+                &\ln n \geq m^* \ln (1 - \varepsilon) + \varepsilon \cdot \expected[m]\\
+                &\varepsilon \cdot \expected[m] \leq \ln n - m^* \ln (1 - \varepsilon)\\
+                &\varepsilon \cdot \expected[m] \leq \ln n + m^* \ln \frac{1}{1 - \varepsilon}\\
+            \end{split}
+        \end{equation*}
+
+        Thus,
+        \begin{equation*}
+            \begin{split}
+                \expected[m] &\leq \frac{1}{\varepsilon} \ln n + \frac{m^*}{\varepsilon} \ln \frac{1}{1 - \varepsilon} \leq\text{\footnote{$\forall \varepsilon \in (0, \frac{1}{2})$, $\ln \frac{1}{1 - \varepsilon} \leq \varepsilon + \varepsilon^2$}}\\
+                    &\leq \frac{1}{\varepsilon} \ln n + \frac{m^*}{\varepsilon} (\varepsilon + \varepsilon^2) =\\
+                    &= (1 + \varepsilon) m^* + \frac{1}{\varepsilon} \ln n
+            \end{split}
+        \end{equation*}
+    \end{proof}
