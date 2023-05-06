@@ -224,20 +224,22 @@ At testing time, you get the prediction of each of the $n$ models, and you have 
         \begin{equation*}
             \begin{split}
                 &n \prod_{s=1}^{T} (1 - \varepsilon I^s) = W^T \geq (1 - \varepsilon)^{m^*}\\
-                &\ln n - \varepsilon \sum_{s=1}^T I^S \geq \ln n + \sum_{s=1}^T \ln(1 - \varepsilon \cdot I^S) \geq m^* \ln (1 - \varepsilon)\\
+                &\ln n - \varepsilon \sum_{s=1}^T I^S \geq\footnotemark \ln n + \sum_{s=1}^T \ln(1 - \varepsilon \cdot I^S) \geq m^* \ln (1 - \varepsilon)\\
                 &\ln n \geq m^* \ln (1 - \varepsilon) + \varepsilon \sum_{s=1}^{T} I^s\\
                 &\ln n \geq m^* \ln (1 - \varepsilon) + \varepsilon \cdot \expected[m]\\
                 &\varepsilon \cdot \expected[m] \leq \ln n - m^* \ln (1 - \varepsilon)\\
                 &\varepsilon \cdot \expected[m] \leq \ln n + m^* \ln \frac{1}{1 - \varepsilon}\\
             \end{split}
         \end{equation*}
-
+        \footnotetext{$\forall x \in (0,1)$, $\ln(1 - x) \leq -x$}
+        
         Thus,
         \begin{equation*}
             \begin{split}
-                \expected[m] &\leq \frac{1}{\varepsilon} \ln n + \frac{m^*}{\varepsilon} \ln \frac{1}{1 - \varepsilon} \leq\text{\footnote{$\forall \varepsilon \in (0, \frac{1}{2})$, $\ln \frac{1}{1 - \varepsilon} \leq \varepsilon + \varepsilon^2$}}\\
+                \expected[m] &\leq \frac{1}{\varepsilon} \ln n + \frac{m^*}{\varepsilon} \ln \frac{1}{1 - \varepsilon} \leq\footnotemark\\
                     &\leq \frac{1}{\varepsilon} \ln n + \frac{m^*}{\varepsilon} (\varepsilon + \varepsilon^2) =\\
                     &= (1 + \varepsilon) m^* + \frac{1}{\varepsilon} \ln n
             \end{split}
         \end{equation*}
+        \footnotetext{$\forall \varepsilon \in (0, \frac{1}{2})$, $\ln \frac{1}{1 - \varepsilon} \leq \varepsilon + \varepsilon^2$}
     \end{proof}
