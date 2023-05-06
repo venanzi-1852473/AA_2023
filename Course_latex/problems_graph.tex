@@ -7,7 +7,12 @@
     Question: what is the bipartition $(S, V \setminus S)$ of $V$ that maximizes $\cardinality{\cut}$?
 
     Where a \textit{cut} is defined as follows:
-    \[ \cut = \{ e \st e \in E \wedge e \cap S \neq \emptyset \wedge e \cap (V \setminus S) \neq \emptyset \} = \{ e \st e \in E \wedge \cardinality{e \cap S} = 1 \}\]
+    \begin{equation*}
+        \begin{split}
+            \cut &= \{ e \st e \in E \wedge e \cap S \neq \emptyset \wedge e \cap (V \setminus S) \neq \emptyset \} =\\
+                &= \{ e \st e \in E \wedge \cardinality{e \cap S} = 1 \}            
+        \end{split}
+    \end{equation*}
 
     This problem is NP-Hard, thus we don't know how to solve it efficiently.
     There exists a ($0.878\dots$)-approximation based on Semi-Definite Programming. We now see a simple $\frac{1}{2}$-approximation.
