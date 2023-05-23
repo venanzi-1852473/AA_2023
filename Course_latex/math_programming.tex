@@ -276,7 +276,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
     \end{proof}
 
     \begin{lemma}\label{lemma:sc_2}
-        Pick $i \in [n]$. $\prob[i \text{ not covered by ant set in } A] \leq \frac{1}{n^2}$.
+        Pick $i \in [n]$. $\prob[i \text{ not covered by any set in } A] \leq \frac{1}{n^2}$.
     \end{lemma}
 
     \begin{proof}
@@ -459,7 +459,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
 
         \begin{equation*}
             \begin{split}
-                \int_0^1 \cardinality{E(r)} dr &=\\
+                \int_0^1 \cardinality{S(r)} dr &=\\
                     &= \int_{0}^{y_{\pi(1)}} \cardinality{S(r)}dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} \cardinality{S(r)}dr + \cdots + \int_{y_{\pi(n)}}^{1} \cardinality{S(r)}dr =\\
                     &= \int_{0}^{y_{\pi(1)}} n \; dr + \int_{y_{\pi(1)}}^{y_{\pi(2)}} (n-1)dr + \cdots + \int_{y_{\pi(n-1)}}^{y_{\pi(n)}} 1 dr + \int_{y_{\pi(n)}}^{1} 0 dr =\\
                     &= (y_{\pi(1)} - 0)n + (y_{\pi(2)} - y_{\pi(1)})(n-1) + \cdots + (y_{\pi(n)} - y_{\pi(n-1)})1 + 0 =\\
@@ -697,7 +697,7 @@ When we force each variable to be an integer, the progam is called \textbf{Integ
         \begin{cases}
             \max \sum_{\{i,j\} \in E} x_{\{i,j\}}\\
             (y_{ij}): x_{\{i,j\}} - x_i \leq 0  & \forall \{i,j\} \in E\\
-            (y_{ji}): x:{\{i,j\}} - x_j \leq 0  & \forall \{i,j\} \in E\\
+            (y_{ji}): x_{\{i,j\}} - x_j \leq 0  & \forall \{i,j\} \in E\\
             (y^*): \sum_{i \in V} x_i \leq 1\\
             x_{\{i,j\}} \geq 0                  & \forall \{i,j\} \in E\\
             x_i \geq 0                          & \forall i \in V
