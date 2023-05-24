@@ -148,7 +148,7 @@
     \[ \ell_1(\underbar{X}, \underbar{Y}) = \cardinality{\underbar{X} - \underbar{Y}}_1 = \sum_{t=1}^{d} \cardinality{X(t) - Y(t)} \]
 
     \begin{lemma}\label{lemma:metric4}
-        If $d : V \times V \rightarrow \mathbb{R}$ is a cut metric over $k$ cuts, then $f : V \rightarrow \mathbb{R}^k$ s.t. $d(X,Y) = \cardinality{f(X) - f(Y)}_1$, $\forall X,Y \in V$.
+        If $d : V \times V \rightarrow \mathbb{R}$ is a cut metric over $k$ cuts, then $\exist f : V \rightarrow \mathbb{R}^k$ s.t. $d(X,Y) = \cardinality{f(X) - f(Y)}_1$, $\forall X,Y \in V$.
 
         If $X \subseteq \mathbb{R}^d$ is finite, then the $l-1$-metric over $X$ can be represented by a cut metric over $k = (\cardinality{X}-1)d$ cuts.
     \end{lemma}
@@ -441,7 +441,7 @@
         Let $s_i$ be the score of $S_i$ when $S_i$ was picked (note that the score of a set $S_i$ can change during iterations, as more elements are covered).
         Then $s_i = \cardinality{S_i \setminus T_{i-1}}$, where $T_{i-1} = \bigcup_{j=1}^{i-1}S_j$.
 
-        Also, let $t_i = \cardinality{T_i} = \bigcup_{j=1}^{i}S_j$.
+        Also, let $t_i = \cardinality{T_i} = \cardinality{\bigcup_{j=1}^{i}S_j}$.
 
         Let $u_i = \cardinality{X^*} - t_i$.
 
