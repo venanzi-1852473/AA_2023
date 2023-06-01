@@ -195,7 +195,7 @@ At testing time, you get the prediction of each of the $n$ models, and you have 
                 \expected[m] &= \sum_{t=1}^{T} \prob[\text{\textsc{RWM} makes a mistake in round } t] =\\
                     &= \sum_{t=1}^{T} \prob[\text{\textsc{RWM} selects an incorrect expert in round } t] =\\
                     &= \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \prob[\text{\textsc{RWM} selects expert } i \text{ in round } t] =\\
-                    &= \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \frac{w_i^{t-1}}{\sum_{j \in [n]} w_j^{t-1}} = \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \frac{w_i^{t-1}}{\sum_{j \in [n]} W^{t-1}} =\\
+                    &= \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \frac{w_i^{t-1}}{\sum_{j \in [n]} w_j^{t-1}} = \sum_{t=1}^{T} \sum_{\substack{i \in [n] \\ Y_{it} \neq x_t}} \frac{w_i^{t-1}}{W^{t-1}} =\\
                     &= \sum_{t=1}^{T} I^t
             \end{split}
         \end{equation*}

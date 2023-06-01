@@ -71,7 +71,7 @@
     \end{proof}
 
     \begin{definition}[Cut metric]
-        Let $d_{T_1}, d_{T_2}, \dots, d_{T_k} : V \times V \rightarrow \mathbb{R}$ be elementary cut metric, and let $\lambda_1, \lambda_2, \dots, \lambda_k > 0$, then $d : V \times V \rightarrow \mathbb{R}$ defined as
+        Let $d_{T_1}, d_{T_2}, \dots, d_{T_k} : V \times V \rightarrow \mathbb{R}$ be elementary cut metrics, and let $\lambda_1, \lambda_2, \dots, \lambda_k > 0$, then $d : V \times V \rightarrow \mathbb{R}$ defined as
         \[ d(X,Y) = \sum_{i=1}^{k}(\lambda_i \cdot d_{T_i}(X,Y)) \]
         is a cut metric.
     \end{definition}
@@ -148,7 +148,7 @@
     \[ \ell_1(\underbar{X}, \underbar{Y}) = \cardinality{\underbar{X} - \underbar{Y}}_1 = \sum_{t=1}^{d} \cardinality{X(t) - Y(t)} \]
 
     \begin{lemma}\label{lemma:metric4}
-        If $d : V \times V \rightarrow \mathbb{R}$ is a cut metric over $k$ cuts, then $f : V \rightarrow \mathbb{R}^k$ s.t. $d(X,Y) = \cardinality{f(X) - f(Y)}_1$, $\forall X,Y \in V$.
+        If $d : V \times V \rightarrow \mathbb{R}$ is a cut metric over $k$ cuts, then $\exist f : V \rightarrow \mathbb{R}^k$ s.t. $d(X,Y) = \cardinality{f(X) - f(Y)}_1$, $\forall X,Y \in V$.
 
         If $X \subseteq \mathbb{R}^d$ is finite, then the $l-1$-metric over $X$ can be represented by a cut metric over $k = (\cardinality{X}-1)d$ cuts.
     \end{lemma}
@@ -441,7 +441,7 @@
         Let $s_i$ be the score of $S_i$ when $S_i$ was picked (note that the score of a set $S_i$ can change during iterations, as more elements are covered).
         Then $s_i = \cardinality{S_i \setminus T_{i-1}}$, where $T_{i-1} = \bigcup_{j=1}^{i-1}S_j$.
 
-        Also, let $t_i = \cardinality{T_i} = \bigcup_{j=1}^{i}S_j$.
+        Also, let $t_i = \cardinality{T_i} = \cardinality{\bigcup_{j=1}^{i}S_j}$.
 
         Let $u_i = \cardinality{X^*} - t_i$.
 
@@ -487,7 +487,7 @@
                 u_{i+1} &= \cardinality{X^*} - t_{i+1} = \cardinality{X^*} - \cardinality{T_{i+1}} = \cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i+1} S_j} =\\
                         &= \cardinality{X^*} - \cardinality{\bigcup_{j=1}^{i} S_j} - \cardinality{S_{i+1} \setminus \bigcup_{i=1}^i S_j} = \cardinality{X^*} - \cardinality{T_i} - \cardinality{S_{i+1} \setminus T_i} =\\
                         &= \cardinality{X^*} - \cardinality{T_i} - s_{i+1} = u_i - s_{i+1} \overset{\text{previous claim}}{\leq} u_i - \frac{u_i}{k} = (1 - \frac{1}{k})u_i \leq\\
-                        &\leq (1 - \frac{1}{k}) - (1 - \frac{1}{k})^i \cardinality{X^*} = (1 - \frac{1}{k})^{i+1} \cardinality{X^*}
+                        &\leq (1 - \frac{1}{k}) (1 - \frac{1}{k})^i \cardinality{X^*} = (1 - \frac{1}{k})^{i+1} \cardinality{X^*}
             \end{split}
         \end{equation*}
 
